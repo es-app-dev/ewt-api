@@ -1,0 +1,56 @@
+{
+ "count": 7,
+ "defaultInstance": "CORP",
+ "modelSourceInstance": "CORP",
+ "instances": [
+  {
+   "name": "CORP",
+   "displayName": "Corporate",
+   "isCorporate": true,
+   "legacyKey": null,
+   "tnsAlias": "EWT_CORP_DEV"
+  },
+  {
+   "name": "BASC",
+   "displayName": "BASC",
+   "isCorporate": false,
+   "legacyKey": "4",
+   "tnsAlias": "EWT_BASC_DEV"
+  },
+  {
+   "name": "BCTN",
+   "displayName": "BCTN",
+   "isCorporate": false,
+   "legacyKey": "1064",
+   "tnsAlias": "EWT_BCTN_DEV"
+  },
+  {
+   "name": "BRON",
+   "displayName": "BRON",
+   "isCorporate": false,
+   "legacyKey": "3",
+   "tnsAlias": "EWT_CAN_DEV"
+  },
+  {
+   "name": "CLUT",
+   "displayName": "CLUT",
+   "isCorporate": false,
+   "legacyKey": "1127",
+   "tnsAlias": "EWT_CLUT_DEV"
+  },
+  {
+   "name": "EWTN",
+   "displayName": "EWTN",
+   "isCorporate": false,
+   "legacyKey": "1111",
+   "tnsAlias": "EWT_EWTN_DEV"
+  },
+  {
+   "name": "MEMTN",
+   "displayName": "MEMTN",
+   "isCorporate": false,
+   "legacyKey": "1067",
+   "tnsAlias": "EWT_MEMTN_DEV"
+  }
+ ]
+}

@@ -1,0 +1,1418 @@
+{
+ "generated": "2026-09-23",
+ "source": "ewt-ui/analysis/api/sequence-map.json, classified against EWT.Api/metadata/tables.*.json",
+ "note": "Only tables in 'assign' get a server-assigned key on POST, and only when the client omits that column. Everything in 'excluded' is deliberate.",
+ "assign": {
+  "AT_ADDRESSES": {
+   "column": "ADDR_SEQ_ID",
+   "sequence": "ADDR_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9106",
+    "AT9107",
+    "AT9129",
+    "AT9141"
+   ]
+  },
+  "AT_AGENTS_AND_MEDIAS": {
+   "column": "AGT_MEDIA_SEQ_ID",
+   "sequence": "AGT_MEDIA_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9115"
+   ]
+  },
+  "AT_ASSAY_TRACKED_ITEMS": {
+   "column": "ASSAYTRCK_SEQ_ID",
+   "sequence": "ASSAYTRCK_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5316"
+   ]
+  },
+  "AT_BARCODE_CHEMICALS": {
+   "column": "CNTNR_CHEMICAL_SEQ_ID",
+   "sequence": "CNTNR_CHEMICAL_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT3110"
+   ]
+  },
+  "AT_BARCODE_HAZ_WASTE_CODES": {
+   "column": "CNTNR_HAZ_SEQ_ID",
+   "sequence": "CNTNR_HAZ_SEQ",
+   "basis": "no PK; 3 writes, all from CNTNR_HAZ_SEQ; measured unique on CLUT (83,221 rows) and BCTN (53,985 rows)",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT3110",
+    "AT5315"
+   ],
+   "alsoPrimaryKeyOf": [
+    "AT_CNTNR_HAZ_WASTE_CODES"
+   ]
+  },
+  "AT_BARCODE_METALS": {
+   "column": "CNTNR_METAL_SEQ_ID",
+   "sequence": "CNTNR_METAL_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT3110"
+   ]
+  },
+  "AT_BARCODE_ROLL_LOG": {
+   "column": "BARCODE_ROLL_SEQ_ID",
+   "sequence": "BARCODE_ROLL_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9622"
+   ]
+  },
+  "AT_BARCODE_UHC_CODES": {
+   "column": "CNTNR_UHC_SEQ_ID",
+   "sequence": "CNTNR_UHC_SEQ",
+   "basis": "no PK; 3 writes, all from CNTNR_UHC_SEQ; measured unique on BCTN (380 rows)",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT3110",
+    "AT5315"
+   ],
+   "alsoPrimaryKeyOf": [
+    "AT_CNTNR_UHC_CODES"
+   ]
+  },
+  "AT_BATCH_HEADERS": {
+   "column": "BATCH_SEQ_ID",
+   "sequence": "BATCH_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT4150",
+    "AT4151"
+   ]
+  },
+  "AT_BYPRODUCT_HDRS": {
+   "column": "BYPRODHDRS_SEQ_ID",
+   "sequence": "BYPRODHDRS_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5210"
+   ]
+  },
+  "AT_COMMENT_INSTRUCTIONS": {
+   "column": "COMNT_SEQ_ID",
+   "sequence": "COMNT_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT1310",
+    "AT1410"
+   ]
+  },
+  "AT_COMNT_INSTR_TYPES": {
+   "column": "COMNTTYP_SEQ_ID",
+   "sequence": "COMNTTYP_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9116"
+   ]
+  },
+  "AT_COMPACTION_MASTERS": {
+   "column": "CMPCTN_SEQ_ID",
+   "sequence": "CNTNR_PROC_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT4210"
+   ]
+  },
+  "AT_CONTACTS": {
+   "column": "CNTCT_SEQ_ID",
+   "sequence": "CNTCT_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT1310"
+   ]
+  },
+  "AT_CONTACT_TYPES": {
+   "column": "CNTCT_TYP_SEQ_ID",
+   "sequence": "CNTCT_TYP_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9102"
+   ]
+  },
+  "AT_CONTAINERS": {
+   "column": "CNTNR_SEQ_ID",
+   "sequence": "CNTNR_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT3115",
+    "AT5120",
+    "AT5150"
+   ]
+  },
+  "AT_CONTAINER_PROCESSES": {
+   "column": "CNTNR_PROC_SEQ_ID",
+   "sequence": "CNTNR_PROC_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT4120",
+    "AT4130",
+    "AT4150",
+    "AT4151",
+    "AT5210"
+   ]
+  },
+  "AT_CONTAINER_TYPES": {
+   "column": "CNTNR_TYP_SEQ_ID",
+   "sequence": "CNTNR_TYP_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9112"
+   ]
+  },
+  "AT_CONTRACTS": {
+   "column": "CNTRCT_SEQ_ID",
+   "sequence": "CNTRCT_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT1410"
+   ]
+  },
+  "AT_CONTRACT_PROD_SERVICES": {
+   "column": "CNPRODSERV_SEQ_ID",
+   "sequence": "CNPRODSERV_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT1410"
+   ]
+  },
+  "AT_CONTRACT_SHIPPING_LOCS": {
+   "column": "CONTRACT_SHIPPING_LOC_SEQ_ID",
+   "sequence": "CONTRACT_SHIPPING_LOC_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT1410"
+   ]
+  },
+  "AT_CUSTOMERS": {
+   "column": "CUST_SEQ_ID",
+   "sequence": "CUST_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT1310"
+   ]
+  },
+  "AT_CUSTOMER_LICENSES": {
+   "column": "CUST_LIC_SEQ_ID",
+   "sequence": "CUST_LIC_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT1310",
+    "AT9106"
+   ]
+  },
+  "AT_CUST_DOC_TRACKED_ITEMS": {
+   "column": "CUSTTRCK_SEQ_ID",
+   "sequence": "CUSTTRCK_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT3110",
+    "AT9999"
+   ]
+  },
+  "AT_DISP_SITES": {
+   "column": "DISP_SITE_SEQ_ID",
+   "sequence": "DISP_SITE_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9106"
+   ]
+  },
+  "AT_DUMPLISTS": {
+   "column": "DUMP_SEQ_ID",
+   "sequence": "DUMP_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT7200"
+   ]
+  },
+  "AT_DUMP_MANIFESTS": {
+   "column": "DUMP_MNFST_SEQ_ID",
+   "sequence": "DUMP_MNFST_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT7300"
+   ]
+  },
+  "AT_ELEMENTS": {
+   "column": "EL_SEQ_ID",
+   "sequence": "EL_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9620"
+   ]
+  },
+  "AT_GIC_ASSAYS": {
+   "column": "GIC_ASSAY_SEQ_ID",
+   "sequence": "GIC_ASSAY_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT7100"
+   ]
+  },
+  "AT_GIC_CONTAINER_TYPES": {
+   "column": "GIC_CNTNR_TYP_SEQ_ID",
+   "sequence": "GIC_CNTNR_TYP_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9144"
+   ]
+  },
+  "AT_GIC_ITEMS": {
+   "column": "GIC_ITEM_SEQ_ID",
+   "sequence": "GIC_ITEM_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT7100"
+   ]
+  },
+  "AT_GIC_PROFILES": {
+   "column": "GIC_PROFILE_SEQ_ID",
+   "sequence": "GIC_PROFILE_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9140"
+   ]
+  },
+  "AT_HAZ_WASTE_CODES": {
+   "column": "HAZ_SEQ_ID",
+   "sequence": "HAZ_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9626"
+   ]
+  },
+  "AT_INCOMING_MANIFESTS": {
+   "column": "ADVNOTIF_SEQ_ID",
+   "sequence": "MNFST_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT1510"
+   ]
+  },
+  "AT_INVOICES": {
+   "column": "INVC_SEQ_ID",
+   "sequence": "INV_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT1710"
+   ]
+  },
+  "AT_LAB_ANALYSIS_SAMPLES": {
+   "column": "LABANLSMPL_SEQ_ID",
+   "sequence": "LABANLSMPL_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5310",
+    "AT5312",
+    "AT5316"
+   ]
+  },
+  "AT_LAB_ANALYSIS_TYPES": {
+   "column": "LABTYP_SEQ_ID",
+   "sequence": "LABTYP_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9609"
+   ]
+  },
+  "AT_LAB_RESULTS_TRACKED_ITEMS": {
+   "column": "RESLTITM_SEQ_ID",
+   "sequence": "RESLTITM_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5310",
+    "AT5311"
+   ]
+  },
+  "AT_LAB_SAMPLES": {
+   "column": "LABSAMPLE_SEQ_ID",
+   "sequence": "LABSAMPLE_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5311",
+    "AT5312",
+    "AT5316"
+   ]
+  },
+  "AT_LANDFILL_HEADERS": {
+   "column": "LANDFILL_SEQ_ID",
+   "sequence": "LANDFILL_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5514"
+   ]
+  },
+  "AT_LANDFILL_SITES": {
+   "column": "LANDFILL_SITE_SEQ_ID",
+   "sequence": "LANDFILL_SITE_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9141"
+   ]
+  },
+  "AT_LICENSE_TYPES": {
+   "column": "LIC_TYP_SEQ_ID",
+   "sequence": "LIC_TYP_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9104"
+   ]
+  },
+  "AT_LINE_ITEM_CONTAINERS": {
+   "column": "LITMCNTR_SEQ_ID",
+   "sequence": "LITMCNTR_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT1551",
+    "AT1552"
+   ]
+  },
+  "AT_MATERIALS": {
+   "column": "MATL_SEQ_ID",
+   "sequence": "MATL_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT3110"
+   ]
+  },
+  "AT_MATERIAL_TYPES": {
+   "column": "MATL_TYP_SEQ_ID",
+   "sequence": "MATL_TYP_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9111"
+   ]
+  },
+  "AT_OUTBOUND_SHIPMENTS": {
+   "column": "OUTSHIPMT_SEQ_ID",
+   "sequence": "OUTSHIPMT_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5510",
+    "AT5511"
+   ]
+  },
+  "AT_PICKLISTS": {
+   "column": "PL_SEQ_ID",
+   "sequence": "PL_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT3420"
+   ]
+  },
+  "AT_PICKLIST_CONTAINERS": {
+   "column": "PL_CNTNR_SEQ_ID",
+   "sequence": "PL_CNTNR_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT3420"
+   ]
+  },
+  "AT_PRICE_SHEETS": {
+   "column": "PRCSHT_SEQ_ID",
+   "sequence": "PRCSHEET_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT1420"
+   ]
+  },
+  "AT_PROBLEM_ITEMS": {
+   "column": "PRBITM_SEQ_ID",
+   "sequence": "PRBITM_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9810"
+   ]
+  },
+  "AT_PROCESS_TRANS_TYPES": {
+   "column": "PRCTRANTYP_SEQ_ID",
+   "sequence": "PRCTRANTYP_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9603"
+   ]
+  },
+  "AT_PRODUCT_CATEGORIES": {
+   "column": "PRODCAT_SEQ_ID",
+   "sequence": "PRODCAT_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT1610"
+   ]
+  },
+  "AT_PRODUCT_SERVICES": {
+   "column": "PRODSERV_SEQ_ID",
+   "sequence": "PRODSERV_SEQ",
+   "basis": "compound PK; measured unique on CORP (754 rows)",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT1610"
+   ]
+  },
+  "AT_RECYCLE_SITES": {
+   "column": "RECYCLER_SITE_SEQ_ID",
+   "sequence": "RECYCLE_SITE_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9129"
+   ]
+  },
+  "AT_RENTAL_CONTAINERS": {
+   "column": "RNCNTNR_SEQ_ID",
+   "sequence": "RNCNTNR_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT3210",
+    "AT3211",
+    "AT3212"
+   ]
+  },
+  "AT_RENTAL_CONTAINER_HIST": {
+   "column": "RNCNTNRHIS_SEQ_ID",
+   "sequence": "RNCNTNRHIS_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT3231"
+   ]
+  },
+  "AT_SEG_DEPARTMENTS": {
+   "column": "SEG_DEPT_SEQ_ID",
+   "sequence": "SEG_DEPT_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9120"
+   ]
+  },
+  "AT_SEG_FACILITIES": {
+   "column": "FAC_SEQ_ID",
+   "sequence": "FAC_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9606"
+   ]
+  },
+  "AT_SEG_LICENSE_GROUPS": {
+   "column": "LICGRP_SEQ_ID",
+   "sequence": "LICGRP_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9613"
+   ]
+  },
+  "AT_SEG_OPERATING_LICENSES": {
+   "column": "SEG_LIC_SEQ_ID",
+   "sequence": "SEG_LIC_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9605"
+   ]
+  },
+  "AT_SEG_ORDER_LINE_ITEMS": {
+   "column": "SEGORDLITM_SEQ_ID",
+   "sequence": "SEGORDLITM_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT1510"
+   ]
+  },
+  "AT_SEG_SITES": {
+   "column": "SITE_SEQ_ID",
+   "sequence": "SITE_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9606"
+   ]
+  },
+  "AT_SHIPMENT_BOL": {
+   "column": "SHIP_BOL_SEQ_ID",
+   "sequence": "SHIP_BOL_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT3310"
+   ]
+  },
+  "AT_SHIPMENT_STATES": {
+   "column": "SHIPST_SEQ_ID",
+   "sequence": "SHIPST_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT3310"
+   ]
+  },
+  "AT_SHIP_COMPACTION_MASTERS": {
+   "column": "CMPCTN_SEQ_ID",
+   "sequence": "CNTNR_PROC_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT4211"
+   ]
+  },
+  "AT_SOURCES": {
+   "column": "SOURCE_SEQ_ID",
+   "sequence": "SOURCE_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT6000"
+   ]
+  },
+  "AT_SOURCE_CUSTODIANS": {
+   "column": "CUSTODIAN_SEQ_ID",
+   "sequence": "CUSTODIAN_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9501"
+   ]
+  },
+  "AT_STANDARD_NOTES": {
+   "column": "NOTE_SEQ_ID",
+   "sequence": "STANDARD_NOTE_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9131"
+   ]
+  },
+  "AT_STORAGE_LOCATIONS": {
+   "column": "STORLOC_SEQ_ID",
+   "sequence": "STORLOC_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT9601"
+   ]
+  },
+  "AT_TELECOM_ADDRESSES": {
+   "column": "TELCOMADDR_SEQ_ID",
+   "sequence": "TELCOMADDR_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT1310",
+    "AT9107"
+   ]
+  },
+  "AT_TELECOM_TYPES": {
+   "column": "TELCOM_TYP_SEQ_ID",
+   "sequence": "TELCOM_TYP_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9109"
+   ]
+  },
+  "AT_TRANSPORT_PERMITS": {
+   "column": "TRANSPMT_SEQ_ID",
+   "sequence": "TRANSPMT_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9615"
+   ]
+  },
+  "AT_UHC_HAZ": {
+   "column": "UHC_HAZ_SEQ_ID",
+   "sequence": "UHC_HAZ_SEQ",
+   "basis": "no PK; 1 write from UHC_HAZ_SEQ; measured unique on CORP (1,594 rows)",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9626"
+   ]
+  },
+  "AT_UHC_WASTE_CODES": {
+   "column": "UHC_SEQ_ID",
+   "sequence": "UHC_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9626"
+   ]
+  },
+  "AT_UNIT_CONVERSIONS": {
+   "column": "UNITCNV_SEQ_ID",
+   "sequence": "UNITCNV_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "CORP"
+   ],
+   "forms": [
+    "AT9121"
+   ]
+  },
+  "AT_WASTE_STREAM_10CFR61_ANAL": {
+   "column": "WSANAL10CFR_SEQ_ID",
+   "sequence": "WSANAL10CFR61_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5322"
+   ]
+  },
+  "AT_WASTE_STREAM_10CFR61_DIST": {
+   "column": "WSCFRDIST_SEQ_ID",
+   "sequence": "WSCFRDIST_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5322"
+   ]
+  },
+  "AT_WASTE_STREAM_10CFR61_FACT": {
+   "column": "WSCFRCNVRT_SEQ_ID",
+   "sequence": "WSCFRCNVRT_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5323"
+   ]
+  },
+  "AT_WASTE_STREAM_ANALYSIS_ITEMS": {
+   "column": "WSCMPANLITM_SEQ_ID",
+   "sequence": "WSCMPANLITM_SEQ",
+   "basis": "no PK; 1 write from WSCMPANLITM_SEQ, plus one copy via a Designer temp in AT5331; measured unique on BCTN (1,161 rows)",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5331"
+   ]
+  },
+  "AT_WASTE_STREAM_COMP_ANALYSIS": {
+   "column": "WSCOMPSANAL_SEQ_ID",
+   "sequence": "WSCOMPSANAL_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "AT5331"
+   ]
+  },
+  "WB_IBOX_CONTENTS": {
+   "column": "IBOX_CONTENTS_SEQ_ID",
+   "sequence": "IBOX_CONTENTS_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "WB3000"
+   ]
+  },
+  "WB_IBOX_DETAILS": {
+   "column": "IBOX_DETAIL_SEQ_ID",
+   "sequence": "IBOX_DETAIL_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "WB3000",
+    "WB3600"
+   ]
+  },
+  "WB_MAN_SURVEY_INSTRUMENTS": {
+   "column": "SURVEY_INSTR_SEQ_ID",
+   "sequence": "WB_SURVEY_INSTR_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "WB1100"
+   ]
+  },
+  "WB_QTB_CONTAINERS": {
+   "column": "QTB_SEQ_ID",
+   "sequence": "QTB_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "WB4000"
+   ]
+  },
+  "WB_QTB_CONTENTS": {
+   "column": "QTB_CONTENTS_SEQ_ID",
+   "sequence": "QTB_CONTENTS_SEQ",
+   "basis": "sole primary key",
+   "instances": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ],
+   "forms": [
+    "WB4000"
+   ]
+  }
+ },
+ "excluded": [
+  {
+   "table": "WB_BATCH_HEADERS",
+   "column": "BATCH_SEQ_ID",
+   "sequence": "BATCH_SEQ",
+   "forms": [
+    "WB3600"
+   ],
+   "reason": "BATCH_SEQ_ID is assigned from something other than its sequence 33 times, appears in 9 INSERT column lists and is updated after insert 34 times"
+  },
+  {
+   "table": "AT_CONTACTS",
+   "column": "ADDR_SEQ_ID",
+   "sequence": "ADDR_SEQ",
+   "forms": [
+    "AT1310"
+   ],
+   "reason": "column is not the primary key (CNTCT_SEQ_ID); a child allocating its parent's key"
+  },
+  {
+   "table": "AT_CONTRACTS",
+   "column": "ADDR_SEQ_ID",
+   "sequence": "ADDR_SEQ",
+   "forms": [
+    "AT1410"
+   ],
+   "reason": "column is not the primary key (CNTRCT_SEQ_ID); a child allocating its parent's key"
+  },
+  {
+   "table": "WB_IBOX_DETAILS",
+   "column": "DAUGHTER_CNTNR_SEQ_ID",
+   "sequence": "CNTNR_SEQ",
+   "forms": [
+    "WB3600"
+   ],
+   "reason": "column is not the primary key (IBOX_DETAIL_SEQ_ID); a child allocating its parent's key"
+  },
+  {
+   "table": "WB_QTB_CONTAINERS",
+   "column": "QTB_CNTNR_SEQ_ID",
+   "sequence": "CNTNR_SEQ",
+   "forms": [
+    "WB4000"
+   ],
+   "reason": "column is not the primary key (QTB_SEQ_ID); a child allocating its parent's key"
+  },
+  {
+   "table": "AT_INVOICE_LINE_RNCNTNR",
+   "column": "INVLITM_SEQ_ID",
+   "sequence": "INVLITM_SEQ",
+   "forms": [
+    "AT1710"
+   ],
+   "reason": "measured on BCTN: 18,615 rows but 3,740 distinct INVLITM_SEQ_ID; the column references the parent line item rather than being allocated per row"
+  },
+  {
+   "table": "AT_BATCH_DAUGHTERS",
+   "column": "CNTNR_SEQ_ID",
+   "sequence": "CNTNR_SEQ",
+   "forms": [
+    "AT4150",
+    "AT4151"
+   ],
+   "reason": "measured on BCTN: 48,522 rows but 47,858 distinct CNTNR_SEQ_ID; the column references a container rather than being allocated per row"
+  },
+  {
+   "table": "AT_INVOICE_LINE_ITEMS",
+   "column": "INVLITM_SEQ_ID",
+   "sequence": "INVLITM_SEQ",
+   "forms": [
+    "AT1710"
+   ],
+   "reason": "measured on BCTN: 738,724 rows but 628,790 distinct INVLITM_SEQ_ID"
+  },
+  {
+   "table": "AT_OVERPACK_DETAILS_VIEW",
+   "column": "OVPKDTL_SEQ_ID",
+   "sequence": "CNTNR_PROC_SEQ",
+   "forms": [
+    "AT4220",
+    "AT4225",
+    "AT4230"
+   ],
+   "reason": "table declares no primary key"
+  },
+  {
+   "table": "AT_OVERPACK_MASTERS_VIEW",
+   "column": "CNTNR_SEQ_ID",
+   "sequence": "CNTNR_SEQ",
+   "forms": [
+    "AT4220",
+    "AT4225",
+    "AT4230"
+   ],
+   "reason": "table declares no primary key"
+  },
+  {
+   "table": "AT_OVERPACK_MASTERS_VIEW",
+   "column": "OVRPACK_SEQ_ID",
+   "sequence": "CNTNR_PROC_SEQ",
+   "forms": [
+    "AT4220",
+    "AT4225",
+    "AT4230"
+   ],
+   "reason": "table declares no primary key"
+  }
+ ]
+}

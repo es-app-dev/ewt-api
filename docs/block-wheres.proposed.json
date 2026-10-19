@@ -1,0 +1,705 @@
+{
+ "generated": "2026-10-02T15:02:25.380Z",
+ "generator": "ewt-ui/scripts/jdapi/block-wheres.cjs",
+ "blockWheres": [
+  {
+   "name": "AT1310.COMNT",
+   "entitySet": "AT_COMMENT_INSTRUCTIONS",
+   "sql": "(COMNT_SEQ_ID = (SELECT MAX(COMNT_SEQ_ID) FROM AT_COMMENT_INSTRUCTIONS WHERE (CUST_SEQ_ID = :CUST9_CUST_SEQ_ID AND COMNTTYP_SEQ_ID = (SELECT COMNTTYP_SEQ_ID FROM AT_COMNT_INSTR_TYPES WHERE CODE = 'CUSTOMER'))))",
+   "binds": [
+    {
+     "name": "CUST9.CUST_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT1310 block COMNT. Binds: :CUST9.CUST_SEQ_ID."
+  },
+  {
+   "name": "AT1410.AT_CNTRCT_CUST_VIEW",
+   "entitySet": "AT_CNTRCT_CUST_VIEW",
+   "sql": "contract_nbr = :AT_CONTRACTS_CONTRACT_NBR",
+   "binds": [
+    {
+     "name": "AT_CONTRACTS.CONTRACT_NBR",
+     "type": "string"
+    }
+   ],
+   "note": "AT1410 block AT_CNTRCT_CUST_VIEW. Binds: :AT_CONTRACTS.CONTRACT_NBR."
+  },
+  {
+   "name": "AT1410.CLONE_PROD_SERVICES",
+   "entitySet": "AT_CONTRACT_PROD_SERVICES",
+   "sql": "cntrct_seq_id = :AT_CONTRACTS_CNTRCT_SEQ_ID and cust_seq_id = :AT_CONTRACTS_CUST_SEQ_ID",
+   "binds": [
+    {
+     "name": "AT_CONTRACTS.CNTRCT_SEQ_ID",
+     "type": "number"
+    },
+    {
+     "name": "AT_CONTRACTS.CUST_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT1410 block CLONE_PROD_SERVICES. Binds: :AT_CONTRACTS.CNTRCT_SEQ_ID, :AT_CONTRACTS.CUST_SEQ_ID."
+  },
+  {
+   "name": "AT1510.AT_CPS_VIEW",
+   "entitySet": "AT_CNPRODSERV_VIEW3",
+   "sql": "cntrct_mod_cntrct_id = get_max_mod4(cntrct_contract_nbr , :MNFST_CUST_SEQ_ID ,NVL( :MNFST_ADVNOTIF_EXPECTED_RECPT_DT, SYSDATE)) AND cnprodserv_cust_seq_id = :MNFST_CUST_SEQ_ID AND prof_seq_id = NVL( :MNFST_ES_PROF_SEQ_ID, prof_seq_id) AND disp_site_seq_id = NVL( :MNFST_DISP_SITE_SEQ_ID, disp_site_seq_id) AND NVL(subgroup_nbr, 0) = 0",
+   "binds": [
+    {
+     "name": "MNFST.CUST_SEQ_ID",
+     "type": "number"
+    },
+    {
+     "name": "MNFST.ADVNOTIF_EXPECTED_RECPT_DT",
+     "type": "date"
+    },
+    {
+     "name": "MNFST.ES_PROF_SEQ_ID",
+     "type": "number"
+    },
+    {
+     "name": "MNFST.DISP_SITE_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT1510 block AT_CPS_VIEW. Binds: :MNFST.CUST_SEQ_ID, :MNFST.ADVNOTIF_EXPECTED_RECPT_DT, :MNFST.ES_PROF_SEQ_ID, :MNFST.DISP_SITE_SEQ_ID. the form reads AT_CNPRODSERV_VIEW3@ATCORP.ENERGYSOLUTIONS.COM: query it with db=CORP (legacy, Bruce 2 Oct); the link is dropped from the clause because on CORP its target is local; calls GET_MAX_MOD4."
+  },
+  {
+   "name": "AT1510.AT_INVOICES",
+   "entitySet": "AT_INVOICES",
+   "sql": "invc_seq_id in ( select invc_seq_id from at_invoice_line_items where advnotif_seq_id = :MNFST_ADVNOTIF_SEQ_ID union select invc_seq_id from at_invoice_line_shipments where manifest_nbr in ( select manifest_nbr from at_incoming_manifests where advnotif_seq_id = :MNFST_ADVNOTIF_SEQ_ID)) and advnotif_seq_id <> 1086",
+   "binds": [
+    {
+     "name": "MNFST.ADVNOTIF_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT1510 block AT_INVOICES. Binds: :MNFST.ADVNOTIF_SEQ_ID."
+  },
+  {
+   "name": "AT1510.RNCNTNRS",
+   "entitySet": "AT_RENTAL_CNTNR_SHIPMENTS_VIEW",
+   "sql": "AT_RENTAL_CNTNR_SHIPMENTS_VIEW.PICK_UP_CUST_SEQ_ID = ( select c.cust_seq_id from at_customers c where c.customer_nbr = 396 )",
+   "binds": [],
+   "note": "AT1510 block RNCNTNRS."
+  },
+  {
+   "name": "AT1551.UNMAPPED_BARCODES",
+   "entitySet": "AT_ORDER_BARCODE_VIEW",
+   "sql": "advnotif_seq_id = :AT_INCOMING_MANIFESTS_ORD_NUM",
+   "binds": [
+    {
+     "name": "AT_INCOMING_MANIFESTS.ORD_NUM",
+     "type": "number"
+    }
+   ],
+   "note": "AT1551 block UNMAPPED_BARCODES. Binds: :AT_INCOMING_MANIFESTS.ORD_NUM."
+  },
+  {
+   "name": "AT1552.UNMAPPED_ORDERS",
+   "entitySet": "AT_BARCODE_ORDER_VIEW",
+   "sql": "cntnr_seq_id = :AT_CONTAINERS_CNTNR_SEQ_ID",
+   "binds": [
+    {
+     "name": "AT_CONTAINERS.CNTNR_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT1552 block UNMAPPED_ORDERS. Binds: :AT_CONTAINERS.CNTNR_SEQ_ID."
+  },
+  {
+   "name": "AT1710.AT_RENTAL_CNTNR_SHIPMENTS_VIEW",
+   "entitySet": "AT_RENTAL_CNTNR_SHIPMENTS_VIEW",
+   "sql": "consignee_cust_seq_id = :INV_SHIP_TO_CUST_SEQ_ID and (owned_by_cust_seq_id in (1296,3382,1202) or rented_by_cust_seq_id in (1296,3382,1202)) and ( (out_dt <= :AT$CTRL_END_DT and NVL(in_dt,:AT$CTRL_BEGIN_DT) >= :AT$CTRL_BEGIN_DT) or ( NVL(in_dt,:AT$CTRL_END_DT) >= :AT$CTRL_END_DT and NVL(out_dt,:AT$CTRL_END_DT) <= :AT$CTRL_END_DT ) )",
+   "binds": [
+    {
+     "name": "INV.SHIP_TO_CUST_SEQ_ID",
+     "type": "number"
+    },
+    {
+     "name": "AT$CTRL.END_DT",
+     "type": "date"
+    },
+    {
+     "name": "AT$CTRL.BEGIN_DT",
+     "type": "date"
+    }
+   ],
+   "note": "AT1710 block AT_RENTAL_CNTNR_SHIPMENTS_VIEW. Binds: :INV.SHIP_TO_CUST_SEQ_ID, :AT$CTRL.END_DT, :AT$CTRL.BEGIN_DT."
+  },
+  {
+   "name": "AT1710.AT_SHIP_TRANS",
+   "entitySet": "AT_SHIP_TRANS",
+   "sql": "shipment_nbr = :AT_INVOICE_LINE_SHIPMENTS_SHIPMENT_NBR",
+   "binds": [
+    {
+     "name": "AT_INVOICE_LINE_SHIPMENTS.SHIPMENT_NBR",
+     "type": "string"
+    }
+   ],
+   "note": "AT1710 block AT_SHIP_TRANS. Binds: :AT_INVOICE_LINE_SHIPMENTS.SHIPMENT_NBR."
+  },
+  {
+   "name": "AT1710.PREV_INV",
+   "entitySet": "AT_INVOICE_LINE_CNTNR",
+   "sql": "CNTNR_SEQ_ID = NVL(:AT$CTRL_PREV_CNTNR_SEQ,0) and advnotif_seq_id = :AT$CTRL_ADVNOTIF_SEQ_ID",
+   "binds": [
+    {
+     "name": "AT$CTRL.PREV_CNTNR_SEQ",
+     "type": "number"
+    },
+    {
+     "name": "AT$CTRL.ADVNOTIF_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT1710 block PREV_INV. Binds: :AT$CTRL.PREV_CNTNR_SEQ, :AT$CTRL.ADVNOTIF_SEQ_ID."
+  },
+  {
+   "name": "AT1710.SRC",
+   "entitySet": "AT_OPPORTUNITIES_VIEW",
+   "sql": "AT_OPPORTUNITIES_VIEW.CUST_SEQ_ID = :INV_CHARGE_TO_CUST_SEQ_ID and AT_OPPORTUNITIES_VIEW.PRODSERV_CD = :WKSHT_PRODSERV_CD and NVL(AT_OPPORTUNITIES_VIEW.DISP_SITE_ALIAS,' ') = nvl(:WKSHT_DISP_SITE_ALIAS,' ') and AT_OPPORTUNITIES_VIEW.ADVNOTIF_SEQ_ID = :WKSHT_ADVNOTIF_SEQ_ID and AT_OPPORTUNITIES_VIEW.INVOICED_IND = 'N'",
+   "binds": [
+    {
+     "name": "INV.CHARGE_TO_CUST_SEQ_ID",
+     "type": "number"
+    },
+    {
+     "name": "WKSHT.PRODSERV_CD",
+     "type": "string"
+    },
+    {
+     "name": "WKSHT.DISP_SITE_ALIAS",
+     "type": "string"
+    },
+    {
+     "name": "WKSHT.ADVNOTIF_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT1710 block SRC. Binds: :INV.CHARGE_TO_CUST_SEQ_ID, :WKSHT.PRODSERV_CD, :WKSHT.DISP_SITE_ALIAS, :WKSHT.ADVNOTIF_SEQ_ID."
+  },
+  {
+   "name": "AT3110.AT_ESPROFILE_EPA",
+   "entitySet": "AT_ESPROFILE_EPA",
+   "sql": "NOT EXISTS (SELECT 1 FROM at_barcode_haz_waste_codes bhwc2 WHERE bhwc2.matl_seq_id = :MATL_MATL_SEQ_ID AND bhwc2.cntnr_seq_id = :MATL_CNTNR_SEQ_ID AND bhwc2.haz_seq_id = pe.haz_seq_id)",
+   "binds": [
+    {
+     "name": "MATL.MATL_SEQ_ID",
+     "type": "number"
+    },
+    {
+     "name": "MATL.CNTNR_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT3110 block AT_ESPROFILE_EPA. Binds: :MATL.MATL_SEQ_ID, :MATL.CNTNR_SEQ_ID."
+  },
+  {
+   "name": "AT3110.AT_ESPROFILE_EPA_I",
+   "entitySet": "AT_ESPROFILE_EPA",
+   "sql": "NOT EXISTS (SELECT 1 FROM at_barcode_haz_waste_codes bhwc2 WHERE bhwc2.matl_seq_id = :MATL1_MATL_SEQ_ID AND bhwc2.cntnr_seq_id = :MATL1_CNTNR_SEQ_ID AND bhwc2.haz_seq_id = pe.haz_seq_id)",
+   "binds": [
+    {
+     "name": "MATL1.MATL_SEQ_ID",
+     "type": "number"
+    },
+    {
+     "name": "MATL1.CNTNR_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT3110 block AT_ESPROFILE_EPA_I. Binds: :MATL1.MATL_SEQ_ID, :MATL1.CNTNR_SEQ_ID."
+  },
+  {
+   "name": "AT3110.CNTNR",
+   "entitySet": "AT_CONTAINERS",
+   "sql": "CNTNR_SEQ_ID = :MATL_CNTNR_SEQ_ID",
+   "binds": [
+    {
+     "name": "MATL.CNTNR_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT3110 block CNTNR. Binds: :MATL.CNTNR_SEQ_ID."
+  },
+  {
+   "name": "AT3115.CNTNR",
+   "entitySet": "AT_CONTAINERS",
+   "sql": "cntnr_seq_id = :PARAMETER_CNTNR_SEQ_ID",
+   "binds": [
+    {
+     "name": "PARAMETER.CNTNR_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT3115 block CNTNR. Binds: :PARAMETER.CNTNR_SEQ_ID."
+  },
+  {
+   "name": "AT4151.LINER_CREATE",
+   "entitySet": "AT_CONTAINER_PROCESSES",
+   "sql": "parent_daughter_type_cd = 'PARENT' and instr(get_container_id(cntnr_seq_id),'-REM1') > 0",
+   "binds": [],
+   "note": "AT4151 block LINER_CREATE. calls GET_CONTAINER_ID."
+  },
+  {
+   "name": "AT4210.COMPACTION_MASTER",
+   "entitySet": "AT_COMPACTION_MASTERS",
+   "sql": "ALL_PARENTS_EMPTY(CNTNR_SEQ_ID)='TRUE' AND PRCTRANTYP_SEQ_ID IN (select PRCTRANTYP_SEQ_ID FROM AT_PROCESS_TRANS_TYPES where PRCTRANTYP_CD_ID like '2%')",
+   "binds": [],
+   "note": "AT4210 block COMPACTION_MASTER. calls ALL_PARENTS_EMPTY."
+  },
+  {
+   "name": "AT4211.COMPACTION_MASTER",
+   "entitySet": "AT_SHIP_COMPACTION_MASTERS",
+   "sql": "ALL_PARENTS_EMPTY(CNTNR_SEQ_ID)='TRUE' AND PRCTRANTYP_SEQ_ID IN (select PRCTRANTYP_SEQ_ID FROM AT_PROCESS_TRANS_TYPES where PRCTRANTYP_CD_ID like '2%')",
+   "binds": [],
+   "note": "AT4211 block COMPACTION_MASTER. calls ALL_PARENTS_EMPTY."
+  },
+  {
+   "name": "AT4215.COMPACTION_MASTER",
+   "entitySet": "AT_COMPACTION_MASTERS",
+   "sql": "ALL_PARENTS_EMPTY(CNTNR_SEQ_ID)='TRUE' AND PRCTRANTYP_SEQ_ID IN (select PRCTRANTYP_SEQ_ID FROM AT_PROCESS_TRANS_TYPES where PRCTRANTYP_CD_ID like '2%')",
+   "binds": [],
+   "note": "AT4215 block COMPACTION_MASTER. calls ALL_PARENTS_EMPTY."
+  },
+  {
+   "name": "AT4220.COMPACTION_MASTERS",
+   "entitySet": "AT_COMPACTION_MASTERS",
+   "sql": "not exists (select 'x' from at_process_trans_types c where c.prctrantyp_seq_id = at_compaction_masters.prctrantyp_seq_id connect by prior c.prctrantyp_seq_id = c.within_prctrantyp_seq_id start with c.prctrantyp_seq_id = (select prctrantyp_seq_id from at_incinerate_process_view))",
+   "binds": [],
+   "note": "AT4220 block COMPACTION_MASTERS. CONNECT BY, inside a subquery."
+  },
+  {
+   "name": "AT4220.OVERPACK_MASTER",
+   "entitySet": "AT_OVERPACK_MASTERS_VIEW",
+   "sql": "nvl(compacted_ind,'Y') = 'Y' AND PARENT_DAUGHTER_TYPE_CD = 'PARENT'",
+   "binds": [],
+   "note": "AT4220 block OVERPACK_MASTER."
+  },
+  {
+   "name": "AT4225.COMPACTION_MASTERS",
+   "entitySet": "AT_SHIP_COMPACTION_MASTERS",
+   "sql": "not exists (select 'x' from at_process_trans_types c where c.prctrantyp_seq_id = at_ship_compaction_masters.prctrantyp_seq_id connect by prior c.prctrantyp_seq_id = c.within_prctrantyp_seq_id start with c.prctrantyp_seq_id = (select prctrantyp_seq_id from at_incinerate_process_view))",
+   "binds": [],
+   "note": "AT4225 block COMPACTION_MASTERS. CONNECT BY, inside a subquery."
+  },
+  {
+   "name": "AT4225.OVERPACK_MASTER",
+   "entitySet": "AT_OVERPACK_MASTERS_VIEW",
+   "sql": "nvl(compacted_ind,'Y') = 'Y' AND PARENT_DAUGHTER_TYPE_CD = 'PARENT'",
+   "binds": [],
+   "note": "AT4225 block OVERPACK_MASTER."
+  },
+  {
+   "name": "AT4230.CONTAINERS",
+   "entitySet": "AT_CONTAINERS",
+   "sql": "next_prctrantyp_seq_id in (select prctrantyp_seq_id from at_process_trans_types where prctrantyp_cd_id like '9%') and cntnr_stat_cd_id='IN USE' and cntnr_seq_id not in (select cntnr_seq_id from at_container_processes where prctrantyp_seq_id = 790 and parent_daughter_type_cd = 'PARENT') and cntnr_typ_seq_id not in (401,402,403)",
+   "binds": [],
+   "note": "AT4230 block CONTAINERS."
+  },
+  {
+   "name": "AT4230.OVERPACK_MASTER",
+   "entitySet": "AT_OVERPACK_MASTERS_VIEW",
+   "sql": "NVL(COMPACTED_IND,'Y') = 'N'",
+   "binds": [],
+   "note": "AT4230 block OVERPACK_MASTER."
+  },
+  {
+   "name": "AT5160.CNTNR1",
+   "entitySet": "AT_CONTAINERS",
+   "sql": "AT_CONTAINERS.CNTNR_STAT_CD_ID IN ('AJ','WR','HOLD','TRU','RA','PERMIT', 'SITE CO-MINGLE','IN USE','ACTIVITY','LAB','EMPTY') AND CNTNR_SEQ_ID NOT IN (SELECT CNTNR_SEQ_ID FROM AT_COMPACTION_MASTERS WHERE AT_CONTAINERS.CNTNR_SEQ_ID=CNTNR_SEQ_ID)",
+   "binds": [],
+   "note": "AT5160 block CNTNR1."
+  },
+  {
+   "name": "AT5161.AT_SHIPMENTS",
+   "entitySet": "AT_SHIPMENTS",
+   "sql": "received_dt is not null and shipment_nbr in (select shipment_nbr from at_incoming_manifests where advnotif_seq_id in (select advnotif_seq_id from at_materials where cntnr_seq_id in (select cntnr_seq_id from at_containers where cntnr_stat_cd_id = 'LAB')))",
+   "binds": [],
+   "note": "AT5161 block AT_SHIPMENTS."
+  },
+  {
+   "name": "AT5161.CNTNR1",
+   "entitySet": "AT_CONTAINERS",
+   "sql": "AT_CONTAINERS.CNTNR_STAT_CD_ID IN ('LAB') AND AT_CONTAINERS.CNTNR_SEQ_ID IN (SELECT CNTNR_SEQ_ID FROM AT_MATERIALS WHERE ADVNOTIF_SEQ_ID IN (SELECT ADVNOTIF_SEQ_ID FROM AT_INCOMING_MANIFESTS WHERE SHIPMENT_NBR = :AT_SHIPMENTS_SHIPMENT_NBR ) )",
+   "binds": [
+    {
+     "name": "AT_SHIPMENTS.SHIPMENT_NBR",
+     "type": "string"
+    }
+   ],
+   "note": "AT5161 block CNTNR1. Binds: :AT_SHIPMENTS.SHIPMENT_NBR."
+  },
+  {
+   "name": "AT5170.AT_CNTNR_LAB_RESULTS_VIEW",
+   "entitySet": "AT_CNTNR_LAB_RESULTS_VIEW",
+   "sql": "cntnr_seq_id = :CNTNR_CNTNR_SEQ_ID",
+   "binds": [
+    {
+     "name": "CNTNR.CNTNR_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT5170 block AT_CNTNR_LAB_RESULTS_VIEW. Binds: :CNTNR.CNTNR_SEQ_ID."
+  },
+  {
+   "name": "AT5170.CNTNR",
+   "entitySet": "AT_CONTAINERS",
+   "sql": "(:CNTNR_CONTAINER_ID IS NOT NULL AND NVL(TERMINAL_IND,'N') != 'Y')",
+   "binds": [
+    {
+     "name": "CNTNR.CONTAINER_ID",
+     "type": "string"
+    }
+   ],
+   "note": "AT5170 block CNTNR. Binds: :CNTNR.CONTAINER_ID. :CNTNR.CONTAINER_ID is the block's own item: at query time, the value typed as criteria."
+  },
+  {
+   "name": "AT5311.LABANLSMPL5",
+   "entitySet": "AT_LAB_ANALYSIS_SAMPLES",
+   "sql": "labtyp_seq_id = (select labtyp_seq_id from at_lab_analysis_types where code = 'GSPEC')",
+   "binds": [],
+   "note": "AT5311 block LABANLSMPL5."
+  },
+  {
+   "name": "AT5311.LABSAMPLE2",
+   "entitySet": "AT_LAB_SAMPLES",
+   "sql": "labsample_seq_id in (select distinct smpls.labsample_seq_id from at_lab_samples smpls, at_lab_analysis_samples smpl, at_lab_analysis_types typs where smpls.labsample_seq_id = smpl.labsample_seq_id and smpl.labtyp_seq_id = typs.labtyp_seq_id and typs.code = 'GSPEC')",
+   "binds": [],
+   "note": "AT5311 block LABSAMPLE2."
+  },
+  {
+   "name": "AT5312.AT_ESPROFILE_SAMP_FREQ",
+   "entitySet": "AT_ESPROFILE_SAMP_FREQ",
+   "sql": "es_prof_seq_id = :LABSAMPLE2_ES_PROF_SEQ_ID",
+   "binds": [
+    {
+     "name": "LABSAMPLE2.ES_PROF_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT5312 block AT_ESPROFILE_SAMP_FREQ. Binds: :LABSAMPLE2.ES_PROF_SEQ_ID."
+  },
+  {
+   "name": "AT5312.COMPOSITE",
+   "entitySet": "AT_LAB_SAMPLE_CONTAINERS",
+   "sql": "LABSAMPLE_SEQ_ID = :LABSAMPLE2_LABSAMPLE_SEQ_ID",
+   "binds": [
+    {
+     "name": "LABSAMPLE2.LABSAMPLE_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT5312 block COMPOSITE. Binds: :LABSAMPLE2.LABSAMPLE_SEQ_ID."
+  },
+  {
+   "name": "AT5316.LABANLSMPL5",
+   "entitySet": "AT_LAB_ANALYSIS_SAMPLES",
+   "sql": "labtyp_seq_id = (select labtyp_seq_id from at_lab_analysis_types where code = 'NIA')",
+   "binds": [],
+   "note": "AT5316 block LABANLSMPL5."
+  },
+  {
+   "name": "AT5316.LABSAMPLE2",
+   "entitySet": "AT_LAB_SAMPLES",
+   "sql": "labsample_seq_id in (select distinct smpls.labsample_seq_id from at_lab_samples smpls, at_lab_analysis_samples smpl, at_lab_analysis_types typs where smpls.labsample_seq_id = smpl.labsample_seq_id and smpl.labtyp_seq_id = typs.labtyp_seq_id and nvl(typs.code,'NONE') = 'NIA')",
+   "binds": [],
+   "note": "AT5316 block LABSAMPLE2."
+  },
+  {
+   "name": "AT5510.AT_OUTBOUND_SHIPMENTS",
+   "entitySet": "AT_OUTBOUND_SHIPMENTS",
+   "sql": "SHIPMENT_NBR IN ( SELECT SHIPMENT_NBR FROM AT_SHIPMENTS WHERE SUBSTR(SHIPMENT_TYPE_CD,1,8) <> 'TRANSFER')",
+   "binds": [],
+   "note": "AT5510 block AT_OUTBOUND_SHIPMENTS."
+  },
+  {
+   "name": "AT5511.OUTSHIPMT",
+   "entitySet": "AT_OUTBOUND_SHIPMENTS",
+   "sql": "SHIPMENT_NBR IN ( SELECT SHIPMENT_NBR FROM AT_SHIPMENTS WHERE SUBSTR(SHIPMENT_TYPE_CD,1,8) = 'TRANSFER')",
+   "binds": [],
+   "note": "AT5511 block OUTSHIPMT."
+  },
+  {
+   "name": "AT5514.OUTCNTNR",
+   "entitySet": "AT_CONTAINERS",
+   "sql": "NVL(terminal_process_ind,'N') = 'Y' and get_current_location_seq(cntnr_seq_id) = :LANDFILL_HEADERS_BEGIN_STORLOC_SEQ_ID",
+   "binds": [
+    {
+     "name": "LANDFILL_HEADERS.BEGIN_STORLOC_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT5514 block OUTCNTNR. Binds: :LANDFILL_HEADERS.BEGIN_STORLOC_SEQ_ID. calls GET_CURRENT_LOCATION_SEQ."
+  },
+  {
+   "name": "AT5520.OUTSHIPMT",
+   "entitySet": "AT_OUTBOUND_SHIPMENTS",
+   "sql": "shipment_nbr in ( select shipment_nbr from at_shipments where (to_char(shipment_dt,'RRRR') = to_char(sysdate,'RRRR') or to_char(shipment_dt,'RRRR') = to_char(sysdate-180,'RRRR'))) and disp_SITE_SEQ_ID IN (select disp_site_seq_id from at_disp_site_acks)",
+   "binds": [],
+   "note": "AT5520 block OUTSHIPMT."
+  },
+  {
+   "name": "AT5521.OUTSHIPMT",
+   "entitySet": "AT_OUTBOUND_SHIPMENTS",
+   "sql": "DISP_SITE_SEQ_ID = 2 and shipment_nbr in (select shipment_nbr from at_shipments where shipment_dt is not null)",
+   "binds": [],
+   "note": "AT5521 block OUTSHIPMT."
+  },
+  {
+   "name": "AT9999.AT_CUST_DOC_TRACKED_ITEMS",
+   "entitySet": "AT_CUST_DOC_TRACKED_ITEMS",
+   "sql": "cntnr_seq_id = :AT$CTRL_CNTNR_SEQ",
+   "binds": [
+    {
+     "name": "AT$CTRL.CNTNR_SEQ",
+     "type": "number"
+    }
+   ],
+   "note": "AT9999 block AT_CUST_DOC_TRACKED_ITEMS. Binds: :AT$CTRL.CNTNR_SEQ."
+  },
+  {
+   "name": "AT9999.AT_CUST_DOC_TRACKED_ITEMS_N",
+   "entitySet": "AT_CUST_DOC_TRACKED_ITEMS_N",
+   "sql": "cntnr_seq_id in (select cntnr_seq_id from at_container_processes where parent_cntnr_seq_id = :AT$CTRL_CNTNR_SEQ_N) and cust_provided_ind = 'N' and matl_seq_id = :AT$CTRL_MATL_SEQ_N",
+   "binds": [
+    {
+     "name": "AT$CTRL.CNTNR_SEQ_N",
+     "type": "number"
+    },
+    {
+     "name": "AT$CTRL.MATL_SEQ_N",
+     "type": "number"
+    }
+   ],
+   "note": "AT9999 block AT_CUST_DOC_TRACKED_ITEMS_N. Binds: :AT$CTRL.CNTNR_SEQ_N, :AT$CTRL.MATL_SEQ_N."
+  },
+  {
+   "name": "AT9999.DAUGHTERS",
+   "entitySet": "AT_CONTAINER_PROCESSES",
+   "sql": "PARENT_CNTNR_SEQ_ID =:AT_ANCHOR_RETRO_CNTNR_SEQ_ID",
+   "binds": [
+    {
+     "name": "AT_ANCHOR_RETRO.CNTNR_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "AT9999 block DAUGHTERS. Binds: :AT_ANCHOR_RETRO.CNTNR_SEQ_ID."
+  },
+  {
+   "name": "WB1000.SEGORDLITM",
+   "entitySet": "AT_SEG_ORDER_LINE_ITEMS",
+   "sql": "ADVNOTIF_SEQ_ID = :MNFST_ADVNOTIF_SEQ_ID",
+   "binds": [
+    {
+     "name": "MNFST.ADVNOTIF_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "WB1000 block SEGORDLITM. Binds: :MNFST.ADVNOTIF_SEQ_ID."
+  },
+  {
+   "name": "WB1000.WB_CONT_NUC_VIEW",
+   "entitySet": "WB_CONT_NUC_VIEW",
+   "sql": "trkditm_cd not in (select code from at_tracked_items)",
+   "binds": [],
+   "note": "WB1000 block WB_CONT_NUC_VIEW."
+  },
+  {
+   "name": "WB1100.DOUBLE_CONTAINMENT",
+   "entitySet": "WB_CONTAINERS",
+   "sql": "CNTNR_SEQ_ID IN (SELECT CNTNR_SEQ_ID FROM WB_MATERIALS WHERE ADVNOTIF_SEQ_ID = :WB_INCOMING_MANIFESTS_ADVNOTIF_SEQ_ID AND PARENT_MATL_SEQ_ID IS NULL)",
+   "binds": [
+    {
+     "name": "WB_INCOMING_MANIFESTS.ADVNOTIF_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "WB1100 block DOUBLE_CONTAINMENT. Binds: :WB_INCOMING_MANIFESTS.ADVNOTIF_SEQ_ID."
+  },
+  {
+   "name": "WB2002.AT_COMPACTION_MASTERS",
+   "entitySet": "AT_COMPACTION_MASTERS",
+   "sql": "not exists (select 'x' from at_process_trans_types c where c.prctrantyp_seq_id = at_compaction_masters.prctrantyp_seq_id connect by prior c.prctrantyp_seq_id = c.within_prctrantyp_seq_id start with c.prctrantyp_seq_id = (select prctrantyp_seq_id from at_incinerate_process_view)) and NVL(hold_ind,'N') = 'N'",
+   "binds": [],
+   "note": "WB2002 block AT_COMPACTION_MASTERS. CONNECT BY, inside a subquery."
+  },
+  {
+   "name": "WB2002.AT_COMPACTION_MASTERS2",
+   "entitySet": "AT_COMPACTION_MASTERS",
+   "sql": "not exists (select 'x' from at_process_trans_types c where c.prctrantyp_seq_id = at_compaction_masters.prctrantyp_seq_id connect by prior c.prctrantyp_seq_id = c.within_prctrantyp_seq_id start with c.prctrantyp_seq_id = (select prctrantyp_seq_id from at_incinerate_process_view)) and NVL(hold_ind,'N') = 'Y'",
+   "binds": [],
+   "note": "WB2002 block AT_COMPACTION_MASTERS2. CONNECT BY, inside a subquery."
+  },
+  {
+   "name": "WB2002.AT_CONTAINER_PROCESSES",
+   "entitySet": "AT_CONTAINER_PROCESSES",
+   "sql": "PRCTRANTYP_SEQ_ID = 790 AND CNTNR_SEQ_ID IS NOT NULL AND PARENT_CNTNR_SEQ_ID = :AT_OVERPACKS_CNTNR_SEQ_ID",
+   "binds": [
+    {
+     "name": "AT_OVERPACKS.CNTNR_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "WB2002 block AT_CONTAINER_PROCESSES. Binds: :AT_OVERPACKS.CNTNR_SEQ_ID."
+  },
+  {
+   "name": "WB2002.AT_OVERPACKS",
+   "entitySet": "AT_OVERPACKS",
+   "sql": "rank > 0 and NVL(full_ind,'N') = 'N'",
+   "binds": [],
+   "note": "WB2002 block AT_OVERPACKS."
+  },
+  {
+   "name": "WB2003.AT_CONTAINER_PROCESSES",
+   "entitySet": "AT_CONTAINER_PROCESSES",
+   "sql": "PRCTRANTYP_SEQ_ID = 790 AND CNTNR_SEQ_ID IS NOT NULL AND PARENT_CNTNR_SEQ_ID = :OP_CNTNR_SEQ_ID",
+   "binds": [
+    {
+     "name": "OP.CNTNR_SEQ_ID",
+     "type": "number"
+    }
+   ],
+   "note": "WB2003 block AT_CONTAINER_PROCESSES. Binds: :OP.CNTNR_SEQ_ID."
+  },
+  {
+   "name": "WB3100.LOAD_IBOX",
+   "entitySet": "WB_IBOX_CONTAINERS",
+   "sql": "INCINERATION_STATUS='ON-LINE' AND SORT_STATUS='ON-LINE' AND INCINERATOR_ID = :AT$CTRL_INCINERATOR_ID",
+   "binds": [
+    {
+     "name": "AT$CTRL.INCINERATOR_ID",
+     "type": "string"
+    }
+   ],
+   "note": "WB3100 block LOAD_IBOX. Binds: :AT$CTRL.INCINERATOR_ID."
+  },
+  {
+   "name": "WB3200.ACTIVITY_BURNED",
+   "entitySet": "WB_IBOX_CONTAINERS",
+   "sql": "INCINERATION_STATUS='BURN' AND SORT_STATUS='EMPTY' AND INCINERATOR_ID = :BURN_INCINERATOR_INCIN",
+   "binds": [
+    {
+     "name": "BURN_INCINERATOR.INCIN",
+     "type": "string"
+    }
+   ],
+   "note": "WB3200 block ACTIVITY_BURNED. Binds: :BURN_INCINERATOR.INCIN."
+  },
+  {
+   "name": "WB3200.ASHBOX_ACTIVITY",
+   "entitySet": "WB_IBOX_CONTAINERS",
+   "sql": "SORT_STATUS='EMPTY' AND INCINERATION_STATUS='BURN' AND INCINERATOR_ID = :ASHBOX_INCINERATOR_INCIN_ASHBOX",
+   "binds": [
+    {
+     "name": "ASHBOX_INCINERATOR.INCIN_ASHBOX",
+     "type": "string"
+    }
+   ],
+   "note": "WB3200 block ASHBOX_ACTIVITY. Binds: :ASHBOX_INCINERATOR.INCIN_ASHBOX."
+  },
+  {
+   "name": "WB3200.BURN_ACTIVITY_VIEW",
+   "entitySet": "WB_IBOX_CONTAINERS",
+   "sql": "SORT_STATUS = 'ON-LINE' AND INCINERATION_STATUS = 'ON-LINE' AND INCINERATOR_ID = :BURN_INCINERATOR_INCIN",
+   "binds": [
+    {
+     "name": "BURN_INCINERATOR.INCIN",
+     "type": "string"
+    }
+   ],
+   "note": "WB3200 block BURN_ACTIVITY_VIEW. Binds: :BURN_INCINERATOR.INCIN."
+  },
+  {
+   "name": "WB3200.BURNED",
+   "entitySet": "WB_IBOX_CONTAINERS",
+   "sql": "SORT_STATUS='EMPTY' AND INCINERATION_STATUS='ASH' AND INCINERATOR_ID = :ASHBOX_INCINERATOR_INCIN_ASHBOX",
+   "binds": [
+    {
+     "name": "ASHBOX_INCINERATOR.INCIN_ASHBOX",
+     "type": "string"
+    }
+   ],
+   "note": "WB3200 block BURNED. Binds: :ASHBOX_INCINERATOR.INCIN_ASHBOX."
+  },
+  {
+   "name": "WB3200.LOAD_IBOX",
+   "entitySet": "WB_IBOX_CONTAINERS",
+   "sql": "INCINERATION_STATUS = 'ON-LINE' AND SORT_STATUS='ON-LINE' AND INCINERATOR_ID = :AT$CTRL_INCINERATOR_ID",
+   "binds": [
+    {
+     "name": "AT$CTRL.INCINERATOR_ID",
+     "type": "string"
+    }
+   ],
+   "note": "WB3200 block LOAD_IBOX. Binds: :AT$CTRL.INCINERATOR_ID."
+  },
+  {
+   "name": "WB3200.SUMMARY",
+   "entitySet": "WB_IBOX_CONTAINERS",
+   "sql": "SORT_STATUS='EMPTY' AND INCINERATION_STATUS='ASH' AND INCINERATOR_ID = :AT$CTRL_INCIN_SUMMARY",
+   "binds": [
+    {
+     "name": "AT$CTRL.INCIN_SUMMARY",
+     "type": "string"
+    }
+   ],
+   "note": "WB3200 block SUMMARY. Binds: :AT$CTRL.INCIN_SUMMARY."
+  },
+  {
+   "name": "WB3200.WB_ASHDRUM1",
+   "entitySet": "WB_ASHDRUM",
+   "sql": "ASHDRUM_SEQ_ID = (SELECT MIN(ASHDRUM_SEQ_ID) FROM WB_ASHDRUM WHERE ACTIVE_INDICATOR='Y' AND INCINERATOR_ID=:AT$CTRL_INCINERATOR_ID)",
+   "binds": [
+    {
+     "name": "AT$CTRL.INCINERATOR_ID",
+     "type": "string"
+    }
+   ],
+   "note": "WB3200 block WB_ASHDRUM1. Binds: :AT$CTRL.INCINERATOR_ID."
+  },
+  {
+   "name": "WB3200.WB_ASHDRUM2",
+   "entitySet": "WB_ASHDRUM",
+   "sql": "ASHDRUM_SEQ_ID = (SELECT MAX(ASHDRUM_SEQ_ID) FROM WB_ASHDRUM WHERE ACTIVE_INDICATOR='Y' AND INCINERATOR_ID=:AT$CTRL_INCINERATOR_ID)",
+   "binds": [
+    {
+     "name": "AT$CTRL.INCINERATOR_ID",
+     "type": "string"
+    }
+   ],
+   "note": "WB3200 block WB_ASHDRUM2. Binds: :AT$CTRL.INCINERATOR_ID."
+  },
+  {
+   "name": "WB4000.OPEN_PARENTS",
+   "entitySet": "WB_QTB_CONTAINERS",
+   "sql": "NVL(PARENT_EMPTY_IND,'N') = 'N'",
+   "binds": [],
+   "note": "WB4000 block OPEN_PARENTS."
+  },
+  {
+   "name": "WB4000.OPEN_QTB",
+   "entitySet": "WB_QTB_CONTAINERS",
+   "sql": "NVL(QTB_CLOSED_IND,'S') = 'N'",
+   "binds": [],
+   "note": "WB4000 block OPEN_QTB."
+  },
+  {
+   "name": "WB4000.WB_INCOMING_MANIFESTS",
+   "entitySet": "AT_INCOMING_MANIFESTS",
+   "sql": "MNFSTSTAT_CD_ID = 'QC RELEASE' AND ADVNOTIF_SEQ_ID = NO_MANIFEST_DAUGHTERS(ADVNOTIF_SEQ_ID)",
+   "binds": [],
+   "note": "WB4000 block WB_INCOMING_MANIFESTS. calls NO_MANIFEST_DAUGHTERS."
+  },
+  {
+   "name": "WB4100.WB_QTB_CONTAINERS_DAU",
+   "entitySet": "WB_QTB_CONTAINERS",
+   "sql": "NVL(full_wgt, 0) > 0",
+   "binds": [],
+   "note": "WB4100 block WB_QTB_CONTAINERS_DAU."
+  }
+ ]
+}

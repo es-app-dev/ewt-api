@@ -1,0 +1,390 @@
+{
+ "note": "Hand-added $expand relationships, mostly joins onto views that no foreign key expresses. Pulled from a running server with scripts/pull-live-relationships.py. These survive regeneration; the generated ones do not survive being edited here.",
+ "count": 48,
+ "relationships": [
+  {
+   "name": "SegStaff",
+   "fromTable": "AT_ADDRESSES",
+   "fromColumn": "SEG_STAFF_SEQ_ID",
+   "toTable": "AT_SEG_STAFF",
+   "toColumn": "SEG_STF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Containers",
+   "fromTable": "AT_BARCODE_CONTENTS_VIEW",
+   "fromColumn": "CNTNR_SEQ_ID",
+   "toTable": "AT_CONTAINERS",
+   "toColumn": "CNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Materials",
+   "fromTable": "AT_BARCODE_HAZ_WASTE_CODES",
+   "fromColumn": "MATL_SEQ_ID",
+   "toTable": "AT_MATERIALS",
+   "toColumn": "MATL_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Materials",
+   "fromTable": "AT_BARCODE_UHC_CODES",
+   "fromColumn": "MATL_SEQ_ID",
+   "toTable": "AT_MATERIALS",
+   "toColumn": "MATL_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "BatchMaterialTypes",
+   "fromTable": "AT_BATCH_DAUGHTERS",
+   "fromColumn": "BATCH_SEQ_ID",
+   "toTable": "AT_BATCH_MATERIAL_TYPES",
+   "toColumn": "BATCH_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "BatchMaterialTypes2",
+   "fromTable": "AT_BATCH_DAUGHTERS",
+   "fromColumn": "CNTNR_SEQ_ID",
+   "toTable": "AT_BATCH_MATERIAL_TYPES",
+   "toColumn": "CNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Shipments",
+   "fromTable": "AT_CARRIERS",
+   "fromColumn": "CARRIER_SEQ_ID",
+   "toTable": "AT_SHIPMENTS",
+   "toColumn": "CARRIER_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "AssayView",
+   "fromTable": "AT_CONTAINERS",
+   "fromColumn": "CNTNR_SEQ_ID",
+   "toTable": "AT_ASSAY_VIEW",
+   "toColumn": "CNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "ContainerActivitySumView",
+   "fromTable": "AT_CONTAINERS",
+   "fromColumn": "CNTNR_SEQ_ID",
+   "toTable": "AT_CONTAINER_ACTIVITY_SUM_VIEW",
+   "toColumn": "CNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Containers",
+   "fromTable": "AT_CONTAINER_NOTES_VIEW",
+   "fromColumn": "CNTNR_SEQ_ID",
+   "toTable": "AT_CONTAINERS",
+   "toColumn": "CNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "BatchParentMatlTypes",
+   "fromTable": "AT_CONTAINER_PROCESSES",
+   "fromColumn": "BATCH_SEQ_ID",
+   "toTable": "AT_BATCH_PARENT_MATL_TYPES",
+   "toColumn": "BATCH_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "BatchParentMatlTypes2",
+   "fromTable": "AT_CONTAINER_PROCESSES",
+   "fromColumn": "CNTNR_SEQ_ID",
+   "toTable": "AT_BATCH_PARENT_MATL_TYPES",
+   "toColumn": "PARENT_CNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Containers",
+   "fromTable": "AT_CONTAINER_STATUS",
+   "fromColumn": "CNTNRSTAT_CD_ID",
+   "toTable": "AT_CONTAINERS",
+   "toColumn": "CNTNR_STAT_CD_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Esprofiles",
+   "fromTable": "AT_CP_PROF_EE_REVIEW",
+   "fromColumn": "ES_PROF_SEQ_ID",
+   "toTable": "AT_ESPROFILES",
+   "toColumn": "ES_PROF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Esprofiles",
+   "fromTable": "AT_CP_PROF_EE_REVIEW_NON_RCRA",
+   "fromColumn": "ES_PROF_SEQ_ID",
+   "toTable": "AT_ESPROFILES",
+   "toColumn": "ES_PROF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Esprofiles",
+   "fromTable": "AT_CP_PROF_EE_REVIEW_RCRA",
+   "fromColumn": "ES_PROF_SEQ_ID",
+   "toTable": "AT_ESPROFILES",
+   "toColumn": "ES_PROF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Esprofiles",
+   "fromTable": "AT_CP_PROF_IH_REVIEW",
+   "fromColumn": "ES_PROF_SEQ_ID",
+   "toTable": "AT_ESPROFILES",
+   "toColumn": "ES_PROF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Esprofiles",
+   "fromTable": "AT_CP_PROF_OPS_REVIEW",
+   "fromColumn": "ES_PROF_SEQ_ID",
+   "toTable": "AT_ESPROFILES",
+   "toColumn": "ES_PROF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Esprofiles",
+   "fromTable": "AT_CP_PROF_RSO_REVIEW",
+   "fromColumn": "ES_PROF_SEQ_ID",
+   "toTable": "AT_ESPROFILES",
+   "toColumn": "ES_PROF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Esprofiles",
+   "fromTable": "AT_CP_PROF_TS_REVIEW",
+   "fromColumn": "ES_PROF_SEQ_ID",
+   "toTable": "AT_ESPROFILES",
+   "toColumn": "ES_PROF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "CustomerFacilities",
+   "fromTable": "AT_CUSTOMER_SITES",
+   "fromColumn": "CUST_SEQ_ID",
+   "toTable": "AT_CUSTOMER_FACILITIES",
+   "toColumn": "CUST_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "CustomerFacilities2",
+   "fromTable": "AT_CUSTOMER_SITES",
+   "fromColumn": "CUST_SITE_CD_ID",
+   "toTable": "AT_CUSTOMER_FACILITIES",
+   "toColumn": "CUST_SITE_CD_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "DispSiteConstraints",
+   "fromTable": "AT_DISP_SITES",
+   "fromColumn": "DISP_SITE_SEQ_ID",
+   "toTable": "AT_DISP_SITE_CONSTRAINTS",
+   "toColumn": "DISP_SITE_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "LandfillProfiles",
+   "fromTable": "AT_DUMPLISTS",
+   "fromColumn": "LANDFILL_SITE_SEQ_ID",
+   "toTable": "AT_LANDFILL_PROFILES",
+   "toColumn": "LANDFILL_SITE_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "Customer",
+   "fromTable": "AT_INCOMING_MANIFESTS",
+   "fromColumn": "CUST_SEQ_ID",
+   "toTable": "AT_CUSTOMERS",
+   "toColumn": "CUST_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "EsProfile",
+   "fromTable": "AT_INCOMING_MANIFESTS",
+   "fromColumn": "ES_PROF_SEQ_ID",
+   "toTable": "AT_ESPROFILES",
+   "toColumn": "ES_PROF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "EsprofileEpa",
+   "fromTable": "AT_INCOMING_MANIFESTS",
+   "fromColumn": "ES_PROF_SEQ_ID",
+   "toTable": "AT_ESPROFILE_EPA",
+   "toColumn": "ES_PROF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "AssayTrackedItems",
+   "fromTable": "AT_LAB_SAMPLES",
+   "fromColumn": "CNTNR_SEQ_ID",
+   "toTable": "AT_ASSAY_TRACKED_ITEMS",
+   "toColumn": "CNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "LabAnalysisSamples",
+   "fromTable": "AT_LAB_SAMPLES",
+   "fromColumn": "LABSAMPLE_SEQ_ID",
+   "toTable": "AT_LAB_ANALYSIS_SAMPLES",
+   "toColumn": "LABSAMPLE_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "LabSampleContainers",
+   "fromTable": "AT_LAB_SAMPLES",
+   "fromColumn": "LABSAMPLE_SEQ_ID",
+   "toTable": "AT_LAB_SAMPLE_CONTAINERS",
+   "toColumn": "LABSAMPLE_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "BarcodeHazWasteCodes",
+   "fromTable": "AT_MATERIALS",
+   "fromColumn": "MATL_SEQ_ID",
+   "toTable": "AT_BARCODE_HAZ_WASTE_CODES",
+   "toColumn": "MATL_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "BarcodeUhcCodes",
+   "fromTable": "AT_MATERIALS",
+   "fromColumn": "MATL_SEQ_ID",
+   "toTable": "AT_BARCODE_UHC_CODES",
+   "toColumn": "MATL_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "IncomingManifests",
+   "fromTable": "AT_ORDER_OOWAGS",
+   "fromColumn": "ADVNOTIF_SEQ_ID",
+   "toTable": "AT_INCOMING_MANIFESTS",
+   "toColumn": "ADVNOTIF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "ContainerProcesses",
+   "fromTable": "AT_OVERPACKS",
+   "fromColumn": "CNTNR_SEQ_ID",
+   "toTable": "AT_CONTAINER_PROCESSES",
+   "toColumn": "PARENT_CNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "OverfillDetailsView",
+   "fromTable": "AT_OVERPACK_MASTERS_VIEW",
+   "fromColumn": "CNTNR_SEQ_ID",
+   "toTable": "AT_OVERFILL_DETAILS_VIEW",
+   "toColumn": "CNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "OverpackDetailsView",
+   "fromTable": "AT_OVERPACK_MASTERS_VIEW",
+   "fromColumn": "CNTNR_SEQ_ID",
+   "toTable": "AT_OVERPACK_DETAILS_VIEW",
+   "toColumn": "PARENT_CNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "PriceSheetLineItems",
+   "fromTable": "AT_PRCSHTCAT_VIEW",
+   "fromColumn": "PRODCAT_SEQ_ID",
+   "toTable": "AT_PRICE_SHEET_LINE_ITEMS",
+   "toColumn": "PRODSERV_PRODCAT_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "PriceSheetLineItems2",
+   "fromTable": "AT_PRCSHTCAT_VIEW",
+   "fromColumn": "PRCSHT_SEQ_ID",
+   "toTable": "AT_PRICE_SHEET_LINE_ITEMS",
+   "toColumn": "PRCSHT_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "PrcshtcatView",
+   "fromTable": "AT_PRICE_SHEETS",
+   "fromColumn": "PRCSHT_SEQ_ID",
+   "toTable": "AT_PRCSHTCAT_VIEW",
+   "toColumn": "PRCSHT_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "RentalCntnrShipmentView5",
+   "fromTable": "AT_RENTAL_CONTAINERS",
+   "fromColumn": "RNCNTNR_SEQ_ID",
+   "toTable": "AT_RENTAL_CNTNR_SHIPMENT_VIEW5",
+   "toColumn": "RNCNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "RentalContainerOrders",
+   "fromTable": "AT_RENTAL_CONTAINERS",
+   "fromColumn": "RNCNTNR_SEQ_ID",
+   "toTable": "AT_RENTAL_CONTAINER_ORDERS",
+   "toColumn": "RNCNTNR_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "RentalCntnrShipmentsView",
+   "fromTable": "AT_SEG_ORDER_LINE_ITEMS",
+   "fromColumn": "SEGORDLITM_SEQ_ID",
+   "toTable": "AT_RENTAL_CNTNR_SHIPMENTS_VIEW",
+   "toColumn": "SEGORDLITM_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "SegStaff",
+   "fromTable": "AT_TELECOM_ADDRESSES",
+   "fromColumn": "SEG_STF_SEQ_ID",
+   "toTable": "AT_SEG_STAFF",
+   "toColumn": "SEG_STF_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "IboxView",
+   "fromTable": "WB_ASHDRUM",
+   "fromColumn": "ASHDRUM_SEQ_ID",
+   "toTable": "WB_IBOX_VIEW",
+   "toColumn": "ASHDRUM_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "IboxDetails",
+   "fromTable": "WB_BATCH_HEADERS",
+   "fromColumn": "BATCH_SEQ_ID",
+   "toTable": "WB_IBOX_DETAILS",
+   "toColumn": "BATCH_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "IboxContainers",
+   "fromTable": "WB_IBOX_CONTENTS",
+   "fromColumn": "IBOX_SEQ_ID",
+   "toTable": "WB_IBOX_CONTAINERS",
+   "toColumn": "IBOX_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "CustDocTrackedItems",
+   "fromTable": "WB_MATERIALS",
+   "fromColumn": "MATL_SEQ_ID",
+   "toTable": "WB_CUST_DOC_TRACKED_ITEMS",
+   "toColumn": "MATL_SEQ_ID",
+   "type": "many-to-one"
+  },
+  {
+   "name": "MaterialToMaterialTypes",
+   "fromTable": "WB_MATERIALS",
+   "fromColumn": "MATL_SEQ_ID",
+   "toTable": "WB_MATERIAL_TO_MATERIAL_TYPES",
+   "toColumn": "MATL_SEQ_ID",
+   "type": "many-to-one"
+  }
+ ]
+}

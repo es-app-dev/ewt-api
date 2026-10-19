@@ -1,0 +1,46 @@
+{
+  "_comment": [
+    "The WHERE clauses the legacy Forms blocks apply to every query of the block, for the",
+    "blocks whose clause $filter cannot express. A request names one: ?where=AT5521.OUTSHIPMT.",
+    "The text never comes from the client.",
+    "",
+    "Reviewed and placed by hand, like relationships.json. Nothing writes this at runtime.",
+    "",
+    "Each entry:",
+    "  name       form.BLOCK, as the request names it. Unique.",
+    "  entitySet  the table the block queries. The name is valid against this table only.",
+    "  sql        the predicate as the form wrote it. No semicolon, no comment, balanced parens.",
+    "  binds      values the screen supplies. Write :NAME in the sql with dots turned to",
+    "             underscores, so the Forms name MATL.CNTNR_SEQ_ID is :MATL_CNTNR_SEQ_ID in the",
+    "             sql and arrives as bind.MATL.CNTNR_SEQ_ID on the request. type is number,",
+    "             string or date. A declared bind missing from the sql, or a bind used in the",
+    "             sql but not declared, is rejected at startup and logged as an error.",
+    "  note      where it came from and anything a reviewer should know.",
+    "",
+    "Seeded with the three clauses API-HANDOFF-Block-Where.md quotes in full. The rest of the",
+    "twenty are abridged in that document and are to arrive generated from the forms."
+  ],
+  "blockWheres": [
+    {
+      "name": "AT5510.OUTSHIPMT",
+      "entitySet": "AT_OUTBOUND_SHIPMENTS",
+      "sql": "SHIPMENT_NBR IN (SELECT SHIPMENT_NBR FROM AT_SHIPMENTS WHERE SUBSTR(SHIPMENT_TYPE_CD,1,8) <> 'TRANSFER')",
+      "binds": [],
+      "note": "AT5510 block OUTSHIPMT. Excludes transfer shipments. Quoted in full in API-HANDOFF-Block-Where.md, 30 Sep 2026."
+    },
+    {
+      "name": "AT5511.OUTSHIPMT",
+      "entitySet": "AT_OUTBOUND_SHIPMENTS",
+      "sql": "SHIPMENT_NBR IN (SELECT SHIPMENT_NBR FROM AT_SHIPMENTS WHERE SUBSTR(SHIPMENT_TYPE_CD,1,8) <> 'TRANSFER')",
+      "binds": [],
+      "note": "AT5511 block OUTSHIPMT. Same clause as AT5510; kept as its own name so either screen can change without touching the other."
+    },
+    {
+      "name": "AT5521.OUTSHIPMT",
+      "entitySet": "AT_OUTBOUND_SHIPMENTS",
+      "sql": "DISP_SITE_SEQ_ID = 2 AND SHIPMENT_NBR IN (SELECT SHIPMENT_NBR FROM AT_SHIPMENTS WHERE SHIPMENT_DT IS NOT NULL)",
+      "binds": [],
+      "note": "AT5521 block OUTSHIPMT. The subquery is over 62,719 rows, which is why a two-step IN list will not fit a URL."
+    }
+  ]
+}

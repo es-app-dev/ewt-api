@@ -1,0 +1,605 @@
+{
+  "package": "EWT_UI",
+  "note": "Order is the order the original EWT_UI.sql defined these in. The API assembles in this order; a fragment not listed here is appended alphabetically after the listed ones.",
+  "splitFrom": "OurPackages\\EWT_UI.sql",
+  "order": [
+    "_COMMON",
+    "AT5510",
+    "AT3250",
+    "AT5132",
+    "AT5110",
+    "AT1310",
+    "AT1410",
+    "AT1510",
+    "AT1551",
+    "AT1552",
+    "AT1553",
+    "AT1710",
+    "AT3110",
+    "AT3115",
+    "AT3212",
+    "AT3420",
+    "AT4140",
+    "AT4150",
+    "AT4210",
+    "AT4211",
+    "AT4220",
+    "AT4225",
+    "AT4230",
+    "AT4240",
+    "AT4260",
+    "AT4270",
+    "AT4280",
+    "AT4420",
+    "AT5120",
+    "AT5210",
+    "AT5310",
+    "AT5311",
+    "AT5312",
+    "AT5316",
+    "AT5390",
+    "AT5511",
+    "AT5514",
+    "AT9106",
+    "AT9603",
+    "AT9612",
+    "AT9640",
+    "WB1000",
+    "WB1100",
+    "WB2001",
+    "WB4000",
+    "AT1330",
+    "AT4151",
+    "AT4215",
+    "AT5160",
+    "AT5161",
+    "AT5170",
+    "AT5520",
+    "AT5521",
+    "AT9999",
+    "WB2002",
+    "WB2003",
+    "WB3000",
+    "WB3100",
+    "WB3200",
+    "WB4100"
+  ],
+  "fragments": {
+    "_COMMON": {
+      "procedures": [
+        "rule_error"
+      ],
+      "specDeclarations": 0,
+      "bodyDefinitions": 1
+    },
+    "AT5510": {
+      "procedures": [
+        "at5510_bucket_shipment",
+        "at5510_set_location",
+        "at5510_update_loaded_movement",
+        "at5510_update_status",
+        "at5510_lov_disp_sites_lov",
+        "at5510_lov_waste_profile_numbe",
+        "at5510_w_at_outbound_shipments",
+        "at5510_overpack_exists",
+        "at5510_storage_cntnr_exists",
+        "at5510_update_movement"
+      ],
+      "specDeclarations": 7,
+      "bodyDefinitions": 10
+    },
+    "AT3250": {
+      "procedures": [
+        "at3250_key_delrec"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT5132": {
+      "procedures": [
+        "at5132_post_query",
+        "at5132_when_validate_item",
+        "at5132_post_update",
+        "at5132_make_the_connection"
+      ],
+      "specDeclarations": 3,
+      "bodyDefinitions": 4
+    },
+    "AT5110": {
+      "procedures": [
+        "at5110_cntnr_move_ok",
+        "at5110_add_time_to_date",
+        "at5110_storage_cntnr_exists",
+        "at5110_double_container_loc"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 4
+    },
+    "AT1310": {
+      "procedures": [
+        "at1310_lov_corp_cust_lv",
+        "at1310_lov_lv_cust_bus_typ_lst",
+        "at1310_lov_lv_cust_cust_nbr_na",
+        "at1310_lov_lv_lic_rest_lst",
+        "at1310_lov_lv_seg_stf_lst",
+        "at1310_lov_lv_state_province_c",
+        "at1310_w_comnt"
+      ],
+      "specDeclarations": 7,
+      "bodyDefinitions": 7
+    },
+    "AT1410": {
+      "procedures": [
+        "at1410_lov_cust_disp_sites_lov",
+        "at1410_lov_customer_lov",
+        "at1410_lov_shipping_locations_",
+        "at1410_lov_state_lov",
+        "at1410_w_at_cntrct_cust_view",
+        "at1410_w_clone_prod_services"
+      ],
+      "specDeclarations": 6,
+      "bodyDefinitions": 6
+    },
+    "AT1510": {
+      "procedures": [
+        "at1510_lov_disp_site_lv",
+        "at1510_lov_profile_lv",
+        "at1510_w_at_cps_view",
+        "at1510_w_at_invoices",
+        "at1510_w_rncntnrs"
+      ],
+      "specDeclarations": 5,
+      "bodyDefinitions": 5
+    },
+    "AT1551": {
+      "procedures": [
+        "at1551_lov_cgfk_cntnr_dsp_prct",
+        "at1551_lov_lov_cost",
+        "at1551_w_unmapped_barcodes"
+      ],
+      "specDeclarations": 3,
+      "bodyDefinitions": 3
+    },
+    "AT1552": {
+      "procedures": [
+        "at1552_lov_daughter_containers",
+        "at1552_lov_lov_cost",
+        "at1552_w_unmapped_orders"
+      ],
+      "specDeclarations": 3,
+      "bodyDefinitions": 3
+    },
+    "AT1553": {
+      "procedures": [
+        "at1553_lov_lov_order"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT1710": {
+      "procedures": [
+        "at1710_lov_charge_to_cust_lov",
+        "at1710_lov_inv_contract_nbr",
+        "at1710_lov_inv_seg_staff",
+        "at1710_lov_lv_barcode",
+        "at1710_lov_lv_shipments",
+        "at1710_lov_lv_wksht_mnfsts",
+        "at1710_w_at_rental_cntnr__50a1",
+        "at1710_w_at_ship_trans",
+        "at1710_w_prev_inv",
+        "at1710_w_src"
+      ],
+      "specDeclarations": 10,
+      "bodyDefinitions": 10
+    },
+    "AT3110": {
+      "procedures": [
+        "at3110_lov_cgfk_custtrck_ds_02",
+        "at3110_lov_cgfk_custtrck_dsp_c",
+        "at3110_lov_cgfk_matlmatl_dsp_m",
+        "at3110_lov_cgfk_matlmatl1_dsp_",
+        "at3110_lov_lov_activity",
+        "at3110_lov_lov_activity1",
+        "at3110_lov_order_disp_sites",
+        "at3110_w_at_esprofile_epa",
+        "at3110_w_at_esprofile_epa_i",
+        "at3110_w_cntnr"
+      ],
+      "specDeclarations": 10,
+      "bodyDefinitions": 10
+    },
+    "AT3115": {
+      "procedures": [
+        "at3115_lov_cgfk_cntnr_dsp_prct",
+        "at3115_lov_cust_disp",
+        "at3115_lov_lov_cost",
+        "at3115_w_cntnr"
+      ],
+      "specDeclarations": 4,
+      "bodyDefinitions": 4
+    },
+    "AT3212": {
+      "procedures": [
+        "at3212_lov_cgfk_rncntnr_dsp_co"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT3420": {
+      "procedures": [
+        "at3420_lov_cgfk_pl_cntnr_dsp_c"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT4140": {
+      "procedures": [
+        "at4140_lov_containers"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT4150": {
+      "procedures": [
+        "at4150_lov_batch_parents",
+        "at4150_lov_lov_cost",
+        "at4150_lov_map_nonmap_npc",
+        "at4150_lov_material_types",
+        "at4150_lov_parent_contents"
+      ],
+      "specDeclarations": 5,
+      "bodyDefinitions": 5
+    },
+    "AT4210": {
+      "procedures": [
+        "at4210_lov_dsp_container_id",
+        "at4210_w_compaction_master"
+      ],
+      "specDeclarations": 2,
+      "bodyDefinitions": 2
+    },
+    "AT4211": {
+      "procedures": [
+        "at4211_lov_dsp_container_id",
+        "at4211_w_compaction_master"
+      ],
+      "specDeclarations": 2,
+      "bodyDefinitions": 2
+    },
+    "AT4220": {
+      "procedures": [
+        "at4220_lov_partial_overpacks",
+        "at4220_w_compaction_masters",
+        "at4220_w_overpack_master"
+      ],
+      "specDeclarations": 3,
+      "bodyDefinitions": 3
+    },
+    "AT4225": {
+      "procedures": [
+        "at4225_lov_partial_overpacks",
+        "at4225_w_compaction_masters",
+        "at4225_w_overpack_master"
+      ],
+      "specDeclarations": 3,
+      "bodyDefinitions": 3
+    },
+    "AT4230": {
+      "procedures": [
+        "at4230_lov_partial_overpacks",
+        "at4230_w_containers",
+        "at4230_w_overpack_master"
+      ],
+      "specDeclarations": 3,
+      "bodyDefinitions": 3
+    },
+    "AT4240": {
+      "procedures": [
+        "at4240_lov_gic_containers",
+        "at4240_lov_lov_cost"
+      ],
+      "specDeclarations": 2,
+      "bodyDefinitions": 2
+    },
+    "AT4260": {
+      "procedures": [
+        "at4260_lov_adj_containers"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT4270": {
+      "procedures": [
+        "at4270_lov_bins"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT4280": {
+      "procedures": [
+        "at4280_lov_tanks"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT4420": {
+      "procedures": [
+        "at4420_lov_surveys"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT5120": {
+      "procedures": [
+        "at5120_lov_cgfk_cntnr_dsp_cont"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT5210": {
+      "procedures": [
+        "at5210_lov_lv_manifests",
+        "at5210_lov_partition_lov",
+        "at5210_lov_processes",
+        "at5210_lov_project"
+      ],
+      "specDeclarations": 4,
+      "bodyDefinitions": 4
+    },
+    "AT5310": {
+      "procedures": [
+        "at5310_lov_cgfk_labanlsmpl_dsp",
+        "at5310_lov_containers"
+      ],
+      "specDeclarations": 2,
+      "bodyDefinitions": 2
+    },
+    "AT5311": {
+      "procedures": [
+        "at5311_lov_containers",
+        "at5311_w_labanlsmpl5",
+        "at5311_w_labsample2"
+      ],
+      "specDeclarations": 3,
+      "bodyDefinitions": 3
+    },
+    "AT5312": {
+      "procedures": [
+        "at5312_lov_cgfk_labsample2_dsp",
+        "at5312_lov_facility",
+        "at5312_lov_reviewed_by_staff",
+        "at5312_w_at_esprofile_sam_5d3f",
+        "at5312_w_composite"
+      ],
+      "specDeclarations": 5,
+      "bodyDefinitions": 5
+    },
+    "AT5316": {
+      "procedures": [
+        "at5316_lov_containers",
+        "at5316_lov_customers",
+        "at5316_w_labanlsmpl5",
+        "at5316_w_labsample2"
+      ],
+      "specDeclarations": 4,
+      "bodyDefinitions": 4
+    },
+    "AT5390": {
+      "procedures": [
+        "at5390_lov_facility_lov"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT5511": {
+      "procedures": [
+        "at5511_lov_cgfk_outshipmt_dsp_",
+        "at5511_lov_containers",
+        "at5511_w_outshipmt"
+      ],
+      "specDeclarations": 3,
+      "bodyDefinitions": 3
+    },
+    "AT5514": {
+      "procedures": [
+        "at5514_lov_lift_stor_loc_lv",
+        "at5514_w_outcntnr"
+      ],
+      "specDeclarations": 2,
+      "bodyDefinitions": 2
+    },
+    "AT9106": {
+      "procedures": [
+        "at9106_lov_cgfk_contstr_dsp_co",
+        "at9106_lov_lv_lic_rest_lst"
+      ],
+      "specDeclarations": 2,
+      "bodyDefinitions": 2
+    },
+    "AT9603": {
+      "procedures": [
+        "at9603_lov_parent_npc_lov"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT9612": {
+      "procedures": [
+        "at9612_lov_state_lov"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT9640": {
+      "procedures": [
+        "at9640_lov_groups_lov"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "WB1000": {
+      "procedures": [
+        "wb1000_lov_cgfk_custtrck_dsp_c",
+        "wb1000_lov_cgfk_matlmatl_dsp_m",
+        "wb1000_lov_container_disp_site",
+        "wb1000_lov_cust_view_lv",
+        "wb1000_lov_npc_codes",
+        "wb1000_lov_order_disp_sites",
+        "wb1000_lov_psc_lv",
+        "wb1000_w_segordlitm",
+        "wb1000_w_wb_cont_nuc_view"
+      ],
+      "specDeclarations": 9,
+      "bodyDefinitions": 9
+    },
+    "WB1100": {
+      "procedures": [
+        "wb1100_lov_surveyors",
+        "wb1100_w_double_containment"
+      ],
+      "specDeclarations": 2,
+      "bodyDefinitions": 2
+    },
+    "WB2001": {
+      "procedures": [
+        "wb2001_lov_lov_dispsites",
+        "wb2001_lov_lov_rad_flag",
+        "wb2001_lov_lov_waste_cd"
+      ],
+      "specDeclarations": 3,
+      "bodyDefinitions": 3
+    },
+    "WB4000": {
+      "procedures": [
+        "wb4000_lov_items",
+        "wb4000_lov_mid_psc",
+        "wb4000_lov_qtb_burial_parent_l",
+        "wb4000_lov_valid_npc",
+        "wb4000_w_open_parents",
+        "wb4000_w_open_qtb",
+        "wb4000_w_wb_incoming_manifests"
+      ],
+      "specDeclarations": 7,
+      "bodyDefinitions": 7
+    },
+    "AT1330": {
+      "procedures": [
+        "at1330_q_search"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT4151": {
+      "procedures": [
+        "at4151_w_liner_create"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT4215": {
+      "procedures": [
+        "at4215_w_compaction_master"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT5160": {
+      "procedures": [
+        "at5160_w_cntnr1"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT5161": {
+      "procedures": [
+        "at5161_w_at_shipments",
+        "at5161_w_cntnr1"
+      ],
+      "specDeclarations": 2,
+      "bodyDefinitions": 2
+    },
+    "AT5170": {
+      "procedures": [
+        "at5170_w_at_cntnr_lab_res_b392",
+        "at5170_w_cntnr"
+      ],
+      "specDeclarations": 2,
+      "bodyDefinitions": 2
+    },
+    "AT5520": {
+      "procedures": [
+        "at5520_w_outshipmt"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT5521": {
+      "procedures": [
+        "at5521_w_outshipmt"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "AT9999": {
+      "procedures": [
+        "at9999_w_at_cust_doc_trac_c339",
+        "at9999_w_at_cust_doc_trac_5461",
+        "at9999_w_daughters"
+      ],
+      "specDeclarations": 3,
+      "bodyDefinitions": 3
+    },
+    "WB2002": {
+      "procedures": [
+        "wb2002_w_at_compaction_masters",
+        "wb2002_w_at_compaction_ma_f0a9",
+        "wb2002_w_at_container_pro_2fad",
+        "wb2002_w_at_overpacks"
+      ],
+      "specDeclarations": 4,
+      "bodyDefinitions": 4
+    },
+    "WB2003": {
+      "procedures": [
+        "wb2003_w_at_container_pro_4055"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "WB3000": {
+      "procedures": [
+        "wb3000_q_search"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "WB3100": {
+      "procedures": [
+        "wb3100_w_load_ibox"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    },
+    "WB3200": {
+      "procedures": [
+        "wb3200_w_activity_burned",
+        "wb3200_w_ashbox_activity",
+        "wb3200_w_burned",
+        "wb3200_w_burn_activity_view",
+        "wb3200_w_load_ibox",
+        "wb3200_w_summary",
+        "wb3200_w_wb_ashdrum1",
+        "wb3200_w_wb_ashdrum2"
+      ],
+      "specDeclarations": 8,
+      "bodyDefinitions": 8
+    },
+    "WB4100": {
+      "procedures": [
+        "wb4100_w_wb_qtb_containers_dau"
+      ],
+      "specDeclarations": 1,
+      "bodyDefinitions": 1
+    }
+  }
+}

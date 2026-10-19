@@ -1,0 +1,17 @@
+# Normalise line endings in the repo; check out native. The PL/SQL fragments are
+# compared by a whitespace-insensitive fingerprint, so CRLF on a working copy does
+# not cause a spurious package redeploy, but keeping the repo itself consistent
+# avoids every file showing as changed when someone works on another machine.
+* text=auto
+
+*.sql   text
+*.cs    text
+*.json  text
+*.md    text
+*.py    text
+*.csproj text
+*.sln   text eol=crlf
+
+*.pfx   binary
+*.dll   binary
+*.png   binary

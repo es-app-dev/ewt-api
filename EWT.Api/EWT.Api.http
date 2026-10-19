@@ -1,0 +1,6 @@
+@EWT.Api_HostAddress = http://localhost:5182
+
+GET {{EWT.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

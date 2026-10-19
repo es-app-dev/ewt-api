@@ -1,0 +1,831 @@
+{
+ "openapi": "3.0.1",
+ "info": {
+  "title": "EWT API",
+  "description": "Dynamic OData over the seven EWT Oracle databases: CORP and its six daughter sites.\r\n\r\n**Choosing a database.** Every call takes `?db=`, for example\r\n`/odata/AT_CUSTOMERS?db=CORP`. Omit it and the configured default is used.\r\n`GET /odata/instances` lists the valid names.\r\n\r\n**The seven schemas are not identical.** They share column structure but not\r\nwhich tables exist: 75 of the tables the UI binds are on CORP only. Asking a\r\ndaughter for one of those returns 404 naming where it does live, never an\r\nempty result, because an empty result cannot be told apart from \"no rows\".\r\n\r\n**The legacy Oracle Forms application still runs against these same\r\ndatabases.** A write can meet a Forms user holding a row. This API\r\nreproduces legacy behaviour rather than improving on it.\r\n\r\n**Query options:** `$select`, `$filter`, `$orderby`, `$expand`, `$top`,\r\n`$skip`, `$count`, `$apply`.",
+  "version": "v1"
+ },
+ "paths": {
+  "/admin/refresh-cache": {
+   "post": {
+    "tags": [
+     "EWT.Api"
+    ],
+    "summary": "Re-read one database's schema from Oracle.",
+    "description": "Drops the cached metadata for a database, reads the data dictionary again and rebuilds that instance's model. Use it after a schema change. Metadata normally comes from the shipped cache files, so this is not needed in normal running.",
+    "parameters": [
+     {
+      "name": "db",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/admin/relationships": {
+   "get": {
+    "tags": [
+     "EWT.Api"
+    ],
+    "summary": "List the $expand relationships available on each table.",
+    "description": "The navigation properties $expand understands, generated from the real Oracle foreign keys: 1,477 of them, single-column and enabled only. Grouped by table, plus the flat list with the from and to columns of each.",
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "EWT.Api"
+    ],
+    "summary": "Add or replace one $expand relationship.",
+    "description": "For a join the foreign keys do not express, such as a relationship enforced only in application code. Takes name, fromTable, fromColumn, toTable, toColumn and type. Saved to relationships.json and live immediately. The generated ones are rewritten by scripts/convert-schema-metadata.py, so prefer fixing the source data where the foreign key exists.",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/Relationship"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/admin/relationships/{tableName}/{relationshipName}": {
+   "delete": {
+    "tags": [
+     "EWT.Api"
+    ],
+    "summary": "Remove one $expand relationship.",
+    "description": "Deletes a navigation property from relationships.json by table and relationship name. Only affects what $expand offers; nothing in the database changes.",
+    "parameters": [
+     {
+      "name": "tableName",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "relationshipName",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/admin/schema/{tableName}": {
+   "get": {
+    "tags": [
+     "EWT.Api"
+    ],
+    "summary": "Describe one table or view: columns, keys, and how to write to it.",
+    "description": "The reference a client builds a screen from.\n\nPer column: Oracle's own type spelling such as VARCHAR2(30), the JSON type the value arrives as, maxLength for character columns, precision and scale, nullability, whether it is part of the primary key, and whether the server allocates it.\n\nPer table: availableOn lists every database holding this entity, so cross-database routing can be driven from the API rather than a static map. addressing is key, filter or none and says how PATCH and DELETE reach a row. uniqueKeys gives the column sets that identify one row where there is no primary key. generatedKey names the sequence when POST may omit the key. viewWrites reports what Oracle actually permits on a view, asked of the dictionary rather than assumed. concurrency names the column to send as If-Match.\n\nA table absent from this database returns 404 naming where it does exist.",
+    "parameters": [
+     {
+      "name": "tableName",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "db",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/admin/sequences": {
+   "get": {
+    "tags": [
+     "EWT.Api"
+    ],
+    "summary": "Every table whose primary key the server allocates on POST.",
+    "description": "One call instead of probing the schema endpoint for each table. For each: the table, the column the server fills, the sequence it comes from, and which databases hold that table.\n\nPOST to one of these without the listed column and the server allocates it, returning the created entity with its key. Send the column explicitly and it is used as given.",
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/api/dev/effective-roles": {
+   "get": {
+    "tags": [
+     "DevImpersonation"
+    ],
+    "summary": "Effective Entra roles for one user: live from Graph, or canned when Graph is not configured.",
+    "parameters": [
+     {
+      "name": "email",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/api/dev/ewt-users": {
+   "get": {
+    "tags": [
+     "DevImpersonation"
+    ],
+    "summary": "Users for the impersonation picker: live from Graph, or canned when Graph is not configured.",
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/odata": {
+   "get": {
+    "tags": [
+     "OData"
+    ],
+    "summary": "List every table and view available on a database.",
+    "description": "The catalogue for one database, and it differs per database: the seven schemas share\r\ncolumn structure but not which tables exist. Each entry says whether it is a table or\r\na view, whether it is read-only, and what it can `$expand`.\r\n            \r\n    GET /odata?db=CORP\r\n    { \"tableCount\": 1585, \"value\": [ { \"name\": \"AT_CUSTOMERS\", \"kind\": \"table\", ... } ] }\r\n            \r\nCounts differ by design: CORP 1585, CLUT 1555, BCTN 1477, BRON 1425, BASC 1411,\r\nEWTN 1403, MEMTN 1401.",
+    "parameters": [
+     {
+      "name": "db",
+      "in": "query",
+      "description": "Database to list. Omit for the configured default.",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "The entity sets on that database."
+     },
+     "404": {
+      "description": "Unknown database name; the body lists the valid ones."
+     },
+     "503": {
+      "description": "Metadata for that database has not loaded."
+     }
+    }
+   }
+  },
+  "/odata/$batch": {
+   "post": {
+    "tags": [
+     "OData"
+    ],
+    "summary": "Several writes in one request, committed together or not at all.",
+    "description": "Oracle Forms saves a whole master-detail hierarchy as one transaction, and there are\r\n240 master-detail relations in this application. Split across separate HTTP calls, a\r\nfailure halfway leaves the row half saved. This is the OData V4 **JSON** batch format;\r\nmultipart is not supported.\r\n            \r\n**A manifest and its child rows, saved atomically**\r\n            \r\n    POST /odata/$batch\r\n    { \"requests\": [\r\n        { \"id\": \"1\", \"method\": \"POST\", \"atomicityGroup\": \"save\",\r\n          \"url\": \"/odata/AT_MANIFESTS?db=BCTN\",\r\n          \"body\": { \"MANIFEST_NBR\": \"X-1\" } },\r\n        { \"id\": \"2\", \"method\": \"POST\", \"atomicityGroup\": \"save\",\r\n          \"url\": \"/odata/AT_MANIFEST_MATERIALS?db=BCTN\",\r\n          \"body\": { \"MNFST_SEQ_ID\": \"$1.MNFST_SEQ_ID\", \"MATERIAL_CD\": \"SOIL\" } }\r\n    ] }\r\n            \r\n**`$1.COLUMN` is replaced by what request `1` returned.** That is how a child row picks\r\nup the key the server just allocated for its parent, which is the reason master-detail\r\nsaves need a batch at all.\r\n            \r\n**Requests sharing an `atomicityGroup` run in one transaction.** All commit or none do.\r\nRequests without one run independently, exactly as if sent separately.\r\n            \r\n**The outer response is always 200.** Each entry carries its own status, per OData, so\r\ncheck the entries and not the envelope. When a change set fails you can see which\r\nrequest broke it:\r\n            \r\n    id=1 status=424 ChangeSetRolledBack  succeeded, then rolled back\r\n    id=2 status=409 ORA-00904            \"NO_SUCH_COLUMN\": invalid identifier\r\n    id=3 status=424 ChangeSetRolledBack  not attempted\r\n            \r\n**A change set cannot span databases.** One transaction is one Oracle connection, so\r\nrequests in one group must share a `?db=`. For a screen spanning CORP and a site, use\r\none change set per database and send the CORP half first: an orphaned master row is\r\nrecoverable, a dangling reference is not.\r\n            \r\n`PATCH` and `DELETE` inside a batch address the row with `$filter` in the request url,\r\nand take an optional `ifMatch` per request. Reads stay ordinary GET requests. At most\r\n500 requests per batch. Audit rows are written after the commit, so a rolled-back\r\nwrite is never recorded as having happened.",
+    "requestBody": {
+     "description": "The batch envelope: a \"requests\" array.",
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/BatchRequest"
+       }
+      },
+      "text/json": {
+       "schema": {
+        "$ref": "#/components/schemas/BatchRequest"
+       }
+      },
+      "application/*+json": {
+       "schema": {
+        "$ref": "#/components/schemas/BatchRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "The batch ran. Check each entry's own status."
+     },
+     "400": {
+      "description": "Empty batch, more than 500 requests, or duplicate ids."
+     }
+    }
+   }
+  },
+  "/odata/{entitySet}": {
+   "get": {
+    "tags": [
+     "OData"
+    ],
+    "summary": "Read rows from a table or view.",
+    "description": "The main read endpoint. Every table and view on the chosen database is exposed by its\r\nOracle name, so the entity set for AT_CUSTOMERS is literally `AT_CUSTOMERS`.\r\n            \r\n**A plain read, first 100 rows**\r\n            \r\n    GET /odata/AT_CUSTOMERS?db=CORP\r\n            \r\n**Pick columns, filter, sort and page**\r\n            \r\n    GET /odata/AT_CUSTOMERS?db=CORP\r\n        &$select=CUST_SEQ_ID,CUSTOMER_NAME\r\n        &$filter=CUSTOMER_CD eq 'C' and CUSTOMER_NAME like 'ACME%'\r\n        &$orderby=CUSTOMER_NAME\r\n        &$top=50&$skip=100\r\n            \r\n**Total matching rows for a pager**, counted over the filter and not the page:\r\n            \r\n    GET /odata/AT_CUSTOMERS?db=CORP&$top=25&$count=true\r\n    { \"@odata.count\": 8001, \"value\": [ ... 25 rows ... ] }\r\n            \r\n**Follow a foreign key** with $expand. `GET /admin/schema/{table}` lists what each\r\ntable can expand:\r\n            \r\n    GET /odata/AT_CONTACTS?db=CORP&$expand=Addresses\r\n            \r\n**Aggregate instead of returning rows** with $apply. Cannot be combined with $select\r\nor $expand, because it returns groups rather than entities:\r\n            \r\n    $apply=aggregate($count as total)\r\n    $apply=aggregate(nvl(GROSS_WGT,0) with sum as weight)\r\n    $apply=groupby((CUSTOMER_CD))\r\n    $apply=groupby((CUSTOMER_CD),aggregate($count as n))\r\n    $apply=filter(STATUS eq 'A')/groupby((CUST_SEQ_ID),aggregate(GROSS_WGT with sum as w))\r\n            \r\nAggregation methods are sum, average, min, max, countdistinct, and `$count` for rows.\r\nOnly `nvl(column, default)` may wrap a column; for `SUM(a * b)` aggregate the columns\r\nseparately and combine client-side.\r\n            \r\n**Dates** in `$filter` are written plainly and converted for Oracle:\r\n            \r\n    $filter=CREATED_DT ge 2026-01-01 and CREATED_DT lt 2026-02-01\r\n            \r\n**$orderby=none** returns rows in natural database order, reproducing a legacy Forms\r\nblock that had no ORDER BY. Otherwise rows are ordered by the first column.",
+    "parameters": [
+     {
+      "name": "entitySet",
+      "in": "path",
+      "description": "Oracle table or view name, for example AT_CUSTOMERS.",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "db",
+      "in": "query",
+      "description": "Database to read: CORP, BCTN, CLUT, EWTN, BRON, BASC or MEMTN.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "$select",
+      "in": "query",
+      "description": "Comma-separated columns. Omit for all columns.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "$filter",
+      "in": "query",
+      "description": "OData filter: eq, ne, gt, ge, lt, le, and, or, like, null tests.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "$orderby",
+      "in": "query",
+      "description": "Column, optionally with desc. \"none\" means natural order.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "$expand",
+      "in": "query",
+      "description": "Navigation properties to include, from /admin/schema.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "$apply",
+      "in": "query",
+      "description": "Aggregation pipeline. See the examples above.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "$count",
+      "in": "query",
+      "description": "true adds @odata.count, the total matching the filter.",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "$top",
+      "in": "query",
+      "description": "Page size. Default 100, maximum 10000.",
+      "schema": {
+       "type": "integer",
+       "format": "int32",
+       "default": 100
+      }
+     },
+     {
+      "name": "$skip",
+      "in": "query",
+      "description": "Rows to skip, for paging.",
+      "schema": {
+       "type": "integer",
+       "format": "int32"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Rows, under \"value\"."
+     },
+     "400": {
+      "description": "Bad $filter, $select, $orderby or $apply. The body names the problem."
+     },
+     "404": {
+      "description": "That entity set does not exist on that database; the body lists where it does."
+     },
+     "503": {
+      "description": "Metadata for that database has not loaded."
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "OData"
+    ],
+    "summary": "Create a row. The server allocates the primary key for 85 tables.",
+    "description": "Send the columns you want set. Column names are case-insensitive.\r\n            \r\n    POST /odata/AT_BARCODE_ROLL_LOG?db=BRON\r\n    { \"BARCODE_ROLL_QTY\": 1, \"PROCESS_AREA_NAME\": \"Roll 12\" }\r\n            \r\n    201 Created\r\n    { \"BARCODE_ROLL_QTY\": 1, \"PROCESS_AREA_NAME\": \"Roll 12\",\r\n      \"BARCODE_ROLL_SEQ_ID\": 3100 }\r\n            \r\n**Leave the key out and the server fills it.** The legacy forms allocated their own\r\nkeys in PRE-INSERT; a client here does not have to. `GET /admin/sequences` lists every\r\ntable this applies to, and `/admin/schema/{table}` reports it per table as\r\n`generatedKey`. The created entity always comes back with its key, which is what lets\r\nyou build child rows in the same save.\r\n            \r\n**Send the key explicitly and it is used as given**, which keeps migration and replay\r\nworking. Tables not in the map need you to supply the key or have a trigger do it.\r\n            \r\n**Some keys are deliberately never allocated.** A column that is really the parent's\r\nkey, such as `AT_CONTACTS.ADDR_SEQ_ID`, would silently orphan the row if filled in\r\nblind. Create the parent first in a `$batch` change set and reference its key.\r\n            \r\n**Attribution.** Pass `X-EWT-On-Behalf-Of` with the acting user so the audit trail\r\nrecords a person rather than the shared Oracle account.",
+    "parameters": [
+     {
+      "name": "entitySet",
+      "in": "path",
+      "description": "Oracle table name. Views are read-only unless Oracle permits writes.",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "db",
+      "in": "query",
+      "description": "Database to write to.",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "description": "Column name to value. Omit a server-allocated key.",
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": {}
+       }
+      },
+      "text/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": {}
+       }
+      },
+      "application/*+json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": {}
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "201": {
+      "description": "Created. The body is the row including its key."
+     },
+     "400": {
+      "description": "A constraint was violated, or the body names an unknown column. The body gives the ORA code and what it means."
+     },
+     "404": {
+      "description": "That entity set does not exist on that database."
+     },
+     "405": {
+      "description": "That entity is read-only."
+     },
+     "409": {
+      "description": "A unique key already exists, or the row is locked by another session."
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "OData"
+    ],
+    "summary": "Update a row, addressed by its key or by a filter.",
+    "description": "Only the columns you send are changed.\r\n            \r\n**By primary key**, which goes in the body alongside the changes:\r\n            \r\n    PATCH /odata/AT_BARCODE_ROLL_LOG?db=BRON\r\n    { \"BARCODE_ROLL_SEQ_ID\": 3100, \"PROCESS_AREA_NAME\": \"Roll 12A\" }\r\n            \r\n**By filter**, which is how you reach the 27 bound tables that declare no primary key\r\nat all. It also works on keyed tables, so a client can use one code path:\r\n            \r\n    PATCH /odata/AT_ESPROFILE_RAD?db=CORP\r\n          &$filter=ES_PROF_SEQ_ID eq 4211 and TRKDITM_SEQ_ID eq 7\r\n    { \"ACTIVITY_QTY\": 12.5 }\r\n            \r\n**A filter-addressed write must match exactly one row.** Match several and you get 409\r\nwith the count, match none and you get 404, and in both cases nothing is written: the\r\nupdate and its row count are one statement inside a transaction, so a loose filter\r\ncannot quietly change the whole table. `/admin/schema/{table}` reports `addressing`\r\nas \"key\" or \"filter\", and lists `uniqueKeys` when the table has one worth using.\r\n            \r\n**Optional concurrency check.** The legacy Forms application locks a row while a user\r\nedits it, and it is still running against these databases. Send the row's MODIFIED_DT\r\nas `If-Match` and a write that lost the race is refused with 412 rather than silently\r\noverwriting someone:\r\n            \r\n    If-Match: 2026-09-23T13:33:10\r\n            \r\nMODIFIED_DT is null until a row is first edited, so send CREATED_DT when it is, or\r\n`If-Match: null` on the few tables with no CREATED_DT. Omit the header entirely and\r\nthe write is unguarded, which is the historical behaviour.",
+    "parameters": [
+     {
+      "name": "entitySet",
+      "in": "path",
+      "description": "Oracle table name.",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "db",
+      "in": "query",
+      "description": "Database to write to.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "$filter",
+      "in": "query",
+      "description": "Addresses the row instead of the key. Must match exactly one row.",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "description": "Columns to change, plus the primary key when not using $filter.",
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": {}
+       }
+      },
+      "text/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": {}
+       }
+      },
+      "application/*+json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": {}
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "204": {
+      "description": "Updated."
+     },
+     "400": {
+      "description": "No key, nothing to update, a bad filter, or a constraint violation."
+     },
+     "404": {
+      "description": "No row matches."
+     },
+     "405": {
+      "description": "That entity is read-only."
+     },
+     "409": {
+      "description": "The filter matched several rows, or the row is locked by another session."
+     },
+     "412": {
+      "description": "If-Match was sent and the row changed first. The body carries the current row."
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "OData"
+    ],
+    "summary": "Delete the single row matching a filter.",
+    "description": "The route for tables that declare no primary key, so have nothing to put in\r\n`DELETE /odata/{entitySet}(key)`. It works on keyed tables too.\r\n            \r\n    DELETE /odata/AT_ESPROFILE_RAD?db=CORP\r\n           &$filter=ES_PROF_SEQ_ID eq 4211 and TRKDITM_SEQ_ID eq 7\r\n            \r\n**Refused unless it matches exactly one row**, and rolled back when it does not, so a\r\nloose filter cannot empty a table. Several matches gives 409 with the count; none\r\ngives 404. `If-Match` works here exactly as it does on PATCH.",
+    "parameters": [
+     {
+      "name": "entitySet",
+      "in": "path",
+      "description": "Oracle table name.",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "$filter",
+      "in": "query",
+      "description": "Required. Must identify exactly one row.",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "db",
+      "in": "query",
+      "description": "Database to write to.",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "204": {
+      "description": "Deleted."
+     },
+     "400": {
+      "description": "$filter missing or invalid."
+     },
+     "404": {
+      "description": "No row matches."
+     },
+     "405": {
+      "description": "That entity is read-only."
+     },
+     "409": {
+      "description": "Several rows matched, child rows still reference it, or it is locked."
+     },
+     "412": {
+      "description": "If-Match was sent and the row changed first."
+     }
+    }
+   }
+  },
+  "/odata/{entitySet}({key})": {
+   "delete": {
+    "tags": [
+     "OData"
+    ],
+    "summary": "Delete a row by primary key.",
+    "description": "    DELETE /odata/AT_BARCODE_ROLL_LOG(3100)?db=BRON\r\n            \r\nA compound key is given in order, comma separated:\r\n            \r\n    DELETE /odata/AT_INVOICE_LINE_ITEMS(4211,7)?db=BCTN\r\n            \r\nFor a table with no primary key use the `$filter` form instead. `If-Match` works here\r\nas it does on PATCH.",
+    "parameters": [
+     {
+      "name": "entitySet",
+      "in": "path",
+      "description": "Oracle table name.",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "key",
+      "in": "path",
+      "description": "Primary key value, or comma-separated values for a compound key.",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "db",
+      "in": "query",
+      "description": "Database to write to.",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     },
+     "204": {
+      "description": "Deleted."
+     },
+     "404": {
+      "description": "No row with that key."
+     },
+     "405": {
+      "description": "That entity is read-only."
+     },
+     "409": {
+      "description": "Child rows still reference it, or it is locked by another session."
+     },
+     "412": {
+      "description": "If-Match was sent and the row changed first."
+     }
+    }
+   }
+  },
+  "/odata/instances": {
+   "get": {
+    "tags": [
+     "EWT.Api"
+    ],
+    "summary": "List the databases this API can reach.",
+    "description": "The seven EWT Oracle databases: CORP and its six daughter sites. Returns each name, its display name, whether it is the corporate instance, and its TNS alias. The name is what you pass as ?db= on every other call. An unknown ?db= returns 404 listing these, so a typo never reads the wrong database.",
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/odata/proc": {
+   "get": {
+    "tags": [
+     "EWT.Api"
+    ],
+    "summary": "List the stored procedures and functions on a database.",
+    "description": "Name, package, type, whether it is a function, and current status, read from the Oracle data dictionary. Use /odata/proc/{procedureName}/params for the signature before calling one.",
+    "parameters": [
+     {
+      "name": "db",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/odata/proc/{procedureName}": {
+   "post": {
+    "tags": [
+     "EWT.Api"
+    ],
+    "summary": "Execute a stored procedure or function.",
+    "description": "Send input parameters as a JSON object of name to value; names are case-insensitive. OUT and IN OUT parameters come back in the response, and a REF CURSOR is returned as rows.\n\n    POST /odata/proc/AT_SOME_PROC?db=CORP\n    { \"P_CUST_SEQ_ID\": 4211, \"P_STATUS\": \"A\" }\n\nCheck the signature with /odata/proc/{procedureName}/params first. This runs whatever the procedure does, including writes.",
+    "parameters": [
+     {
+      "name": "procedureName",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "db",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": {}
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  },
+  "/odata/proc/{procedureName}/params": {
+   "get": {
+    "tags": [
+     "EWT.Api"
+    ],
+    "summary": "Describe one procedure's parameters.",
+    "description": "Each parameter in position order: name, direction, data type, whether it has a default, and whether you must supply it. A function's return value appears at position 0 with no name.",
+    "parameters": [
+     {
+      "name": "procedureName",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "db",
+      "in": "query",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "OK"
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "BatchOperation": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "description": "Caller's id for this request, used to reference its result from a later one.",
+      "nullable": true
+     },
+     "method": {
+      "type": "string",
+      "description": "POST, PATCH or DELETE. Reads are ordinary GET requests.",
+      "nullable": true
+     },
+     "url": {
+      "type": "string",
+      "description": "For example /odata/AT_ADDRESSES?db=CORP, optionally with $filter.",
+      "nullable": true
+     },
+     "atomicityGroup": {
+      "type": "string",
+      "description": "Requests sharing this value commit or roll back together.",
+      "nullable": true
+     },
+     "ifMatch": {
+      "type": "string",
+      "description": "The MODIFIED_DT this request read, for an optimistically guarded PATCH or DELETE.\r\nA losing race fails the request, which rolls back the whole change set.",
+      "nullable": true
+     },
+     "body": {
+      "type": "object",
+      "additionalProperties": {},
+      "nullable": true
+     }
+    },
+    "additionalProperties": false,
+    "description": "One operation in a batch."
+   },
+   "BatchRequest": {
+    "type": "object",
+    "properties": {
+     "requests": {
+      "type": "array",
+      "items": {
+       "$ref": "#/components/schemas/BatchOperation"
+      },
+      "nullable": true
+     }
+    },
+    "additionalProperties": false,
+    "description": "The OData V4 JSON batch envelope."
+   },
+   "Relationship": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string",
+      "description": "Name of the relationship (used in $expand)",
+      "nullable": true
+     },
+     "fromTable": {
+      "type": "string",
+      "description": "Source table",
+      "nullable": true
+     },
+     "fromColumn": {
+      "type": "string",
+      "description": "Column in source table",
+      "nullable": true
+     },
+     "toTable": {
+      "type": "string",
+      "description": "Target table",
+      "nullable": true
+     },
+     "toColumn": {
+      "type": "string",
+      "description": "Column in target table",
+      "nullable": true
+     },
+     "type": {
+      "type": "string",
+      "description": "Type: \"many-to-one\" (single object) or \"one-to-many\" (array)",
+      "nullable": true
+     }
+    },
+    "additionalProperties": false,
+    "description": "A relationship between two tables."
+   }
+  }
+ },
+ "tags": [
+  {
+   "name": "OData",
+   "description": "POST /odata/$batch: several writes, committed together.\r\n            \r\nOracle Forms commits a whole master-detail hierarchy as one transaction. Saving an\r\nAT3110 manifest writes the manifest, its materials, its containers and their waste\r\ncodes in one go, and there are 240 master-detail relations in the application. Split\r\nacross independent HTTP calls, a failure halfway leaves the row half saved.\r\n            \r\nThis is the OData V4 JSON batch format. Requests carrying the same atomicityGroup run\r\non one Oracle connection inside one transaction: all of them commit, or none do.\r\nRequests with no atomicityGroup run independently, exactly as if they had been sent\r\none at a time.\r\n            \r\nA request may use the key a previous one produced. Write $id.COLUMN as a value in a\r\nlater body and it is substituted with that value, which is how a child row picks up\r\nthe sequence-assigned key of the parent created earlier in the same change set.\r\n            \r\nThe multipart/mixed batch format is deliberately not supported; the JSON format\r\ncarries the same semantics and both ends of this system speak JSON already."
+  },
+  {
+   "name": "DevImpersonation",
+   "description": "Dev/test impersonation endpoints from docs/API-HANDOFF-Impersonation.md.\r\nWhen GraphReader:* is configured, roles come LIVE from Microsoft Graph (app-only cert).\r\nOtherwise it falls back to canned personas (DevImpersonation:Users / built-ins) so the UI\r\ncan exercise the role gates before Graph creds/consent are in place. The response header\r\nX-EWT-Source (\"graph\"|\"stub\") says which path served the request.\r\n            \r\n[AllowAnonymous] so it works locally without a token. The real deployment should require a\r\nbearer token (handoff section 1). Gated by DevImpersonation:Enabled (default FALSE, fail-closed):\r\nenable only in dev/test."
+  }
+ ]
+}

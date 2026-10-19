@@ -1,0 +1,262 @@
+<#
+.SYNOPSIS
+    Creates the EWT Entra security groups and adds their members, from the CSVs the
+    migration analysis produced.
+
+.DESCRIPTION
+    Reads:
+      analysis/entra-nested-groups.csv        one row per group
+      analysis/entra-nested-assignments.csv   one row per person, with their groups
+
+    Safe by default:
+      * Runs as a DRY RUN unless -Execute is supplied. Nothing is written without it.
+      * Idempotent. Existing groups are reused, existing memberships are skipped, so it
+        can be re-run after a partial failure without creating duplicates.
+      * Never deletes a group, never removes a member, never touches anything outside
+        the group list in the CSV.
+      * Writes a full transcript of every intended and actual action to a log CSV.
+
+    NOT DONE BY THIS SCRIPT, on purpose:
+      * Assigning EWT-Users to the enterprise application. That is a one-time change to
+        an app registration and is safer done deliberately in the portal.
+      * Any nesting. These groups are flat by design.
+
+.PARAMETER Execute
+    Actually write to Entra. Without it the script reports what it would do.
+
+.PARAMETER TenantId
+    Optional tenant to connect to.
+
+.PARAMETER Only
+    Limit to specific group ids (for example -Only N01,N02) for a cautious first run.
+
+.EXAMPLE
+    .\Deploy-EwtEntraGroups.ps1
+    Dry run over everything. Start here.
+
+.EXAMPLE
+    .\Deploy-EwtEntraGroups.ps1 -Only GATE -Execute
+    Create the sign-in gate group and add its 93 members, nothing else.
+
+.NOTES
+    Requires the Microsoft.Graph PowerShell SDK:
+        Install-Module Microsoft.Graph -Scope CurrentUser
+    Needs delegated scopes Group.ReadWrite.All and User.Read.All, which means running as
+    someone who can create security groups.
+
+    THIS SCRIPT HAS NOT BEEN RUN AGAINST A REAL TENANT. Dry-run it, then do one group
+    with -Only, confirm it in the portal, and only then run the whole thing.
+#>
+
+[CmdletBinding()]
+param(
+    [switch]$Execute,
+    [string]$TenantId,
+    [string[]]$Only,
+    [string]$GroupCsv = "analysis/entra-nested-groups.csv",
+    [string]$AssignCsv = "analysis/entra-nested-assignments.csv",
+    [string]$LogPath = "analysis/entra-deploy-log.csv"
+)
+
+$ErrorActionPreference = 'Stop'
+$script:Log = [System.Collections.Generic.List[object]]::new()
+
+function Write-Action {
+    param($Phase, $Target, $Action, $Result, $Detail = '')
+    $script:Log.Add([pscustomobject]@{
+        timestamp = (Get-Date).ToString('s')
+        phase     = $Phase
+        target    = $Target
+        action    = $Action
+        result    = $Result
+        detail    = $Detail
+    })
+    $colour = switch ($Result) { 'created' {'Green'} 'added' {'Green'}
+                                'exists' {'DarkGray'} 'present' {'DarkGray'}
+                                'would-create' {'Yellow'} 'would-add' {'Yellow'}
+                                'ERROR' {'Red'} default {'Gray'} }
+    Write-Host ("  {0,-13} {1,-34} {2}" -f $Result, $Target, $Detail) -ForegroundColor $colour
+}
+
+# Graph throttles; retry 429 and 503 with backoff rather than losing the run.
+function Invoke-WithRetry {
+    param([scriptblock]$Script, [int]$MaxAttempts = 5)
+    for ($i = 1; $i -le $MaxAttempts; $i++) {
+        try { return & $Script }
+        catch {
+            $code = $_.Exception.Response.StatusCode.value__
+            if ($code -in 429, 503, 504 -and $i -lt $MaxAttempts) {
+                $wait = [math]::Pow(2, $i)
+                Write-Host "    throttled ($code), retrying in ${wait}s" -ForegroundColor DarkYellow
+                Start-Sleep -Seconds $wait
+                continue
+            }
+            throw
+        }
+    }
+}
+
+# ---------------------------------------------------------------- input
+foreach ($p in $GroupCsv, $AssignCsv) {
+    if (-not (Test-Path $p)) { throw "Missing input file: $p (run from the repo root)" }
+}
+$groups = Import-Csv $GroupCsv
+$people = Import-Csv $AssignCsv
+if ($Only) { $groups = $groups | Where-Object { $_.group_id -in $Only } }
+
+Write-Host ""
+Write-Host "EWT Entra deployment" -ForegroundColor Cyan
+Write-Host ("  mode        : {0}" -f $(if ($Execute) { 'EXECUTE - will write to Entra' } else { 'DRY RUN - no changes' })) `
+    -ForegroundColor $(if ($Execute) { 'Red' } else { 'Yellow' })
+Write-Host "  groups      : $($groups.Count)"
+Write-Host "  people      : $($people.Count)"
+if ($Only) { Write-Host "  limited to  : $($Only -join ', ')" -ForegroundColor Yellow }
+Write-Host ""
+
+if ($Execute) {
+    $answer = Read-Host "Type YES to write these changes to Entra"
+    if ($answer -cne 'YES') { Write-Host "Aborted." -ForegroundColor Yellow; return }
+}
+
+# ---------------------------------------------------------------- connect
+$scopes = @('Group.ReadWrite.All', 'User.Read.All', 'GroupMember.ReadWrite.All')
+Write-Host "Connecting to Microsoft Graph..." -ForegroundColor Cyan
+if ($TenantId) { Connect-MgGraph -Scopes $scopes -TenantId $TenantId -NoWelcome }
+else           { Connect-MgGraph -Scopes $scopes -NoWelcome }
+$ctx = Get-MgContext
+Write-Host "  tenant  : $($ctx.TenantId)"
+Write-Host "  account : $($ctx.Account)"
+Write-Host ""
+
+# ---------------------------------------------------------- phase 1: groups
+Write-Host "Phase 1 - groups" -ForegroundColor Cyan
+$groupObjectId = @{}
+
+foreach ($g in $groups) {
+    $name = $g.entra_group_name
+    $existing = Invoke-WithRetry { Get-MgGroup -Filter "displayName eq '$($name -replace "'","''")'" -ConsistencyLevel eventual -CountVariable c -All }
+
+    if ($existing) {
+        $groupObjectId[$g.group_id] = $existing[0].Id
+        Write-Action 'group' $name 'create' 'exists' "id $($existing[0].Id)"
+        continue
+    }
+    if (-not $Execute) {
+        Write-Action 'group' $name 'create' 'would-create' "$($g.roles_in_group) EWT roles"
+        continue
+    }
+
+    $nickname = ($name -replace '[^A-Za-z0-9]', '').ToLower()
+    $desc = "EWT access group. $($g.roles_in_group) Oracle roles. Created from the EWT to Entra migration; see entra-nested-groups.csv. Flat by design - do not nest."
+    try {
+        $new = Invoke-WithRetry {
+            New-MgGroup -DisplayName $name -MailNickname $nickname `
+                        -MailEnabled:$false -SecurityEnabled:$true -Description $desc
+        }
+        $groupObjectId[$g.group_id] = $new.Id
+        Write-Action 'group' $name 'create' 'created' "id $($new.Id)"
+    }
+    catch { Write-Action 'group' $name 'create' 'ERROR' $_.Exception.Message }
+}
+
+# ---------------------------------------------------------- phase 2: users
+Write-Host ""
+Write-Host "Phase 2 - resolving people" -ForegroundColor Cyan
+$userObjectId = @{}
+$unresolved = @()
+
+foreach ($p in $people) {
+    $key = $p.username
+    $mail = $p.email
+    if (-not $mail) { $unresolved += $key; Write-Action 'user' $key 'resolve' 'ERROR' 'no email in CSV'; continue }
+    $esc = $mail -replace "'", "''"
+    try {
+        $u = Invoke-WithRetry { Get-MgUser -Filter "mail eq '$esc' or userPrincipalName eq '$esc'" -All }
+        if ($u) { $userObjectId[$key] = $u[0].Id }
+        else    { $unresolved += $key; Write-Action 'user' $key 'resolve' 'ERROR' "not found: $mail" }
+    }
+    catch { $unresolved += $key; Write-Action 'user' $key 'resolve' 'ERROR' $_.Exception.Message }
+}
+Write-Host ("  resolved {0} of {1}" -f $userObjectId.Count, $people.Count)
+
+if ($unresolved.Count -and $Execute) {
+    Write-Host ""
+    Write-Host "  $($unresolved.Count) people could not be resolved in Entra." -ForegroundColor Yellow
+    $answer = Read-Host "  Continue and add only the ones that resolved? (yes/no)"
+    if ($answer -ne 'yes') { $script:Log | Export-Csv $LogPath -NoTypeInformation; return }
+}
+
+# -------------------------------------------------------- phase 3: members
+Write-Host ""
+Write-Host "Phase 3 - memberships" -ForegroundColor Cyan
+
+# invert: group id -> the people who belong in it
+$wanted = @{}
+foreach ($p in $people) {
+    foreach ($gid in ($p.direct_groups -split '\s+' | Where-Object { $_ })) {
+        if (-not $wanted.ContainsKey($gid)) { $wanted[$gid] = [System.Collections.Generic.List[string]]::new() }
+        $wanted[$gid].Add($p.username)
+    }
+}
+
+$added = 0; $skipped = 0; $failed = 0
+foreach ($g in $groups) {
+    $gid = $g.group_id
+    if (-not $wanted.ContainsKey($gid)) { continue }
+    $objId = $groupObjectId[$gid]
+    if (-not $objId) {
+        Write-Action 'member' $g.entra_group_name 'add' 'skipped' 'group not created (dry run or error)'
+        continue
+    }
+
+    $current = @{}
+    Invoke-WithRetry { Get-MgGroupMember -GroupId $objId -All } | ForEach-Object { $current[$_.Id] = $true }
+
+    $toAdd = @()
+    foreach ($uname in $wanted[$gid]) {
+        $uid = $userObjectId[$uname]
+        if (-not $uid) { continue }
+        if ($current.ContainsKey($uid)) { $skipped++; continue }
+        $toAdd += $uid
+    }
+
+    if (-not $toAdd) {
+        Write-Action 'member' $g.entra_group_name 'add' 'present' "all $($wanted[$gid].Count) already members"
+        continue
+    }
+    if (-not $Execute) {
+        Write-Action 'member' $g.entra_group_name 'add' 'would-add' "$($toAdd.Count) people"
+        continue
+    }
+
+    # Graph accepts up to 20 member refs per PATCH; one call per member is far slower.
+    for ($i = 0; $i -lt $toAdd.Count; $i += 20) {
+        $chunk = $toAdd[$i..([math]::Min($i + 19, $toAdd.Count - 1))]
+        $body = @{ 'members@odata.bind' = @($chunk | ForEach-Object { "https://graph.microsoft.com/v1.0/directoryObjects/$_" }) }
+        try {
+            Invoke-WithRetry { Update-MgGroup -GroupId $objId -BodyParameter $body }
+            $added += $chunk.Count
+        }
+        catch {
+            $failed += $chunk.Count
+            Write-Action 'member' $g.entra_group_name 'add' 'ERROR' $_.Exception.Message
+        }
+    }
+    Write-Action 'member' $g.entra_group_name 'add' 'added' "$($toAdd.Count) people"
+}
+
+# ---------------------------------------------------------------- summary
+$script:Log | Export-Csv $LogPath -NoTypeInformation -Encoding UTF8
+Write-Host ""
+Write-Host "Summary" -ForegroundColor Cyan
+Write-Host ("  groups created  : {0}" -f ($script:Log | Where-Object result -eq 'created').Count)
+Write-Host ("  groups existing : {0}" -f ($script:Log | Where-Object result -eq 'exists').Count)
+Write-Host ("  members added   : {0}" -f $added)
+Write-Host ("  already members : {0}" -f $skipped)
+Write-Host ("  people unresolved: {0}" -f $unresolved.Count)
+Write-Host ("  failures        : {0}" -f (($script:Log | Where-Object result -eq 'ERROR').Count))
+Write-Host "  log: $LogPath"
+if (-not $Execute) {
+    Write-Host ""
+    Write-Host "  DRY RUN - nothing was changed. Re-run with -Execute to apply." -ForegroundColor Yellow
+}

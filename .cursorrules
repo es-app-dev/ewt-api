@@ -1,0 +1,407 @@
+# EWIS API Development Rules
+
+## Project Overview
+ASP.NET Core 8.0 Web API with:
+- Dynamic Oracle OData interface (no typed entities - runtime metadata discovery)
+- Azure AD / JWT Bearer authentication (currently disabled for debugging)
+- SQL Server via Entity Framework Core for existing functionality
+- Oracle via Oracle.ManagedDataAccess.Core for OData endpoints
+
+## Architecture Decisions
+
+### Dynamic OData Approach
+- Tables are discovered at runtime from Oracle metadata (ALL_TABLES, ALL_TAB_COLUMNS)
+- Single `DynamicODataController` handles all entity sets
+- No code changes required when Oracle tables change
+- Metadata cached to `tables.json`, refreshable via `/admin/refresh-cache`
+
+### Oracle Connection
+- Connection string in `ConnectionStrings:OracleEWIS`
+- Password stored as Base64 in `Oracle:PasswordBase64`
+- Schema filter in `Oracle:SchemaFilter` (null defaults to connected user's schema)
+- `TNS_ADMIN` environment variable cleared on startup to prevent external Oracle client config interference
+
+### Configuration Files
+- `appsettings.json` - base config (use for Production)
+- `appsettings.Development.json` - development overrides with real Oracle credentials
+- IIS defaults to Production environment - ensure `appsettings.json` has correct Oracle settings for deployed environments
+
+## OData Endpoints
+
+### Entity Operations
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/odata` | GET | List all available entity sets |
+| `/odata/{entitySet}` | GET | Query entities (supports $select, $filter, $orderby, $top, $skip, $expand) |
+| `/odata/{entitySet}` | POST | Create entity |
+| `/odata/{entitySet}({key})` | GET | Get single entity |
+| `/odata/{entitySet}({key})` | PATCH | Update entity |
+| `/odata/{entitySet}({key})` | DELETE | Delete entity |
+
+### Stored Procedure Operations
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/odata/proc` | GET | List all procedures in schema |
+| `/odata/proc/{name}/params` | GET | Get procedure parameter metadata |
+| `/odata/proc/{name}` | POST | Execute procedure with JSON body parameters |
+
+Package procedures use dot notation: `/odata/proc/PKG_NAME.PROC_NAME`
+
+### Admin Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/admin/refresh-cache` | POST | Refresh Oracle metadata from database |
+| `/admin/schema/{tableName}` | GET | Get table schema details |
+| `/admin/relationships` | GET | List all configured relationships |
+| `/admin/relationships` | POST | Add a relationship for $expand |
+| `/admin/relationships/{table}/{name}` | DELETE | Remove a relationship |
+
+## Code Conventions
+
+### DateTime Handling
+- JSON DateTime strings (ISO 8601 format like "2013-11-12T00:00:00") are automatically parsed to DateTime objects
+- Required for Oracle DATE columns to work correctly with PATCH/POST operations
+
+### $expand Syntax (Nested Expansions Supported)
+```
+# Simple expand
+$expand=Container
+
+# Multiple expands
+$expand=Container,Status
+
+# Expand with nested $select
+$expand=Container($select=ID,NAME)
+
+# Nested expand (expand within expand)
+$expand=Container($expand=ContainerType)
+
+# Combined nested $select and $expand
+$expand=Container($select=ID,NAME;$expand=ContainerType)
+
+# Deep nesting
+$expand=Treatment($expand=Container($expand=ContainerType))
+```
+Note: Use semicolon (;) to separate options within parentheses
+
+### Oracle Type Mapping
+- VARCHAR2, CHAR → Edm.String
+- NUMBER → Edm.Decimal
+- DATE → Edm.DateTimeOffset
+- CLOB → Edm.String
+- BLOB → Edm.Binary
+
+### Error Responses
+Return structured JSON errors:
+```json
+{
+  "error": {
+    "message": "Description of the error",
+    "details": { ... }
+  }
+}
+```
+
+For OData validation errors, include suggestions:
+```json
+{
+  "error": {
+    "message": "Invalid column(s) in $select: INVALID_COL",
+    "invalidColumns": ["INVALID_COL"],
+    "validColumns": ["COL1", "COL2", "COL3"]
+  }
+}
+```
+
+## Deployment
+
+### Environment Configuration Files
+| File | Environment | Purpose |
+|------|-------------|---------|
+| `appsettings.json` | Base | Shared settings, placeholders |
+| `appsettings.Dev.json` | Development | Local dev Oracle connection |
+| `appsettings.Test.json` | Test | Test server Oracle connection |
+| `appsettings.Prod.json` | Production | Production Oracle connection |
+
+### Build Commands
+Each environment publishes to its own subfolder under `publish/` to keep output isolated and avoid mixing environment-specific files:
+
+```bash
+# Deploy with Dev settings (default) -> publish/Dev
+dotnet publish EWIS.Api/EWIS.Api.csproj -c Release -o ./publish/Dev
+
+# Deploy with Test settings -> publish/Test
+dotnet publish EWIS.Api/EWIS.Api.csproj -c Release -o ./publish/Test -p:DeployEnv=Test
+
+# Deploy with Prod settings -> publish/Prod
+dotnet publish EWIS.Api/EWIS.Api.csproj -c Release -o ./publish/Prod -p:DeployEnv=Prod
+```
+
+The `-p:DeployEnv=<env>` parameter selects which `appsettings.<env>.json` file gets copied to `appsettings.json` in the publish output. This happens automatically via a post-publish MSBuild target in the csproj. Always match the `-o` subfolder (`Dev`/`Test`/`Prod`) to the `DeployEnv` value.
+
+### Published Files
+**Included in publish output:**
+- `appsettings.json` (merged from selected environment)
+- `tables.json` (Oracle metadata cache)
+- `relationships.json` (navigation properties)
+
+**Excluded from publish output:**
+- `appsettings.Dev.json`
+- `appsettings.Test.json`
+- `appsettings.Prod.json`
+
+### Deploy
+Copy contents of the appropriate environment subfolder to the matching IIS application folder:
+- Dev: `C:\ESSource\ewis-api\publish\Dev\` → Dev IIS site
+- Test: `C:\ESSource\ewis-api\publish\Test\` → Test IIS site
+- Prod: `C:\ESSource\ewis-api\publish\Prod\` → Prod IIS site
+
+### IIS Configuration Notes
+- The published `appsettings.json` contains the environment-specific settings from the build
+- No need to set `ASPNETCORE_ENVIRONMENT` on IIS - config is baked in at publish time
+- Swagger enabled for all environments (internal API)
+
+## Debugging
+
+### Launch Configuration
+- F5 opens browser to `/swagger` automatically
+- Environment set to `Development`
+- Uses `appsettings.Development.json` for Oracle credentials
+
+### Security Note
+Authentication is currently commented out on admin and OData endpoints for debugging:
+```csharp
+// TODO: Re-enable .RequireAuthorization() after debugging
+```
+
+Remember to re-enable before production deployment.
+
+## Services Overview
+
+| Service | Lifetime | Purpose |
+|---------|----------|---------|
+| `OracleConnectionService` | Singleton | Manages Oracle connection string |
+| `OracleMetadataService` | Singleton | Discovers table/column metadata |
+| `DynamicEdmModelBuilder` | Singleton | Builds OData EDM model from metadata |
+| `RelationshipService` | Singleton | Manages $expand relationships |
+| `DynamicDataService` | Scoped | Executes CRUD operations |
+| `OracleProcedureService` | Scoped | Executes stored procedures |
+
+## Files Reference
+
+### Key Files
+- `Program.cs` - Service registration and endpoint mapping
+- `Controllers/DynamicODataController.cs` - Main OData controller
+- `Controllers/StatusController.cs` - Health/status endpoints
+- `Services/OracleConnectionService.cs` - Connection management
+- `Services/OracleMetadataService.cs` - Metadata discovery
+- `Services/DynamicEdmModelBuilder.cs` - EDM model building
+- `Services/DynamicDataService.cs` - CRUD operations
+- `Services/OracleProcedureService.cs` - Stored procedure execution
+- `Services/RelationshipService.cs` - Relationship management
+
+### Data Files (in EWIS.Api folder)
+These files must be in `EWIS.Api/` folder to be included in publish:
+
+| File | Purpose | Editable |
+|------|---------|----------|
+| `tables.json` | Cached Oracle table/column metadata (~1.9MB) | Auto-generated, can refresh via `/admin/refresh-cache` |
+| `relationships.json` | Navigation properties for `$expand` | Edit manually or via `/admin/relationships` endpoints |
+
+Both files are automatically copied to publish output.
+
+## Known Issues & Fixes
+
+### Issue: POST returns "Value does not fall within the expected range"
+**Symptom:** POST to any OData entity returns 500 with `ArgumentOutOfRangeException`
+**Cause:** JSON body values were being passed as raw `JsonElement` objects to Oracle instead of converted .NET types
+**Fix:** Added `ConvertJsonElement()` conversion in POST handler (same as PATCH already had)
+```csharp
+var convertedEntity = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+foreach (var kvp in entity)
+{
+    convertedEntity[kvp.Key.ToUpperInvariant()] = ConvertJsonElement(kvp.Value);
+}
+```
+
+### Issue: PATCH with null values doesn't set columns to NULL
+**Symptom:** Sending `{ "COLUMN": null }` in PATCH body doesn't clear the column value
+**Cause:** `OracleParameter` with `DBNull.Value` needs explicit `OracleDbType` set, otherwise Oracle doesn't know the column type
+**Fix:** Look up column type from metadata and set `OracleDbType` when value is null
+```csharp
+if (value == null && columnTypes.TryGetValue(columnName, out var dataType))
+{
+    param.OracleDbType = MapToOracleDbType(dataType);
+}
+```
+
+### Issue: DateTime values in PATCH fail
+**Symptom:** PATCH with ISO 8601 date strings like `"2013-11-12T00:00:00"` fails
+**Cause:** Date strings weren't being parsed to `DateTime` objects before Oracle binding
+**Fix:** Added `ParseStringValue()` helper that detects and parses ISO 8601 date strings
+```csharp
+if (DateTime.TryParse(str, null, DateTimeStyles.RoundtripKind, out var dateTime))
+{
+    if (str.Contains('T') || (str.Contains('-') && str.Length >= 10))
+        return dateTime;
+}
+```
+
+### Issue: /odata/proc returns empty list
+**Symptom:** GET to `/odata/proc` returns `{ "count": 0, "procedures": [] }`
+**Cause:** Schema filter query used `LIKE` but config value had no wildcard, or was `null`
+**Fix:** Changed query to use `OWNER = NVL(:schema, USER)` to match exact schema or default to connected user
+
+### Issue: $filter silently returns 0 results when string value matches a column name
+**Symptom:** `$filter=TYPE eq 'WASTETYPE'` on EC_PICKLISTS returns 0 rows, no error. Other TYPE values like `'WASTEKIND'` work fine. The data exists (confirmed via `$filter=ID eq 4`).
+**Cause:** `ParseFilter()` in `DynamicDataService.cs` has a column-quoting step that wraps column names in double quotes for Oracle. It iterates every column in the table's metadata and uses regex `(?<!")\b{ColumnName}\b(?!")` to find and quote column references. The problem: this regex also matches column names that appear inside single-quoted string literals. EC_PICKLISTS has a column literally named `WASTETYPE`, so the regex matched `WASTETYPE` inside `'WASTETYPE'` and replaced it with `'"WASTETYPE"'` — producing SQL that looks for a string with literal double-quote characters embedded, which matches nothing.
+**Why some values worked:** `'WASTEKIND'` worked because there's no column named `WASTEKIND`. The bug only triggers when a filter value happens to match a column name on the same table.
+**Fix (in `DynamicDataService.cs` `ParseFilter()`):** Before the column-quoting loop, extract all single-quoted string literals into numbered placeholders, then restore them after quoting:
+```csharp
+// Extract string literals before column quoting
+var literals = new List<string>();
+result = Regex.Replace(result, @"'([^']*)'", match =>
+{
+    literals.Add(match.Value);
+    return $"__LIT{literals.Count - 1}__";
+});
+
+// Quote column names (now safe — values are placeholders)
+foreach (var column in metadata.Columns)
+{
+    result = Regex.Replace(result,
+        $@"(?<!"")\b{Regex.Escape(column.ColumnName)}\b(?!"")",
+        $"\"{column.ColumnName}\"",
+        RegexOptions.IgnoreCase);
+}
+
+// Restore string literals
+for (int i = 0; i < literals.Count; i++)
+{
+    result = result.Replace($"__LIT{i}__", literals[i]);
+}
+```
+**Test case:** `GET /odata/EC_PICKLISTS?$filter=TYPE eq 'WASTETYPE'&$select=ID,TYPE,CODE&$orderby=CODE&$top=100` — should return 27 rows, first row ID=4, TYPE=WASTETYPE, CODE=11e2.
+**Watch out for:** This class of bug can recur on any table where a filter string value matches a column name. The literal extraction fix handles all cases generically.
+
+### Issue: Oracle connection fails on IIS but works locally
+**Symptom:** `ORA-12545: Unable to resolve connect hostname` on IIS server only
+**Possible causes:**
+1. `appsettings.json` has placeholder Oracle settings (IIS uses Production, not Development)
+2. External `tnsnames.ora` or `sqlnet.ora` interfering
+**Fix:** 
+1. Ensure `appsettings.json` has correct Oracle connection for Production
+2. `TNS_ADMIN` is cleared on startup in `Program.cs` to prevent external config interference
+
+### Issue: $expand returns entities without navigation properties ("Unknown $expand" in logs)
+**Symptom:** Client sends `$expand=navWasteStream(...)` but response has no `navWasteStream` key. API logs: `Unknown $expand: navWasteStream`.
+**Root cause:** Two separate problems:
+
+**Problem 1: relationships.json format mismatch**
+- The repo root has a full `relationships.json` (195 relationships, extracted from Oracle Forms XML) in a wrapper format `{"relationships": [...]}`.
+- The `EWIS.Api/relationships.json` had a root array `[...]` format after conversion.
+- `RelationshipService.LoadFromFile()` originally only accepted the `RelationshipData` object format `{ "lastModified": "...", "relationships": [...] }`.
+- **Fix:** Updated `LoadFromFile()` to accept BOTH formats: a root JSON array `[...]` OR the object wrapper `{ "relationships": [...] }`. Uses `JsonDocument.Parse` to detect `ValueKind` before deserializing.
+
+**Problem 2: nav properties missing when FK is null**
+- `ExpandRelationshipAsync` collected FK values where `v != null`, then if ALL were null (`fkValues.Count == 0`), it returned early WITHOUT setting the nav property on any record.
+- In the main expand loop, records with null FK values were also skipped — no nav property set at all.
+- The UI couldn't distinguish "expand not supported" from "no related record exists."
+- **Fix:** Added two `else` branches:
+  1. Early return path: when all FK values are null, set `record[relationship.Name] = null` (or empty list for one-to-many) on every record before returning.
+  2. Main loop: added `else` branch for records with null FK, setting the nav property to `null` (or empty list).
+- Result: nav properties are ALWAYS present in the response — as an object when the relation exists, or `null` when the FK is null.
+
+## $expand / Relationships Reference
+
+### How relationships.json works
+- Located in `EWIS.Api/relationships.json`, copied to output/publish automatically
+- Loaded by `RelationshipService` at startup from `AppContext.BaseDirectory`
+- Accepts either root array `[...]` or object `{ "relationships": [...] }` format
+- Each relationship defines: `name`, `fromTable`, `fromColumn`, `toTable`, `toColumn`, `type` ("one-to-one" or "one-to-many")
+- The `name` is what the client uses in `$expand=navName(...)`
+- Can also be managed at runtime via `POST /admin/relationships` (persists to disk)
+
+### Relationship naming conventions
+- Navigation property names use `nav` prefix + descriptive name (camelCase): `navWasteStream`, `navContainerType`, `navStatus`
+- FK columns like `PCKLST_ID_STATUS` map to `navStatus` (pointing to EC_PICKLISTS)
+- FK columns like `LOCATION_ID` map to `navLocation` (pointing to EC_LOCATION_MASTERS)
+- One-to-many relationships use plural names: `navContainers`, `navWasteCodes`, `navRadiologics`
+
+### Key entity relationships (Treatment/Container flows)
+
+**EC_TREATMENTS** (7 nav properties):
+| Nav Property | FK Column | Target Table | Type |
+|---|---|---|---|
+| navWasteStream | WST_STRM_ID | EC_WASTE_STREAMS | one-to-one |
+| navContract | CONTRACT_ID | EC_CONTRACTS | one-to-one |
+| navRecipe | RECIPE_ID | EC_RECIPES | one-to-one |
+| navLocation | LOCATION_ID | EC_LOCATION_MASTERS | one-to-one |
+| navStatus | PCKLST_ID_STATUS | EC_PICKLISTS | one-to-one |
+| navTreatmentMethod | PCKLST_ID_TREATMENT_METHOD | EC_PICKLISTS | one-to-one |
+| navContainersOut | ID | EC_CONTAINERS (TREAT_ID) | one-to-many |
+
+**EC_CONTAINERS** (key nav properties for UI):
+| Nav Property | FK Column | Target Table | Type |
+|---|---|---|---|
+| navContainerType | PCKLST_ID_CONTAINER_TYPE | EC_PICKLISTS | one-to-one |
+| navStatus | PCKLST_ID_STATUS | EC_PICKLISTS | one-to-one |
+| navLocation | LOCATION_ID | EC_LOCATION_MASTERS | one-to-one |
+| navShipment | SHIPMENT_ID | EC_SHIPMENTS | one-to-one |
+| navOverShipment | OVER_SHIPMENT_ID | EC_SHIPMENTS | one-to-one |
+| navTreatment | TREAT_ID | EC_TREATMENTS | one-to-one |
+
+**EC_WASTE_STREAMS** (key nav properties):
+| Nav Property | FK Column | Target Table | Type |
+|---|---|---|---|
+| navContract | CONTRACT_ID | EC_CONTRACTS | one-to-one |
+
+**EC_CONTRACTS**:
+| Nav Property | FK Column | Target Table | Type |
+|---|---|---|---|
+| navGenerator | GEN_ID | EC_GENERATORS | one-to-one |
+
+### Multi-level $expand (nested)
+The API supports nested `$expand` for resolving chains in a single request:
+```
+# Generator name chain (3 levels): Treatment -> WasteStream -> Contract -> Generator
+$expand=navWasteStream($select=ID,WASTEID,CONTRACT_ID;$expand=navContract($select=ID,CONTRACT_NO,GEN_ID;$expand=navGenerator($select=ID,NAME)))
+
+# Container -> Treatment -> WasteStream (2 levels)
+$expand=navTreatment($select=ID,TREATMENT_ID,WST_STRM_ID;$expand=navWasteStream($select=ID,WASTEID,DESCRIPTION))
+```
+Use semicolons (`;`) to separate `$select` and `$expand` within parentheses.
+
+### Verified $expand test requests
+These requests are confirmed working against the Dev server (`https://ewis-dev-api.energysolutions.com`):
+
+1. **EC_TREATMENTS list:** `$expand=navWasteStream($select=...),navLocation($select=...),navStatus($select=...)`
+2. **EC_TREATMENTS single:** adds `navTreatmentMethod($select=...),navRecipe($select=...)` — returns null when FK is null
+3. **EC_CONTAINERS In:** `$expand=navContainerType,navStatus,navLocation,navShipment,navOverShipment,navTreatment`
+4. **EC_CONTAINERS Out:** subset: `navContainerType,navStatus,navLocation`
+5. **EC_WASTE_STREAMS:** `$expand=navContract($select=ID,CONTRACT_NO,GEN_ID)`
+6. **Multi-level:** Treatment -> navWasteStream -> navContract -> navGenerator (3 levels deep)
+
+Full test URLs are in `ewis-ui/docs/api-expand-test-requests.md`.
+A PowerShell verification script is at `scripts/Verify-ODataExpand.ps1`.
+
+## Debugging Tips
+
+### Stale processes blocking port 5182
+When debugging in VS Code, an old API process can survive and hold port 5182, causing new F5 launches to fail silently or bind to a different port (e.g. 5000). Symptoms:
+- F5 starts but API binds to port 5000 instead of 5182
+- Build fails with "file is locked by EWIS.Api (PID)"
+- Tests pass against old code on 5182 while new code runs on 5000
+
+**Fix:** Check `netstat -ano | Select-String ":5182"` for the PID, then `Stop-Process -Id <PID> -Force`. After killing, F5 will bind to the correct port.
+
+### VS Code launch configuration
+- Launch config in `.vscode/launch.json` runs `bin/Debug/net8.0/EWIS.Api.dll`
+- Pre-launch task runs `dotnet build` (Debug config, no incremental by default)
+- The `launchSettings.json` specifies port 5182 for the `http` profile, but if another process holds that port, Kestrel falls back to port 5000
+
+### Two relationships.json files
+- **Repo root:** `relationships.json` (1640 lines) — full set in wrapper format `{"relationships": [...]}`  from Oracle Forms XML extraction. This is the source of truth.
+- **EWIS.Api/:** `relationships.json` (1563 lines) — the API's working copy in root array format `[...]`. This is what gets published and deployed.
+- If relationships need updating, edit `EWIS.Api/relationships.json` or use `POST /admin/relationships` at runtime.
+- The API accepts both formats, so either can be used.

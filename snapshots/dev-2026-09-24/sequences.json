@@ -1,0 +1,1022 @@
+{
+ "count": 85,
+ "note": "POST to one of these entity sets without the listed column and the server allocates it from the sequence, returning the created entity with its key. Send the column explicitly and it is used as given.",
+ "value": [
+  {
+   "table": "AT_ADDRESSES",
+   "column": "ADDR_SEQ_ID",
+   "sequence": "ADDR_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_AGENTS_AND_MEDIAS",
+   "column": "AGT_MEDIA_SEQ_ID",
+   "sequence": "AGT_MEDIA_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_ASSAY_TRACKED_ITEMS",
+   "column": "ASSAYTRCK_SEQ_ID",
+   "sequence": "ASSAYTRCK_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_BARCODE_CHEMICALS",
+   "column": "CNTNR_CHEMICAL_SEQ_ID",
+   "sequence": "CNTNR_CHEMICAL_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_BARCODE_HAZ_WASTE_CODES",
+   "column": "CNTNR_HAZ_SEQ_ID",
+   "sequence": "CNTNR_HAZ_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_BARCODE_METALS",
+   "column": "CNTNR_METAL_SEQ_ID",
+   "sequence": "CNTNR_METAL_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_BARCODE_ROLL_LOG",
+   "column": "BARCODE_ROLL_SEQ_ID",
+   "sequence": "BARCODE_ROLL_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_BARCODE_UHC_CODES",
+   "column": "CNTNR_UHC_SEQ_ID",
+   "sequence": "CNTNR_UHC_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_BATCH_HEADERS",
+   "column": "BATCH_SEQ_ID",
+   "sequence": "BATCH_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_BYPRODUCT_HDRS",
+   "column": "BYPRODHDRS_SEQ_ID",
+   "sequence": "BYPRODHDRS_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_COMMENT_INSTRUCTIONS",
+   "column": "COMNT_SEQ_ID",
+   "sequence": "COMNT_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_COMNT_INSTR_TYPES",
+   "column": "COMNTTYP_SEQ_ID",
+   "sequence": "COMNTTYP_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_COMPACTION_MASTERS",
+   "column": "CMPCTN_SEQ_ID",
+   "sequence": "CNTNR_PROC_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_CONTACTS",
+   "column": "CNTCT_SEQ_ID",
+   "sequence": "CNTCT_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_CONTACT_TYPES",
+   "column": "CNTCT_TYP_SEQ_ID",
+   "sequence": "CNTCT_TYP_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_CONTAINERS",
+   "column": "CNTNR_SEQ_ID",
+   "sequence": "CNTNR_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_CONTAINER_PROCESSES",
+   "column": "CNTNR_PROC_SEQ_ID",
+   "sequence": "CNTNR_PROC_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_CONTAINER_TYPES",
+   "column": "CNTNR_TYP_SEQ_ID",
+   "sequence": "CNTNR_TYP_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_CONTRACTS",
+   "column": "CNTRCT_SEQ_ID",
+   "sequence": "CNTRCT_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_CONTRACT_PROD_SERVICES",
+   "column": "CNPRODSERV_SEQ_ID",
+   "sequence": "CNPRODSERV_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_CONTRACT_SHIPPING_LOCS",
+   "column": "CONTRACT_SHIPPING_LOC_SEQ_ID",
+   "sequence": "CONTRACT_SHIPPING_LOC_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_CUSTOMERS",
+   "column": "CUST_SEQ_ID",
+   "sequence": "CUST_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_CUSTOMER_LICENSES",
+   "column": "CUST_LIC_SEQ_ID",
+   "sequence": "CUST_LIC_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_CUST_DOC_TRACKED_ITEMS",
+   "column": "CUSTTRCK_SEQ_ID",
+   "sequence": "CUSTTRCK_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_DISP_SITES",
+   "column": "DISP_SITE_SEQ_ID",
+   "sequence": "DISP_SITE_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_DUMPLISTS",
+   "column": "DUMP_SEQ_ID",
+   "sequence": "DUMP_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_DUMP_MANIFESTS",
+   "column": "DUMP_MNFST_SEQ_ID",
+   "sequence": "DUMP_MNFST_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_ELEMENTS",
+   "column": "EL_SEQ_ID",
+   "sequence": "EL_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_GIC_ASSAYS",
+   "column": "GIC_ASSAY_SEQ_ID",
+   "sequence": "GIC_ASSAY_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_GIC_CONTAINER_TYPES",
+   "column": "GIC_CNTNR_TYP_SEQ_ID",
+   "sequence": "GIC_CNTNR_TYP_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_GIC_ITEMS",
+   "column": "GIC_ITEM_SEQ_ID",
+   "sequence": "GIC_ITEM_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_GIC_PROFILES",
+   "column": "GIC_PROFILE_SEQ_ID",
+   "sequence": "GIC_PROFILE_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_HAZ_WASTE_CODES",
+   "column": "HAZ_SEQ_ID",
+   "sequence": "HAZ_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_INCOMING_MANIFESTS",
+   "column": "ADVNOTIF_SEQ_ID",
+   "sequence": "MNFST_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_INVOICES",
+   "column": "INVC_SEQ_ID",
+   "sequence": "INV_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_LAB_ANALYSIS_SAMPLES",
+   "column": "LABANLSMPL_SEQ_ID",
+   "sequence": "LABANLSMPL_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_LAB_ANALYSIS_TYPES",
+   "column": "LABTYP_SEQ_ID",
+   "sequence": "LABTYP_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_LAB_RESULTS_TRACKED_ITEMS",
+   "column": "RESLTITM_SEQ_ID",
+   "sequence": "RESLTITM_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_LAB_SAMPLES",
+   "column": "LABSAMPLE_SEQ_ID",
+   "sequence": "LABSAMPLE_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_LANDFILL_HEADERS",
+   "column": "LANDFILL_SEQ_ID",
+   "sequence": "LANDFILL_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_LANDFILL_SITES",
+   "column": "LANDFILL_SITE_SEQ_ID",
+   "sequence": "LANDFILL_SITE_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_LICENSE_TYPES",
+   "column": "LIC_TYP_SEQ_ID",
+   "sequence": "LIC_TYP_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_LINE_ITEM_CONTAINERS",
+   "column": "LITMCNTR_SEQ_ID",
+   "sequence": "LITMCNTR_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_MATERIALS",
+   "column": "MATL_SEQ_ID",
+   "sequence": "MATL_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_MATERIAL_TYPES",
+   "column": "MATL_TYP_SEQ_ID",
+   "sequence": "MATL_TYP_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_OUTBOUND_SHIPMENTS",
+   "column": "OUTSHIPMT_SEQ_ID",
+   "sequence": "OUTSHIPMT_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_PICKLISTS",
+   "column": "PL_SEQ_ID",
+   "sequence": "PL_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_PICKLIST_CONTAINERS",
+   "column": "PL_CNTNR_SEQ_ID",
+   "sequence": "PL_CNTNR_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_PRICE_SHEETS",
+   "column": "PRCSHT_SEQ_ID",
+   "sequence": "PRCSHEET_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_PROBLEM_ITEMS",
+   "column": "PRBITM_SEQ_ID",
+   "sequence": "PRBITM_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_PROCESS_TRANS_TYPES",
+   "column": "PRCTRANTYP_SEQ_ID",
+   "sequence": "PRCTRANTYP_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_PRODUCT_CATEGORIES",
+   "column": "PRODCAT_SEQ_ID",
+   "sequence": "PRODCAT_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_PRODUCT_SERVICES",
+   "column": "PRODSERV_SEQ_ID",
+   "sequence": "PRODSERV_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_RECYCLE_SITES",
+   "column": "RECYCLER_SITE_SEQ_ID",
+   "sequence": "RECYCLE_SITE_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_RENTAL_CONTAINERS",
+   "column": "RNCNTNR_SEQ_ID",
+   "sequence": "RNCNTNR_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_RENTAL_CONTAINER_HIST",
+   "column": "RNCNTNRHIS_SEQ_ID",
+   "sequence": "RNCNTNRHIS_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_SEG_DEPARTMENTS",
+   "column": "SEG_DEPT_SEQ_ID",
+   "sequence": "SEG_DEPT_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_SEG_FACILITIES",
+   "column": "FAC_SEQ_ID",
+   "sequence": "FAC_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_SEG_LICENSE_GROUPS",
+   "column": "LICGRP_SEQ_ID",
+   "sequence": "LICGRP_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_SEG_OPERATING_LICENSES",
+   "column": "SEG_LIC_SEQ_ID",
+   "sequence": "SEG_LIC_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_SEG_ORDER_LINE_ITEMS",
+   "column": "SEGORDLITM_SEQ_ID",
+   "sequence": "SEGORDLITM_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_SEG_SITES",
+   "column": "SITE_SEQ_ID",
+   "sequence": "SITE_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_SHIPMENT_BOL",
+   "column": "SHIP_BOL_SEQ_ID",
+   "sequence": "SHIP_BOL_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_SHIPMENT_STATES",
+   "column": "SHIPST_SEQ_ID",
+   "sequence": "SHIPST_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_SHIP_COMPACTION_MASTERS",
+   "column": "CMPCTN_SEQ_ID",
+   "sequence": "CNTNR_PROC_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_SOURCES",
+   "column": "SOURCE_SEQ_ID",
+   "sequence": "SOURCE_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_SOURCE_CUSTODIANS",
+   "column": "CUSTODIAN_SEQ_ID",
+   "sequence": "CUSTODIAN_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_STANDARD_NOTES",
+   "column": "NOTE_SEQ_ID",
+   "sequence": "STANDARD_NOTE_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_STORAGE_LOCATIONS",
+   "column": "STORLOC_SEQ_ID",
+   "sequence": "STORLOC_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_TELECOM_ADDRESSES",
+   "column": "TELCOMADDR_SEQ_ID",
+   "sequence": "TELCOMADDR_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_TELECOM_TYPES",
+   "column": "TELCOM_TYP_SEQ_ID",
+   "sequence": "TELCOM_TYP_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_TRANSPORT_PERMITS",
+   "column": "TRANSPMT_SEQ_ID",
+   "sequence": "TRANSPMT_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_UHC_HAZ",
+   "column": "UHC_HAZ_SEQ_ID",
+   "sequence": "UHC_HAZ_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_UHC_WASTE_CODES",
+   "column": "UHC_SEQ_ID",
+   "sequence": "UHC_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_UNIT_CONVERSIONS",
+   "column": "UNITCNV_SEQ_ID",
+   "sequence": "UNITCNV_SEQ",
+   "availableOn": [
+    "CORP"
+   ]
+  },
+  {
+   "table": "AT_WASTE_STREAM_10CFR61_ANAL",
+   "column": "WSANAL10CFR_SEQ_ID",
+   "sequence": "WSANAL10CFR61_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_WASTE_STREAM_10CFR61_DIST",
+   "column": "WSCFRDIST_SEQ_ID",
+   "sequence": "WSCFRDIST_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_WASTE_STREAM_10CFR61_FACT",
+   "column": "WSCFRCNVRT_SEQ_ID",
+   "sequence": "WSCFRCNVRT_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_WASTE_STREAM_ANALYSIS_ITEMS",
+   "column": "WSCMPANLITM_SEQ_ID",
+   "sequence": "WSCMPANLITM_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "AT_WASTE_STREAM_COMP_ANALYSIS",
+   "column": "WSCOMPSANAL_SEQ_ID",
+   "sequence": "WSCOMPSANAL_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "WB_IBOX_CONTENTS",
+   "column": "IBOX_CONTENTS_SEQ_ID",
+   "sequence": "IBOX_CONTENTS_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "WB_IBOX_DETAILS",
+   "column": "IBOX_DETAIL_SEQ_ID",
+   "sequence": "IBOX_DETAIL_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "WB_MAN_SURVEY_INSTRUMENTS",
+   "column": "SURVEY_INSTR_SEQ_ID",
+   "sequence": "WB_SURVEY_INSTR_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "WB_QTB_CONTAINERS",
+   "column": "QTB_SEQ_ID",
+   "sequence": "QTB_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  },
+  {
+   "table": "WB_QTB_CONTENTS",
+   "column": "QTB_CONTENTS_SEQ_ID",
+   "sequence": "QTB_CONTENTS_SEQ",
+   "availableOn": [
+    "BASC",
+    "BCTN",
+    "BRON",
+    "CLUT",
+    "CORP",
+    "EWTN",
+    "MEMTN"
+   ]
+  }
+ ]
+}

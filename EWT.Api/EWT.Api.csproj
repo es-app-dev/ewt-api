@@ -1,0 +1,129 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<UserSecretsId>EWT</UserSecretsId>
+    <!-- Swagger reads the XML doc comments on controllers, so every call carries its own
+         description and examples rather than just a method name. CS1591 is suppressed
+         because we document the endpoints, not every DTO property. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
+	  <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.2.5" />
+	  <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.130" />
+	  <PackageReference Include="Microsoft.Identity.Web" Version="3.8.3" />
+	  <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+	  <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+	  <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+	  <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EWT.Data\EWT.Data.csproj" />
+    <ProjectReference Include="..\EWT.Services\EWT.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="relationships.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="sequences.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <!-- The named block WHERE clauses. Reviewed and placed by hand like relationships.json. -->
+    <Content Update="block-wheres.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <!-- Our own PL/SQL package source. Ships with the build so the running server can
+         check, and optionally deploy, what it is supposed to have. Link so the files can
+         live at the repo root rather than inside the project. -->
+    <Content Include="..\OurPackages\**\*.sql" Link="OurPackages\%(RecursiveDir)%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <!-- The fragment manifest sets assembly order, so it ships with the fragments. -->
+    <Content Include="..\OurPackages\**\_manifest.json" Link="OurPackages\%(RecursiveDir)%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <!-- Timestamped copies kept when a fragment is edited at runtime: never ship them. -->
+    <Content Include="..\OurPackages\**\*.bak">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+
+    <Content Update="metadata\**\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <!-- relationships.json is the merged file the API loads. Its two inputs are build-time
+         sources: shipping them invites someone to edit a copy that nothing reads. -->
+    <Content Update="relationships.generated.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Update="relationships.manual.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+
+    <!-- Exclude environment-specific configs from publish output -->
+    <Content Update="appsettings.Dev.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Update="appsettings.Test.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Update="appsettings.Prod.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Update="appsettings.example.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="logs\" />
+  </ItemGroup>
+
+  <!-- 
+    Post-publish: Copy environment-specific settings to appsettings.json
+    Usage: dotnet publish -p:DeployEnv=Dev|Test|Prod
+    Default: Dev
+  -->
+  <PropertyGroup>
+    <DeployEnv Condition="'$(DeployEnv)' == ''">Dev</DeployEnv>
+  </PropertyGroup>
+  
+  <Target Name="CopyEnvSettingsToPublish" AfterTargets="Publish">
+    <Message Importance="high" Text="Deploying with environment: $(DeployEnv)" />
+
+    <!--
+      Since 19 Oct 2026 the appsettings files are not in the repo: they live on the
+      secret server and are copied into EWT.Api/ by hand. A fresh clone therefore has
+      none of them, and the old behaviour would have been to fail with MSB3030 naming
+      a missing file, or worse, to leave whatever appsettings.json the SDK had already
+      copied and ship a dist pointing at the wrong databases. Stop, and say why.
+    -->
+    <Error Condition="!Exists('$(ProjectDir)appsettings.$(DeployEnv).json')"
+           Text="appsettings.$(DeployEnv).json is not in EWT.Api/. It is no longer kept in the repo: fetch it from the secret server and put it there, then publish again. appsettings.example.json shows the shape." />
+
+    <Message Importance="high" Text="Copying appsettings.$(DeployEnv).json to appsettings.json in publish output..." />
+    <Copy SourceFiles="$(ProjectDir)appsettings.$(DeployEnv).json" 
+          DestinationFiles="$(PublishDir)appsettings.json" 
+          OverwriteReadOnlyFiles="true" />
+    <Message Importance="high" Text="Done. Published appsettings.json now contains $(DeployEnv) settings." />
+  </Target>
+
+</Project>

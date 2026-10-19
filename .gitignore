@@ -1,0 +1,86 @@
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
+# Visual Studio Code
+.vscode/
+
+# Secrets / certificates: NEVER commit (private keys, passwords)
+*.pfx
+*.p12
+*.cer
+*.pem
+*.key
+EWIS_GraphReader_*.pfx
+
+# Logs
+logs/
+*.log
+
+# Publish
+/publish/
+
+# Rider
+.idea/
+
+# Visual Studio
+.vs/
+
+# Fleet
+.fleet/
+
+# Code Rush
+.cr/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# Configuration, as of 19 Oct 2026, lives on the secret server, not here.
+#
+# appsettings.Dev.json carries Oracle:DefaultPasswordBase64, which is a live
+# credential for all seven instances. The others carry connection strings and
+# host names. None of it belongs in the repo.
+#
+# Keep your local copies in EWT.Api/ where they have always been: the build reads
+# them from there and a publish copies the one for the target environment into the
+# dist as appsettings.json. They are simply no longer tracked.
+#
+# A fresh clone has none of them and will not publish until you fetch them from the
+# secret server. appsettings.example.json is tracked and shows the shape.
+appsettings.json
+appsettings.Dev.json
+appsettings.Test.json
+appsettings.Prod.json
+appsettings.*.local.json
+appsettings.local.json
+*.secrets.json
+!appsettings.example.json
+
+# Role-mining output contains staff email addresses (identity join key).
+# Decide deliberately before committing personal data.
+analysis/
+
+# Timestamped copies the API keeps when a package fragment is edited at runtime.
+OurPackages/**/*.bak

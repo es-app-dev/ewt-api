@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EWIS API — User Attribution &amp; Audit Trail Design</title>
+<style>
+  :root { --ink:#1a1a1a; --muted:#555; --line:#d0d0d0; --accent:#0b5394; --soft:#f4f6f8; --warn:#8a1f11; --good:#1e6b2f; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: var(--ink); line-height: 1.5; font-size: 11pt; margin: 0; }
+  h1 { font-size: 22pt; color: var(--accent); margin: 0 0 2pt; }
+  h2 { font-size: 14pt; color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 3pt; margin: 22pt 0 8pt; }
+  h3 { font-size: 12pt; margin: 14pt 0 4pt; }
+  p { margin: 6pt 0; }
+  code, pre { font-family: "Consolas", "Courier New", monospace; }
+  code { background: var(--soft); padding: 1px 4px; border-radius: 3px; font-size: 9.5pt; }
+  pre { background: var(--soft); border: 1px solid var(--line); border-radius: 5px; padding: 10px 12px; font-size: 9pt; line-height: 1.4; white-space: pre-wrap; word-wrap: break-word; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; margin: 8pt 0; font-size: 9.5pt; }
+  th, td { border: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+  th { background: var(--accent); color: #fff; font-weight: 600; }
+  tr:nth-child(even) td { background: var(--soft); }
+  .cover { border-bottom: 3px solid var(--accent); padding-bottom: 14pt; margin-bottom: 8pt; }
+  .sub { color: var(--muted); font-size: 11pt; margin-top: 2pt; }
+  .meta { color: var(--muted); font-size: 9.5pt; margin-top: 10pt; }
+  .callout { border-left: 4px solid var(--accent); background: var(--soft); padding: 8px 12px; margin: 10pt 0; border-radius: 0 4px 4px 0; }
+  .warn { border-left-color: var(--warn); }
+  .good { border-left-color: var(--good); }
+  .tag { display: inline-block; font-size: 8pt; font-weight: 700; padding: 1px 6px; border-radius: 3px; color:#fff; }
+  .tag.no { background: var(--warn); }
+  .tag.yes { background: var(--good); }
+  ul, ol { margin: 6pt 0; padding-left: 20pt; }
+  li { margin: 3pt 0; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card { border: 1px solid var(--line); border-radius: 5px; padding: 8px 12px; }
+  .card h3 { margin-top: 0; }
+  h2 { break-after: avoid; }
+  pre, table, .callout, .card { break-inside: avoid; }
+  footer { margin-top: 20pt; border-top: 1px solid var(--line); padding-top: 6pt; color: var(--muted); font-size: 8.5pt; }
+  @page { margin: 16mm 15mm; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>EWIS API — User Attribution &amp; Audit Trail Design</h1>
+  <div class="sub">Replacing database-account identity with application-level (Entra) attribution, without disturbing the legacy system</div>
+  <div class="meta">Prepared for: EWIS Platform / Data Governance &nbsp;•&nbsp; Status: Design proposal &nbsp;•&nbsp; Applies to: EWIS API (dynamic Oracle OData service)</div>
+</div>
+
+<h2>1. Executive Summary</h2>
+<p>
+The legacy EWIS application identified users by giving <strong>each person their own Oracle database account</strong>, and its audit tables record "who did what" by reading the Oracle session user (<code>USER</code>). The modern EWIS API instead authenticates people through <strong>Microsoft Entra</strong> and connects to Oracle with a <strong>single shared service account</strong>. That is the correct, more secure architecture — but it means the legacy audit triggers can no longer see the real person; every change now records the shared account name.
+</p>
+<p>
+This document proposes a small, <strong>additive</strong> enhancement: an application-level audit trail — a single consolidated table, <code>EWIS_API_AUDIT</code>, populated by the API with the real Entra user for every create, update, and delete. It does <strong>not</strong> modify any legacy table, trigger, or package. It is also easier to read than the legacy audit: one row per change instead of many rows spread across dozens of per-table shadow tables.
+</p>
+
+<h2>2. Background — The Legacy Approach Put Users Inside the Database</h2>
+<p>
+In the legacy system, application users were provisioned as <strong>real Oracle database accounts</strong>. When a person signed in, their identity <em>was</em> their Oracle login, so the database's built-in <code>USER</code> value equalled the person (e.g. <code>CALINN</code>, <code>TDMERKEY</code>). Every "who" stamp in the system flows from that single fact.
+</p>
+<div class="callout warn">
+  <strong>Why user-accounts-in-the-database is a recognized anti-pattern:</strong>
+  <ul>
+    <li><strong>Large attack surface.</strong> Every employee is a credential directly on the production database — far more exposure than a single application account behind a service tier.</li>
+    <li><strong>No central identity / SSO.</strong> Identity is bound to the database engine, not to the organization's directory. It cannot participate in Entra, MFA, conditional access, or centralized joiner/mover/leaver processes.</li>
+    <li><strong>Operational burden &amp; offboarding risk.</strong> Accounts, passwords, and privileges must be created, rotated, and revoked per person, per environment. A missed revocation leaves a live database credential.</li>
+    <li><strong>Privilege sprawl.</strong> Direct database accounts can be used outside the application, making least-privilege and separation-of-duties hard to enforce.</li>
+    <li><strong>Licensing &amp; scaling friction.</strong> Named database users tie user growth to database administration rather than to an identity provider.</li>
+  </ul>
+</div>
+<p>
+The modern practice — and what the new API does — is to keep <strong>people out of the database entirely</strong>: authenticate them in Entra, and let the application connect to Oracle through one managed service account. The trade-off is that the database can no longer identify the person on its own; the application must carry that identity. That is exactly the gap this design fills.
+</p>
+
+<h2>3. How Legacy Auditing Works Today</h2>
+<p>Confirmed by directly reading the Dev database's trigger and package source. For a base table such as <code>EC_LABLOGS</code>:</p>
+<table>
+  <tr><th>Mechanism</th><th>Behavior</th></tr>
+  <tr><td><code>EC_LABL_WHO_TBIUR</code> (trigger)</td><td>On insert/update sets <code>CREATE_USER</code>/<code>MODIFY_USER</code> := <code>USER</code> (the Oracle session user).</td></tr>
+  <tr><td><code>EC_LABL_TBIUR</code> (trigger)</td><td>Sets numeric <code>CREATED_BY</code>/<code>LAST_UPDATED_BY</code> via <code>ec_api_persons.get_user_id(USER)</code>.</td></tr>
+  <tr><td><code>EC_LABL_AUDIT_TBUDR</code> (trigger)</td><td>On update/delete calls package <code>EC_APP_AUDIT</code> to write shadow-table rows.</td></tr>
+  <tr><td><code>EC_LABLOGS_A</code> (shadow table)</td><td>Column-level history: one row <em>per changed column</em> (old value, new value, event). Its own actor column is again stamped from <code>USER</code>.</td></tr>
+</table>
+<p>
+Two facts matter for this design: (1) <strong>every identity stamp resolves to Oracle <code>USER</code></strong> — nothing reads a client identifier or any passed-in value; and (2) the audit is <strong>per-table and column-level</strong>. There is a separate <code>*_A</code> shadow table for each base table, and a single logical edit fans out into many audit rows.
+</p>
+
+<h3>Why the legacy audit is hard to read</h3>
+<p>To answer "what did Chris change on lab-log entry 203741, and when?" you must:</p>
+<ol>
+  <li>Know that <code>EC_LABLOGS</code> is audited by <code>EC_LABLOGS_A</code> (a different table name per entity).</li>
+  <li>Filter that table by the row's key and timestamp.</li>
+  <li>Read <em>several</em> rows — one per changed column — and mentally reassemble them into a single edit.</li>
+  <li>Read the actor from a separate who-column, and interpret inconsistent event labels (<code>UPDATING</code>, <code>DELETE</code>).</li>
+</ol>
+<p>
+A cross-entity question — "everything user X changed today" — is worse: it requires querying and unioning <strong>dozens of different <code>*_A</code> tables</strong>. The new design answers both questions from one table with one row per change (see §7).
+</p>
+
+<h2>4. What Changed — and Why Attribution Broke</h2>
+<p>
+The API connects to Oracle as the shared account <code>ENVR</code>. A live session check confirms the session presents as <code>SESSION_USER = ENVR</code> with <code>CLIENT_IDENTIFIER = NULL</code>. Because the legacy triggers stamp <code>USER</code>, <strong>every write through the API records <code>ENVR</code></strong> instead of the real person — and since the "who" triggers overwrite the column unconditionally, the application cannot fix this by passing a value into the existing columns. The real user is an Entra identity that, correctly, <strong>is not a database user</strong>. Legacy attribution therefore cannot represent them, and a new trail is required.
+</p>
+
+<h2>5. The New Method — Application-Level Audit Trail</h2>
+<p>The API records the real Entra user for each mutating operation into one dedicated table. Key properties:</p>
+<ul>
+  <li><strong>Identity from Entra (JWT).</strong> The signed-in user's <code>oid</code> and display name are read from the access-token claims the GUI already sends — no extra call to Entra. An optional HTTP header provides a fallback.</li>
+  <li><strong>Single consolidated table.</strong> All entities, all operations, land in <code>EWIS_API_AUDIT</code>.</li>
+  <li><strong>One row per change,</strong> with the details captured as JSON (<code>EVENT_JSON</code>).</li>
+  <li><strong>Best-effort.</strong> If the audit write fails, the underlying data change is never blocked.</li>
+  <li><strong>Self-provisioning.</strong> The table is auto-created on startup if absent (configurable), so each environment sets itself up.</li>
+</ul>
+
+<div class="callout good">
+  <strong>Non-impact — it enhances, it does not disturb.</strong>
+  <ul>
+    <li><span class="tag no">NO</span> changes to any legacy table, trigger, sequence, or the <code>EC_APP_AUDIT</code> package.</li>
+    <li><span class="tag no">NO</span> change to how existing writes behave; the legacy <code>*_A</code> trail keeps working exactly as today.</li>
+    <li><span class="tag yes">ADDS</span> a real human actor (not <code>ENVR</code>) on every API change.</li>
+    <li><span class="tag yes">ADDS</span> a single, easy-to-query history across all entities.</li>
+    <li><span class="tag yes">SAFE</span> if identity or the audit table is unavailable, data operations continue uninterrupted.</li>
+  </ul>
+</div>
+
+<h2>6. Owner Resolution</h2>
+<p>The API determines the acting user in this order:</p>
+<ol>
+  <li><strong>JWT claim (primary):</strong> <code>oid</code> → <code>OWNER_USER</code>, <code>name</code> → <code>OWNER_DISPLAY</code>, read from the validated Entra token.</li>
+  <li><strong>Header (fallback):</strong> <code>X-EWIS-On-Behalf-Of</code> and <code>X-EWIS-On-Behalf-Of-Name</code>.</li>
+  <li><strong>None:</strong> the row is still written with a null owner (best-effort). A later switch, <code>Audit:RequireOwner=true</code>, can enforce attribution once the GUI is fully cut over.</li>
+</ol>
+
+<h2>7. Design Details</h2>
+
+<h3>7.1 Audit table</h3>
+<pre>EWIS_API_AUDIT
+  AUDIT_ID       NUMBER        -- primary key, from sequence EWIS_API_AUDIT_SEQ
+  ENTITY_NAME    VARCHAR2      -- e.g. EC_LABLOGS        (indexed query helper)
+  OPERATION      VARCHAR2      -- INSERT | UPDATE | DELETE (indexed query helper)
+  OWNER_USER     VARCHAR2      -- Entra oid            (JWT claim, header fallback)
+  OWNER_DISPLAY  VARCHAR2      -- display name
+  DB_USER        VARCHAR2      -- 'ENVR' (cross-reference to the legacy trail)
+  AUDIT_TS_UTC   TIMESTAMP     -- server time, UTC
+  EVENT_JSON     CLOB          -- the CRUD event: entity, operation, pk, new values</pre>
+
+<h3>7.2 EVENT_JSON — examples for each operation</h3>
+<div class="two">
+  <div class="card">
+    <h3>CREATE (POST)</h3>
+<pre>{
+  "entity": "EC_LABLOGS",
+  "operation": "INSERT",
+  "pk": { "ID": 204512 },
+  "values": {
+    "SHIP_ID": 52035,
+    "ENTRYNO": "00",
+    "SAMPLENO": "A-1",
+    "NOTES": "Initial sample log"
+  }
+}</pre>
+  </div>
+  <div class="card">
+    <h3>UPDATE (PATCH)</h3>
+<pre>{
+  "entity": "EC_LABLOGS",
+  "operation": "UPDATE",
+  "pk": { "ID": 203741 },
+  "values": {
+    "APPROVAL_DATETIME": "2026-07-21T09:15:00",
+    "USER_WHO_APPROVED": "CALINN"
+  }
+}</pre>
+  </div>
+</div>
+<div class="card" style="margin-top:12px;">
+  <h3>DELETE</h3>
+<pre>{ "entity": "EC_LABLOGS", "operation": "DELETE", "pk": { "ID": 203741 } }</pre>
+</div>
+<p class="meta">Note: the <code>values</code> object holds the new values supplied on the call. The INSERT <code>pk</code> is the sequence-assigned key, captured via a <code>RETURNING</code> clause (optional; if not enabled, <code>pk</code> is omitted on insert). Reads (GET) are not audited.</p>
+
+<h3>7.3 A stored row (UPDATE)</h3>
+<pre>AUDIT_ID       1001
+ENTITY_NAME    EC_LABLOGS
+OPERATION      UPDATE
+OWNER_USER     5b9e6f0a-3d21-4c8e-9f77-2c1a...   (Entra oid)
+OWNER_DISPLAY  Chris Alinn
+DB_USER        ENVR
+AUDIT_TS_UTC   2026-07-21T15:15:03Z
+EVENT_JSON     { ...the UPDATE example above... }</pre>
+
+<h3>7.4 Readability — legacy vs. new, same edit</h3>
+<table>
+  <tr><th>Question</th><th>Legacy (<code>*_A</code> shadow tables)</th><th>New (<code>EWIS_API_AUDIT</code>)</th></tr>
+  <tr>
+    <td>One edit to entry 203741</td>
+    <td>Multiple rows in <code>EC_LABLOGS_A</code> (one per changed column); actor in a separate column; must reassemble.</td>
+    <td>One row; all changed fields in <code>EVENT_JSON</code>; actor in <code>OWNER_DISPLAY</code>.</td>
+  </tr>
+  <tr>
+    <td>Everything user X did today, all entities</td>
+    <td>Query and UNION dozens of different <code>*_A</code> tables.</td>
+    <td>One filter: <code>WHERE OWNER_USER = :x AND AUDIT_TS_UTC &gt;= :today</code>.</td>
+  </tr>
+  <tr>
+    <td>Who is the actor?</td>
+    <td>Oracle <code>USER</code> — now always <code>ENVR</code> via the API.</td>
+    <td>The real Entra person (<code>oid</code> + display name).</td>
+  </tr>
+</table>
+
+<h3>7.5 Configuration</h3>
+<table>
+  <tr><th>Setting</th><th>Default</th><th>Purpose</th></tr>
+  <tr><td><code>Audit:Enabled</code></td><td>true</td><td>Master on/off for the trail.</td></tr>
+  <tr><td><code>Audit:AutoCreate</code></td><td>true</td><td>Create the table/sequence at startup if missing (turn off where DBAs pre-create).</td></tr>
+  <tr><td><code>Audit:RequireOwner</code></td><td>false</td><td>When true, reject writes lacking an owner — flip after GUI cutover.</td></tr>
+</table>
+
+<h2>8. GUI Implementation Over Time</h2>
+<p>
+Because the owner is optional and the audit is best-effort, this can be adopted gradually with no coordinated release. The identity values are already present in the browser after sign-in (MSAL cache) — no extra Entra calls.
+</p>
+<table>
+  <tr><th>Phase</th><th>Action</th><th>Result</th></tr>
+  <tr>
+    <td><strong>0 — Server first</strong></td>
+    <td>Deploy the API with the audit trail. No GUI change.</td>
+    <td>Every change is audited. If the GUI already sends its Entra bearer token, the real user is captured immediately; otherwise the owner is null.</td>
+  </tr>
+  <tr>
+    <td><strong>1 — One interceptor</strong></td>
+    <td>Add a single HTTP interceptor in the GUI that attaches identity to all write calls:<br>
+      <code>oid = account.idTokenClaims.oid</code>, <code>name = account.name</code>.</td>
+    <td>All screens attribute correctly at once — no per-screen work.</td>
+  </tr>
+  <tr>
+    <td><strong>2 — Enforce</strong></td>
+    <td>Confirm coverage (owner-present rate), then set <code>Audit:RequireOwner=true</code>.</td>
+    <td>Attribution is guaranteed going forward.</td>
+  </tr>
+</table>
+<div class="callout">
+  <strong>GUI effort is minimal:</strong> read two values from the cached MSAL account and attach two request headers (or simply ensure the existing bearer token is sent). No new libraries, no calls to Entra, no screen-by-screen rewrite required.
+</div>
+
+<h2>9. Summary</h2>
+<ul>
+  <li>The legacy system embedded users as database accounts and derived all attribution from Oracle <code>USER</code> — a security anti-pattern the new API deliberately moves away from.</li>
+  <li>Moving to Entra + a shared service account is the right architecture, but it leaves the legacy audit unable to name the real person.</li>
+  <li>The proposed application-level trail restores real attribution, is far easier to read (one row per change, one table for all entities), and is purely additive — the existing system is untouched and continues to function.</li>
+  <li>It can be turned on server-side immediately and adopted in the GUI incrementally, then enforced when ready.</li>
+</ul>
+
+<footer>
+  EWIS API — User Attribution &amp; Audit Trail Design · Design proposal · Legacy behavior described here was verified by reading trigger and package source in the Dev database (read-only).
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+﻿namespace EWT.Domain
+{
+    public class AzureAdUser
+    {
+        public string? Id { get; set; }
+        public string? DisplayName { get; set; }
+        public string? GivenName { get; set; }
+        public string? JobTitle { get; set; }
+        public string? Mail { get; set; }
+        public string? MobilePhone { get; set; }
+        public string? OfficeLanguage { get; set; }
+        public string? Surname { get; set; }  
+        public string? UserPrincipalName { get; set; }
+    }
+}
