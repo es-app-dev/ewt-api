@@ -1,5 +1,10 @@
 """
-Splits OurPackages/EWT_UI.sql into one fragment per form, which the API reassembles.
+Splits a single-file EWT_UI.sql into one fragment per form.
+
+HISTORICAL. This was run once, on 2026-10-19, to produce OurPackages/ewt_ui from the
+350 KB EWT_UI.sql that preceded it. That file has since been deleted, so this script
+has no input unless someone recreates one with scripts/assemble-ewt-ui.py. Kept
+because it documents exactly how the 168 procedures were apportioned to 60 forms.
 
 Run once to convert the monolith. After that the fragments are the source and nothing
 regenerates them from the whole file; the UI side edits a form's fragment through the API

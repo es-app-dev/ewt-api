@@ -8,7 +8,11 @@ which is still running against them, and is not ours to change.
 
 ## The contract
 
-One `.sql` file per package. Put the spec and the body in the same file, separated the way
+**EWT_UI is assembled from `ewt_ui/`, one file per form.** See "Iterating without a restart"
+below and `docs/API-HANDOFF-ui-package-per-form.md`. The single-file `EWT_UI.sql` was deleted
+on 2026-10-19; `scripts/assemble-ewt-ui.py` regenerates an equivalent whenever one is wanted.
+
+For any other package, one `.sql` file per package. Put the spec and the body in the same file, separated the way
 SQL*Plus separates them, with a line containing only a slash:
 
 ```sql

@@ -27,7 +27,6 @@ import re
 import sys
 from collections import Counter
 
-SOURCE = os.path.join("OurPackages", "EWT_UI.sql")
 OUTDIR = os.path.join("OurPackages", "ewt_ui")
 
 KNOWN_SECTIONS = {

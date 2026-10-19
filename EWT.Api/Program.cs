@@ -536,7 +536,7 @@ namespace EWT.Api
             })
             .WithName("UpdateUiPackage")
             .WithSummary("Update the EWT_UI source this server ships.")
-            .WithDescription("Replaces OurPackages/EWT_UI.sql with the request body, content-type text/plain. The text must declare package EWT_UI and split into statements the same way the file does.\n\nThis changes what the server believes the package should be: it is what matchesFile is measured against, what AutoDeploy restores at startup, and it survives a restart. It does not touch any database on its own. The previous file is kept beside it with a timestamp, because it is checked in, so copy the new version back into the repo once you are happy with it.");
+            .WithDescription("Replaces the single .sql file a package is built from, with the request body, content-type text/plain.\n\nThis is refused for EWT_UI, because EWT_UI is assembled from one file per form in OurPackages/ewt_ui: there is no single file to replace, and overwriting the whole package in one call would make one person's edit silently discard everyone else's. Use PutUiPackageForm for the form you changed.\n\nFor any other package:\n\nThis changes what the server believes the package should be: it is what matchesFile is measured against, what AutoDeploy restores at startup, and it survives a restart. It does not touch any database on its own. The previous file is kept beside it with a timestamp, because it is checked in, so copy the new version back into the repo once you are happy with it.");
 
             app.MapPost("/admin/ui-package/deploy", async (PackageService packages, OracleConnectionService connections,
                                                            HttpRequest request, string? db) =>
@@ -578,7 +578,11 @@ namespace EWT.Api
                 return Results.Json(new
                 {
                     package = UiPackage,
-                    source = fromFile ? "OurPackages/EWT_UI.sql on the server" : "the request body",
+                    source = fromFile
+                        ? (packages.UsesFragments
+                            ? $"OurPackages/ewt_ui on the server ({packages.FragmentOrder().Count} fragments)"
+                            : "the .sql file on the server")
+                        : "the request body",
                     ok = allOk,
                     instances = targets.Count,
                     compiled = results.Count(r => r.Ok),
@@ -600,7 +604,7 @@ namespace EWT.Api
             })
             .WithName("DeployUiPackage")
             .WithSummary("Deploy the EWT_UI package to one database or to all seven.")
-            .WithDescription("Compiles EWT_UI and reports what Oracle made of it. ?db= is required and may be an instance name or 'all'.\n\nSend the source as the request body, content-type text/plain, to deploy that text. Send no body to deploy OurPackages/EWT_UI.sql as it stands on the server, which is how you put the shipped version back after trying something.\n\nWhen it does not compile the reply carries USER_ERRORS per instance, with type, line and position, so the reason does not have to be chased through the server log. A deploy from a body does not change the file: restart, or deploy with no body, and the shipped version returns. Use UpdateUiPackage to make a change stick.");
+            .WithDescription("Compiles EWT_UI and reports what Oracle made of it. ?db= is required and may be an instance name or 'all'.\n\nSend the source as the request body, content-type text/plain, to deploy that text. Send no body to deploy what the server holds, which for EWT_UI means the fragments in OurPackages/ewt_ui assembled in manifest order. That is how you put the shipped version back after trying something.\n\nWhen it does not compile the reply carries USER_ERRORS per instance, with type, line and position, so the reason does not have to be chased through the server log. A deploy from a body does not change the file: restart, or deploy with no body, and the shipped version returns. Use UpdateUiPackage to make a change stick.");
 
             // ---- One form at a time -------------------------------------------------------
             // EWT_UI is assembled from OurPackages/ewt_ui/<FORM>.sql. These let the UI side
@@ -617,7 +621,7 @@ namespace EWT.Api
                         message = "This server builds EWT_UI from a single .sql file, not from "
                                   + "per-form fragments.",
                         hint = "OurPackages/ewt_ui/ with a _frame.sql is what switches it over. "
-                               + "scripts/split-ewt-ui.py produces it from EWT_UI.sql."
+                               + "scripts/split-ewt-ui.py produced it from the original single-file package."
                     }
                 }, statusCode: 409);
             }
