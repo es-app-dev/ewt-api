@@ -2,6 +2,7 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- WB2002 AT_COMPACTION_MASTERS: AT_COMPACTION_MASTERS with the block's own WHERE; one optional criterion per column
   PROCEDURE wb2002_w_at_compaction_masters(p_cmpctn_seq_id IN NUMBER, p_cntnr_seq_id IN NUMBER, p_pre_compaction_wgt IN NUMBER, p_innerpack_hgt IN NUMBER, p_innerpack_wgt IN NUMBER, p_rows OUT SYS_REFCURSOR);
 
@@ -13,8 +14,10 @@
 
   -- WB2002 AT_OVERPACKS: AT_OVERPACKS with the block's own WHERE; one optional criterion per column
   PROCEDURE wb2002_w_at_overpacks(p_cntnr_seq_id IN NUMBER, p_underfill_amt IN NUMBER, p_rank IN NUMBER, p_rad_greater_0_ind IN VARCHAR2, p_rad_greater_180_ind IN VARCHAR2, p_ash_ind IN VARCHAR2, p_rad_greater_500_ind IN VARCHAR2, p_baghouse_dust_ind IN VARCHAR2, p_fly_ash_ind IN VARCHAR2, p_rad_greater_1000_ind IN VARCHAR2, p_treated_ash_ind IN VARCHAR2, p_full_ind IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 
 --#BODY
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- WB2002 AT_COMPACTION_MASTERS: AT_COMPACTION_MASTERS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE wb2002_w_at_compaction_masters(p_cmpctn_seq_id IN NUMBER, p_cntnr_seq_id IN NUMBER, p_pre_compaction_wgt IN NUMBER, p_innerpack_hgt IN NUMBER, p_innerpack_wgt IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -89,4 +92,5 @@ and NVL(full_ind,'N') = 'N'
 ) WHERE ROWNUM <= 5000~'
       USING p_cntnr_seq_id, p_cntnr_seq_id, p_underfill_amt, p_underfill_amt, p_rank, p_rank, p_rad_greater_0_ind, p_rad_greater_0_ind, p_rad_greater_0_ind, p_rad_greater_0_ind, p_rad_greater_0_ind, p_rad_greater_180_ind, p_rad_greater_180_ind, p_rad_greater_180_ind, p_rad_greater_180_ind, p_rad_greater_180_ind, p_ash_ind, p_ash_ind, p_ash_ind, p_ash_ind, p_ash_ind, p_rad_greater_500_ind, p_rad_greater_500_ind, p_rad_greater_500_ind, p_rad_greater_500_ind, p_rad_greater_500_ind, p_baghouse_dust_ind, p_baghouse_dust_ind, p_baghouse_dust_ind, p_baghouse_dust_ind, p_baghouse_dust_ind, p_fly_ash_ind, p_fly_ash_ind, p_fly_ash_ind, p_fly_ash_ind, p_fly_ash_ind, p_rad_greater_1000_ind, p_rad_greater_1000_ind, p_rad_greater_1000_ind, p_rad_greater_1000_ind, p_rad_greater_1000_ind, p_treated_ash_ind, p_treated_ash_ind, p_treated_ash_ind, p_treated_ash_ind, p_treated_ash_ind, p_full_ind, p_full_ind, p_full_ind, p_full_ind, p_full_ind;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 

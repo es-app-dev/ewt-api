@@ -2,14 +2,40 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+  -- AT1552 UNMAPPED_ORDERS: AT_BARCODE_ORDER_VIEW with the block's own WHERE; one optional criterion per column
+  PROCEDURE at1552_w_unmapped_orders(b_at_containers_cntnr_seq_id IN NUMBER, p_advnotif_seq_id IN NUMBER, p_manifest_nbr IN VARCHAR2, p_cust_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT1552 DAUGHTER_CONTAINERS (record group DAUGHTER_CONTAINERS); not OData: a join
   PROCEDURE at1552_lov_daughter_containers(p1 IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
   -- AT1552 LOV_COST (record group RG_COST); not OData: a join
   PROCEDURE at1552_lov_lov_cost(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR);
-  -- AT1552 UNMAPPED_ORDERS: AT_BARCODE_ORDER_VIEW with the block's own WHERE; one optional criterion per column
-  PROCEDURE at1552_w_unmapped_orders(b_at_containers_cntnr_seq_id IN NUMBER, p_advnotif_seq_id IN NUMBER, p_manifest_nbr IN VARCHAR2, p_cust_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 
 --#BODY
+
+
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+  -- AT1552 UNMAPPED_ORDERS: AT_BARCODE_ORDER_VIEW with the block's own WHERE (JDAPI); binds and criteria bound; reads only
+  PROCEDURE at1552_w_unmapped_orders(b_at_containers_cntnr_seq_id IN NUMBER, p_advnotif_seq_id IN NUMBER, p_manifest_nbr IN VARCHAR2, p_cust_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM AT_BARCODE_ORDER_VIEW
+ WHERE (
+cntnr_seq_id = :w1
+)
+   AND (:c1 IS NULL OR advnotif_seq_id = :c2)
+   AND (:c3 IS NULL OR (CASE WHEN INSTR(:c4, '%') + INSTR(:c5, '_') > 0 THEN CASE WHEN manifest_nbr LIKE :c6 THEN 1 END WHEN manifest_nbr = :c7 THEN 1 END) = 1)
+   AND (:c8 IS NULL OR cust_seq_id = :c9)
+ ORDER BY advnotif_seq_id
+) WHERE ROWNUM <= 5000~'
+      USING b_at_containers_cntnr_seq_id, p_advnotif_seq_id, p_advnotif_seq_id, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_cust_seq_id, p_cust_seq_id;
+  END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT1552 DAUGHTER_CONTAINERS: the record group's own query; P1 = :AT_CONTAINERS.CONTAINER_ID
   PROCEDURE at1552_lov_daughter_containers(p1 IN VARCHAR2, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -30,19 +56,5 @@ ORDER BY PS.PRODSERV_CD, CPS.UNIT_CD_ID,CPS.COST
 ) WHERE ROWNUM <= 5000~'
       USING p1;
   END;
-
-  -- AT1552 UNMAPPED_ORDERS: AT_BARCODE_ORDER_VIEW with the block's own WHERE (JDAPI); binds and criteria bound; reads only
-  PROCEDURE at1552_w_unmapped_orders(b_at_containers_cntnr_seq_id IN NUMBER, p_advnotif_seq_id IN NUMBER, p_manifest_nbr IN VARCHAR2, p_cust_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM AT_BARCODE_ORDER_VIEW
- WHERE (
-cntnr_seq_id = :w1
-)
-   AND (:c1 IS NULL OR advnotif_seq_id = :c2)
-   AND (:c3 IS NULL OR (CASE WHEN INSTR(:c4, '%') + INSTR(:c5, '_') > 0 THEN CASE WHEN manifest_nbr LIKE :c6 THEN 1 END WHEN manifest_nbr = :c7 THEN 1 END) = 1)
-   AND (:c8 IS NULL OR cust_seq_id = :c9)
- ORDER BY advnotif_seq_id
-) WHERE ROWNUM <= 5000~'
-      USING b_at_containers_cntnr_seq_id, p_advnotif_seq_id, p_advnotif_seq_id, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_cust_seq_id, p_cust_seq_id;
-  END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

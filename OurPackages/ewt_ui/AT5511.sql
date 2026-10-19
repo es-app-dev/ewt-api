@@ -2,36 +2,23 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+  -- AT5511 OUTSHIPMT: AT_OUTBOUND_SHIPMENTS with the block's own WHERE; one optional criterion per column
+  PROCEDURE at5511_w_outshipmt(p_manifest_nbr IN VARCHAR2, p_shipment_nbr IN VARCHAR2, p_exclusive_use_ind IN VARCHAR2, p_shipment_status IN VARCHAR2, p_epa_regulated_waste_ind IN VARCHAR2, p_epa_manifest_nbr IN VARCHAR2, p_shipment_id_nbr IN VARCHAR2, p_transport_permit_nbr IN VARCHAR2, p_generator_cd IN VARCHAR2, p_collector_ind IN VARCHAR2, p_processor_ind IN VARCHAR2, p_outshipmt_seq_id IN NUMBER, p_cust_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_shipper_seg_stf_seq_id IN NUMBER, p_cntnr_vol_ind IN VARCHAR2, p_additional_notes IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT5511 CGFK$OUTSHIPMT_DSP_CARRIER_NAM (record group CGFK$OUTSHIPMT_DSP_CARRIER_NAM); not OData: a join
   PROCEDURE at5511_lov_cgfk_outshipmt_dsp_(p_rows OUT SYS_REFCURSOR);
   -- AT5511 CONTAINERS (record group CONTAINERS); not OData: a join
   PROCEDURE at5511_lov_containers(p_rows OUT SYS_REFCURSOR);
-  -- AT5511 OUTSHIPMT: AT_OUTBOUND_SHIPMENTS with the block's own WHERE; one optional criterion per column
-  PROCEDURE at5511_w_outshipmt(p_manifest_nbr IN VARCHAR2, p_shipment_nbr IN VARCHAR2, p_exclusive_use_ind IN VARCHAR2, p_shipment_status IN VARCHAR2, p_epa_regulated_waste_ind IN VARCHAR2, p_epa_manifest_nbr IN VARCHAR2, p_shipment_id_nbr IN VARCHAR2, p_transport_permit_nbr IN VARCHAR2, p_generator_cd IN VARCHAR2, p_collector_ind IN VARCHAR2, p_processor_ind IN VARCHAR2, p_outshipmt_seq_id IN NUMBER, p_cust_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_shipper_seg_stf_seq_id IN NUMBER, p_cntnr_vol_ind IN VARCHAR2, p_additional_notes IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 
 --#BODY
-  -- AT5511 CGFK$OUTSHIPMT_DSP_CARRIER_NAM: the record group's own query
-  PROCEDURE at5511_lov_cgfk_outshipmt_dsp_(p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (
-select distinct carrier.carrier_name dsp_carrier_name /* cg$fk */ ,carrier.carrier_abbreviated_name dsp_carrier_abbreviated_name ,carrier.carrier_contact_name dsp_carrier_contact_name ,carrier.epa_nbr dsp_epa_nbr ,carrier.carrier_contact_phone_nbr dsp_carrier_contact_phone_nb ,carrier.carrier_status_cd dsp_carrier_status_cd ,carrier.carrier_seq_id carrier_seq_id from at_carriers carrier, at_addresses addr
-) WHERE ROWNUM <= 5000~';
-  END;
 
-  -- AT5511 CONTAINERS: the record group's own query
-  PROCEDURE at5511_lov_containers(p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (
-select cnt.cntnr_seq_id,cnt.container_id,typ.container_type_cd,cnt.waste_class_cd
- from at_container_types typ,at_containers cnt
- where typ.cntnr_typ_seq_id = cnt.cntnr_typ_seq_id
- and cnt.cntnr_stat_cd_id = 'IN USE'
- and cnt.cntnr_seq_id not in
- (select osc.cntnr_seq_id from at_outshipment_containers osc where osc.cntnr_seq_id = cnt.cntnr_seq_id and osc.shipment_type_cd = 'B')
-order by cnt.container_id
-) WHERE ROWNUM <= 5000~';
-  END;
 
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT5511 OUTSHIPMT: AT_OUTBOUND_SHIPMENTS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE at5511_w_outshipmt(p_manifest_nbr IN VARCHAR2, p_shipment_nbr IN VARCHAR2, p_exclusive_use_ind IN VARCHAR2, p_shipment_status IN VARCHAR2, p_epa_regulated_waste_ind IN VARCHAR2, p_epa_manifest_nbr IN VARCHAR2, p_shipment_id_nbr IN VARCHAR2, p_transport_permit_nbr IN VARCHAR2, p_generator_cd IN VARCHAR2, p_collector_ind IN VARCHAR2, p_processor_ind IN VARCHAR2, p_outshipmt_seq_id IN NUMBER, p_cust_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_shipper_seg_stf_seq_id IN NUMBER, p_cntnr_vol_ind IN VARCHAR2, p_additional_notes IN VARCHAR2, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -61,4 +48,29 @@ WHERE SUBSTR(SHIPMENT_TYPE_CD,1,8) = 'TRANSFER')
 ) WHERE ROWNUM <= 5000~'
       USING p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_exclusive_use_ind, p_exclusive_use_ind, p_exclusive_use_ind, p_exclusive_use_ind, p_exclusive_use_ind, p_shipment_status, p_shipment_status, p_shipment_status, p_shipment_status, p_shipment_status, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_epa_manifest_nbr, p_epa_manifest_nbr, p_epa_manifest_nbr, p_epa_manifest_nbr, p_epa_manifest_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_transport_permit_nbr, p_transport_permit_nbr, p_transport_permit_nbr, p_transport_permit_nbr, p_transport_permit_nbr, p_generator_cd, p_generator_cd, p_generator_cd, p_generator_cd, p_generator_cd, p_collector_ind, p_collector_ind, p_collector_ind, p_collector_ind, p_collector_ind, p_processor_ind, p_processor_ind, p_processor_ind, p_processor_ind, p_processor_ind, p_outshipmt_seq_id, p_outshipmt_seq_id, p_cust_seq_id, p_cust_seq_id, p_disp_site_seq_id, p_disp_site_seq_id, p_shipper_seg_stf_seq_id, p_shipper_seg_stf_seq_id, p_cntnr_vol_ind, p_cntnr_vol_ind, p_cntnr_vol_ind, p_cntnr_vol_ind, p_cntnr_vol_ind, p_additional_notes, p_additional_notes, p_additional_notes, p_additional_notes, p_additional_notes;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
+  -- AT5511 CGFK$OUTSHIPMT_DSP_CARRIER_NAM: the record group's own query
+  PROCEDURE at5511_lov_cgfk_outshipmt_dsp_(p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (
+select distinct carrier.carrier_name dsp_carrier_name /* cg$fk */ ,carrier.carrier_abbreviated_name dsp_carrier_abbreviated_name ,carrier.carrier_contact_name dsp_carrier_contact_name ,carrier.epa_nbr dsp_epa_nbr ,carrier.carrier_contact_phone_nbr dsp_carrier_contact_phone_nb ,carrier.carrier_status_cd dsp_carrier_status_cd ,carrier.carrier_seq_id carrier_seq_id from at_carriers carrier, at_addresses addr
+) WHERE ROWNUM <= 5000~';
+  END;
+
+  -- AT5511 CONTAINERS: the record group's own query
+  PROCEDURE at5511_lov_containers(p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (
+select cnt.cntnr_seq_id,cnt.container_id,typ.container_type_cd,cnt.waste_class_cd
+ from at_container_types typ,at_containers cnt
+ where typ.cntnr_typ_seq_id = cnt.cntnr_typ_seq_id
+ and cnt.cntnr_stat_cd_id = 'IN USE'
+ and cnt.cntnr_seq_id not in
+ (select osc.cntnr_seq_id from at_outshipment_containers osc where osc.cntnr_seq_id = cnt.cntnr_seq_id and osc.shipment_type_cd = 'B')
+order by cnt.container_id
+) WHERE ROWNUM <= 5000~';
+  END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

@@ -2,6 +2,19 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+  -- AT3110 AT_ESPROFILE_EPA: AT_ESPROFILE_EPA with the block's own WHERE; one optional criterion per column
+  PROCEDURE at3110_w_at_esprofile_epa(b_matl_matl_seq_id IN NUMBER, b_matl_cntnr_seq_id IN NUMBER, p_es_prof_seq_id IN NUMBER, p_haz_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+
+  -- AT3110 AT_ESPROFILE_EPA_I: AT_ESPROFILE_EPA with the block's own WHERE; one optional criterion per column
+  PROCEDURE at3110_w_at_esprofile_epa_i(b_matl1_matl_seq_id IN NUMBER, b_matl1_cntnr_seq_id IN NUMBER, p_es_prof_seq_id IN NUMBER, p_haz_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+
+  -- AT3110 CNTNR: AT_CONTAINERS with the block's own WHERE; one optional criterion per column
+  PROCEDURE at3110_w_cntnr(b_matl_cntnr_seq_id IN NUMBER, p_cntnr_seq_id IN NUMBER, p_container_id IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT3110 CGFK$CUSTTRCK_DSP_CODE2 (record group CGFK$CUSTTRCK_DSP_CODE2); not OData: could not read the query (unexpected "not" in WHERE)
   PROCEDURE at3110_lov_cgfk_custtrck_ds_02(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR);
   -- AT3110 CGFK$CUSTTRCK_DSP_CODE (record group CGFK$CUSTTRCK_DSP_CODE); not OData: could not read the query (unexpected "not" in WHERE)
@@ -16,16 +29,72 @@
   PROCEDURE at3110_lov_lov_activity1(p1 IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
   -- AT3110 ORDER_DISP_SITES (record group ORDER_DISP_SITES); not OData: a join
   PROCEDURE at3110_lov_order_disp_sites(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR);
-  -- AT3110 AT_ESPROFILE_EPA: AT_ESPROFILE_EPA with the block's own WHERE; one optional criterion per column
-  PROCEDURE at3110_w_at_esprofile_epa(b_matl_matl_seq_id IN NUMBER, b_matl_cntnr_seq_id IN NUMBER, p_es_prof_seq_id IN NUMBER, p_haz_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
-
-  -- AT3110 AT_ESPROFILE_EPA_I: AT_ESPROFILE_EPA with the block's own WHERE; one optional criterion per column
-  PROCEDURE at3110_w_at_esprofile_epa_i(b_matl1_matl_seq_id IN NUMBER, b_matl1_cntnr_seq_id IN NUMBER, p_es_prof_seq_id IN NUMBER, p_haz_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
-
-  -- AT3110 CNTNR: AT_CONTAINERS with the block's own WHERE; one optional criterion per column
-  PROCEDURE at3110_w_cntnr(b_matl_cntnr_seq_id IN NUMBER, p_cntnr_seq_id IN NUMBER, p_container_id IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 
 --#BODY
+
+
+
+
+
+
+
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+  -- AT3110 AT_ESPROFILE_EPA: AT_ESPROFILE_EPA with the block's own WHERE (JDAPI); binds and criteria bound; reads only
+  PROCEDURE at3110_w_at_esprofile_epa(b_matl_matl_seq_id IN NUMBER, b_matl_cntnr_seq_id IN NUMBER, p_es_prof_seq_id IN NUMBER, p_haz_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM at_esprofile_epa pe
+ WHERE (
+NOT EXISTS (SELECT 1
+            FROM   at_barcode_haz_waste_codes bhwc2
+            WHERE  bhwc2.matl_seq_id = :w1
+            AND    bhwc2.cntnr_seq_id = :w2
+            AND    bhwc2.haz_seq_id = pe.haz_seq_id)
+)
+   AND (:c1 IS NULL OR es_prof_seq_id = :c2)
+   AND (:c3 IS NULL OR haz_seq_id = :c4)
+ ORDER BY (SELECT haz_waste_cd
+ FROM   at_haz_waste_codes hwc2
+ WHERE  hwc2.haz_seq_id = pe.haz_seq_id)
+) WHERE ROWNUM <= 5000~'
+      USING b_matl_matl_seq_id, b_matl_cntnr_seq_id, p_es_prof_seq_id, p_es_prof_seq_id, p_haz_seq_id, p_haz_seq_id;
+  END;
+
+  -- AT3110 AT_ESPROFILE_EPA_I: AT_ESPROFILE_EPA with the block's own WHERE (JDAPI); binds and criteria bound; reads only
+  PROCEDURE at3110_w_at_esprofile_epa_i(b_matl1_matl_seq_id IN NUMBER, b_matl1_cntnr_seq_id IN NUMBER, p_es_prof_seq_id IN NUMBER, p_haz_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM at_esprofile_epa pe
+ WHERE (
+NOT EXISTS (SELECT 1
+            FROM   at_barcode_haz_waste_codes bhwc2
+            WHERE  bhwc2.matl_seq_id = :w1
+            AND    bhwc2.cntnr_seq_id = :w2
+            AND    bhwc2.haz_seq_id = pe.haz_seq_id)
+)
+   AND (:c1 IS NULL OR es_prof_seq_id = :c2)
+   AND (:c3 IS NULL OR haz_seq_id = :c4)
+ ORDER BY (SELECT haz_waste_cd
+ FROM   at_haz_waste_codes hwc2
+ WHERE  hwc2.haz_seq_id = pe.haz_seq_id)
+) WHERE ROWNUM <= 5000~'
+      USING b_matl1_matl_seq_id, b_matl1_cntnr_seq_id, p_es_prof_seq_id, p_es_prof_seq_id, p_haz_seq_id, p_haz_seq_id;
+  END;
+
+  -- AT3110 CNTNR: AT_CONTAINERS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
+  PROCEDURE at3110_w_cntnr(b_matl_cntnr_seq_id IN NUMBER, p_cntnr_seq_id IN NUMBER, p_container_id IN VARCHAR2, p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM AT_CONTAINERS
+ WHERE (
+CNTNR_SEQ_ID = :w1
+)
+   AND (:c1 IS NULL OR cntnr_seq_id = :c2)
+   AND (:c3 IS NULL OR (CASE WHEN INSTR(:c4, '%') + INSTR(:c5, '_') > 0 THEN CASE WHEN container_id LIKE :c6 THEN 1 END WHEN container_id = :c7 THEN 1 END) = 1)
+) WHERE ROWNUM <= 5000~'
+      USING b_matl_cntnr_seq_id, p_cntnr_seq_id, p_cntnr_seq_id, p_container_id, p_container_id, p_container_id, p_container_id, p_container_id;
+  END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT3110 CGFK$CUSTTRCK_DSP_CODE2: the record group's own query; P1 = :MATL1.MATL_SEQ_ID
   PROCEDURE at3110_lov_cgfk_custtrck_ds_02(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -110,57 +179,5 @@ select a.code, a.description,a.disp_site_seq_id from at_disp_sites a, at_order_d
 ) WHERE ROWNUM <= 5000~'
       USING p1;
   END;
-
-  -- AT3110 AT_ESPROFILE_EPA: AT_ESPROFILE_EPA with the block's own WHERE (JDAPI); binds and criteria bound; reads only
-  PROCEDURE at3110_w_at_esprofile_epa(b_matl_matl_seq_id IN NUMBER, b_matl_cntnr_seq_id IN NUMBER, p_es_prof_seq_id IN NUMBER, p_haz_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM at_esprofile_epa pe
- WHERE (
-NOT EXISTS (SELECT 1
-            FROM   at_barcode_haz_waste_codes bhwc2
-            WHERE  bhwc2.matl_seq_id = :w1
-            AND    bhwc2.cntnr_seq_id = :w2
-            AND    bhwc2.haz_seq_id = pe.haz_seq_id)
-)
-   AND (:c1 IS NULL OR es_prof_seq_id = :c2)
-   AND (:c3 IS NULL OR haz_seq_id = :c4)
- ORDER BY (SELECT haz_waste_cd
- FROM   at_haz_waste_codes hwc2
- WHERE  hwc2.haz_seq_id = pe.haz_seq_id)
-) WHERE ROWNUM <= 5000~'
-      USING b_matl_matl_seq_id, b_matl_cntnr_seq_id, p_es_prof_seq_id, p_es_prof_seq_id, p_haz_seq_id, p_haz_seq_id;
-  END;
-
-  -- AT3110 AT_ESPROFILE_EPA_I: AT_ESPROFILE_EPA with the block's own WHERE (JDAPI); binds and criteria bound; reads only
-  PROCEDURE at3110_w_at_esprofile_epa_i(b_matl1_matl_seq_id IN NUMBER, b_matl1_cntnr_seq_id IN NUMBER, p_es_prof_seq_id IN NUMBER, p_haz_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM at_esprofile_epa pe
- WHERE (
-NOT EXISTS (SELECT 1
-            FROM   at_barcode_haz_waste_codes bhwc2
-            WHERE  bhwc2.matl_seq_id = :w1
-            AND    bhwc2.cntnr_seq_id = :w2
-            AND    bhwc2.haz_seq_id = pe.haz_seq_id)
-)
-   AND (:c1 IS NULL OR es_prof_seq_id = :c2)
-   AND (:c3 IS NULL OR haz_seq_id = :c4)
- ORDER BY (SELECT haz_waste_cd
- FROM   at_haz_waste_codes hwc2
- WHERE  hwc2.haz_seq_id = pe.haz_seq_id)
-) WHERE ROWNUM <= 5000~'
-      USING b_matl1_matl_seq_id, b_matl1_cntnr_seq_id, p_es_prof_seq_id, p_es_prof_seq_id, p_haz_seq_id, p_haz_seq_id;
-  END;
-
-  -- AT3110 CNTNR: AT_CONTAINERS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
-  PROCEDURE at3110_w_cntnr(b_matl_cntnr_seq_id IN NUMBER, p_cntnr_seq_id IN NUMBER, p_container_id IN VARCHAR2, p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM AT_CONTAINERS
- WHERE (
-CNTNR_SEQ_ID = :w1
-)
-   AND (:c1 IS NULL OR cntnr_seq_id = :c2)
-   AND (:c3 IS NULL OR (CASE WHEN INSTR(:c4, '%') + INSTR(:c5, '_') > 0 THEN CASE WHEN container_id LIKE :c6 THEN 1 END WHEN container_id = :c7 THEN 1 END) = 1)
-) WHERE ROWNUM <= 5000~'
-      USING b_matl_cntnr_seq_id, p_cntnr_seq_id, p_cntnr_seq_id, p_container_id, p_container_id, p_container_id, p_container_id, p_container_id;
-  END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

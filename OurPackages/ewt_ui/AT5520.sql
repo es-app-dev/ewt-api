@@ -2,10 +2,13 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT5520 OUTSHIPMT: AT_OUTBOUND_SHIPMENTS with the block's own WHERE; one optional criterion per column
   PROCEDURE at5520_w_outshipmt(p_outshipmt_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_shipment_nbr IN VARCHAR2, p_shipment_id_nbr IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 
 --#BODY
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT5520 OUTSHIPMT: AT_OUTBOUND_SHIPMENTS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE at5520_w_outshipmt(p_outshipmt_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_shipment_nbr IN VARCHAR2, p_shipment_id_nbr IN VARCHAR2, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -26,4 +29,5 @@ and disp_SITE_SEQ_ID IN (select disp_site_seq_id from at_disp_site_acks)
 ) WHERE ROWNUM <= 5000~'
       USING p_outshipmt_seq_id, p_outshipmt_seq_id, p_disp_site_seq_id, p_disp_site_seq_id, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 

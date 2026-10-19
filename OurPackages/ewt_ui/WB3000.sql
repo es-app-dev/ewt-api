@@ -2,10 +2,13 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- WB3000 SEARCH: the block's own FROM-clause query; one optional criterion per column
   PROCEDURE wb3000_q_search(p_parent_container_id IN VARCHAR2, p_daughter_barcode IN VARCHAR2, p_customer_nbr IN NUMBER, p_customer_name IN VARCHAR2, p_full_wt IN VARCHAR2, p_empty_wgt IN VARCHAR2, p_npc IN VARCHAR2, p_sort_dt IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 
 --#BODY
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- WB3000 SEARCH: the block's own FROM-clause query (JDAPI); binds and criteria bound; reads only
   PROCEDURE wb3000_q_search(p_parent_container_id IN VARCHAR2, p_daughter_barcode IN VARCHAR2, p_customer_nbr IN NUMBER, p_customer_name IN VARCHAR2, p_full_wt IN VARCHAR2, p_empty_wgt IN VARCHAR2, p_npc IN VARCHAR2, p_sort_dt IN VARCHAR2, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -49,4 +52,5 @@ SELECT id.ibox_seq_id
 ) WHERE ROWNUM <= 5000~'
       USING p_parent_container_id, p_parent_container_id, p_parent_container_id, p_parent_container_id, p_parent_container_id, p_daughter_barcode, p_daughter_barcode, p_daughter_barcode, p_daughter_barcode, p_daughter_barcode, p_customer_nbr, p_customer_nbr, p_customer_name, p_customer_name, p_customer_name, p_customer_name, p_customer_name, p_full_wt, p_full_wt, p_full_wt, p_full_wt, p_full_wt, p_empty_wgt, p_empty_wgt, p_empty_wgt, p_empty_wgt, p_empty_wgt, p_npc, p_npc, p_npc, p_npc, p_npc, p_sort_dt, p_sort_dt, p_sort_dt, p_sort_dt, p_sort_dt;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 

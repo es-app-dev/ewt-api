@@ -46,12 +46,18 @@
                          ,p_shipment_dt       IN DATE
                          ,p_shipper_stf_id    IN NUMBER);
 
+
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+  -- AT5510 AT_OUTBOUND_SHIPMENTS: AT_OUTBOUND_SHIPMENTS with the block's own WHERE; one optional criterion per column
+  PROCEDURE at5510_w_at_outbound_shipments(p_outshipmt_seq_id IN NUMBER, p_cust_seq_id IN NUMBER, p_shipment_nbr IN VARCHAR2, p_manifest_nbr IN VARCHAR2, p_shipment_id_nbr IN VARCHAR2, p_railcar_nbr IN VARCHAR2, p_epa_manifest_nbr IN VARCHAR2, p_es_prof_seq_id IN NUMBER, p_exclusive_use_ind IN VARCHAR2, p_cntnr_vol_ind IN VARCHAR2, p_cask_ind IN VARCHAR2, p_epa_regulated_waste_ind IN VARCHAR2, p_collector_ind IN VARCHAR2, p_processor_ind IN VARCHAR2, p_envirocare_cwf_ind IN VARCHAR2, p_qoc_cat2_ind IN VARCHAR2, p_electronic_541_ind IN VARCHAR2, p_electronic_542_ind IN VARCHAR2, p_electronic_add_notes_ind IN VARCHAR2, p_additional_notes IN VARCHAR2, p_shipment_status IN VARCHAR2, p_transport_permit_nbr IN VARCHAR2, p_generator_cd IN VARCHAR2, p_disp_purpose_cd IN VARCHAR2, p_disp_site_seq_id IN NUMBER, p_special_handling_instr IN VARCHAR2, p_shipper_seg_stf_seq_id IN NUMBER, p_man_addl_num_pgs IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT5510 DISP_SITES_LOV (record group DISP_SITES_RG); not OData: function DECODE
   PROCEDURE at5510_lov_disp_sites_lov(p_rows OUT SYS_REFCURSOR);
   -- AT5510 WASTE_PROFILE_NUMBER_LOV (record group WASTE_PROFILE_NUMBER_RG); not OData: could not read the query (expected FROM at "EXTRACTVALUE ( cip .")
   PROCEDURE at5510_lov_waste_profile_numbe(p1 IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
-  -- AT5510 AT_OUTBOUND_SHIPMENTS: AT_OUTBOUND_SHIPMENTS with the block's own WHERE; one optional criterion per column
-  PROCEDURE at5510_w_at_outbound_shipments(p_outshipmt_seq_id IN NUMBER, p_cust_seq_id IN NUMBER, p_shipment_nbr IN VARCHAR2, p_manifest_nbr IN VARCHAR2, p_shipment_id_nbr IN VARCHAR2, p_railcar_nbr IN VARCHAR2, p_epa_manifest_nbr IN VARCHAR2, p_es_prof_seq_id IN NUMBER, p_exclusive_use_ind IN VARCHAR2, p_cntnr_vol_ind IN VARCHAR2, p_cask_ind IN VARCHAR2, p_epa_regulated_waste_ind IN VARCHAR2, p_collector_ind IN VARCHAR2, p_processor_ind IN VARCHAR2, p_envirocare_cwf_ind IN VARCHAR2, p_qoc_cat2_ind IN VARCHAR2, p_electronic_541_ind IN VARCHAR2, p_electronic_542_ind IN VARCHAR2, p_electronic_add_notes_ind IN VARCHAR2, p_additional_notes IN VARCHAR2, p_shipment_status IN VARCHAR2, p_transport_permit_nbr IN VARCHAR2, p_generator_cd IN VARCHAR2, p_disp_purpose_cd IN VARCHAR2, p_disp_site_seq_id IN NUMBER, p_special_handling_instr IN VARCHAR2, p_shipper_seg_stf_seq_id IN NUMBER, p_man_addl_num_pgs IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 
 --#BODY
 /* ===========================================================================
@@ -439,6 +445,52 @@
       RAISE_APPLICATION_ERROR(c_unexpected, 'Error: UPDATE_STATUS (Procedure Body). ' || SQLERRM);
   END at5510_update_status;
 
+
+
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+  -- AT5510 AT_OUTBOUND_SHIPMENTS: AT_OUTBOUND_SHIPMENTS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
+  PROCEDURE at5510_w_at_outbound_shipments(p_outshipmt_seq_id IN NUMBER, p_cust_seq_id IN NUMBER, p_shipment_nbr IN VARCHAR2, p_manifest_nbr IN VARCHAR2, p_shipment_id_nbr IN VARCHAR2, p_railcar_nbr IN VARCHAR2, p_epa_manifest_nbr IN VARCHAR2, p_es_prof_seq_id IN NUMBER, p_exclusive_use_ind IN VARCHAR2, p_cntnr_vol_ind IN VARCHAR2, p_cask_ind IN VARCHAR2, p_epa_regulated_waste_ind IN VARCHAR2, p_collector_ind IN VARCHAR2, p_processor_ind IN VARCHAR2, p_envirocare_cwf_ind IN VARCHAR2, p_qoc_cat2_ind IN VARCHAR2, p_electronic_541_ind IN VARCHAR2, p_electronic_542_ind IN VARCHAR2, p_electronic_add_notes_ind IN VARCHAR2, p_additional_notes IN VARCHAR2, p_shipment_status IN VARCHAR2, p_transport_permit_nbr IN VARCHAR2, p_generator_cd IN VARCHAR2, p_disp_purpose_cd IN VARCHAR2, p_disp_site_seq_id IN NUMBER, p_special_handling_instr IN VARCHAR2, p_shipper_seg_stf_seq_id IN NUMBER, p_man_addl_num_pgs IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM AT_OUTBOUND_SHIPMENTS
+ WHERE (
+SHIPMENT_NBR IN (
+SELECT SHIPMENT_NBR FROM AT_SHIPMENTS
+WHERE SUBSTR(SHIPMENT_TYPE_CD,1,8) <> 'TRANSFER')
+)
+   AND (:c1 IS NULL OR outshipmt_seq_id = :c2)
+   AND (:c3 IS NULL OR cust_seq_id = :c4)
+   AND (:c5 IS NULL OR (CASE WHEN INSTR(:c6, '%') + INSTR(:c7, '_') > 0 THEN CASE WHEN shipment_nbr LIKE :c8 THEN 1 END WHEN shipment_nbr = :c9 THEN 1 END) = 1)
+   AND (:c10 IS NULL OR (CASE WHEN INSTR(:c11, '%') + INSTR(:c12, '_') > 0 THEN CASE WHEN manifest_nbr LIKE :c13 THEN 1 END WHEN manifest_nbr = :c14 THEN 1 END) = 1)
+   AND (:c15 IS NULL OR (CASE WHEN INSTR(:c16, '%') + INSTR(:c17, '_') > 0 THEN CASE WHEN shipment_id_nbr LIKE :c18 THEN 1 END WHEN shipment_id_nbr = :c19 THEN 1 END) = 1)
+   AND (:c20 IS NULL OR (CASE WHEN INSTR(:c21, '%') + INSTR(:c22, '_') > 0 THEN CASE WHEN railcar_nbr LIKE :c23 THEN 1 END WHEN railcar_nbr = :c24 THEN 1 END) = 1)
+   AND (:c25 IS NULL OR (CASE WHEN INSTR(:c26, '%') + INSTR(:c27, '_') > 0 THEN CASE WHEN epa_manifest_nbr LIKE :c28 THEN 1 END WHEN epa_manifest_nbr = :c29 THEN 1 END) = 1)
+   AND (:c30 IS NULL OR es_prof_seq_id = :c31)
+   AND (:c32 IS NULL OR (CASE WHEN INSTR(:c33, '%') + INSTR(:c34, '_') > 0 THEN CASE WHEN exclusive_use_ind LIKE :c35 THEN 1 END WHEN exclusive_use_ind = :c36 THEN 1 END) = 1)
+   AND (:c37 IS NULL OR (CASE WHEN INSTR(:c38, '%') + INSTR(:c39, '_') > 0 THEN CASE WHEN cntnr_vol_ind LIKE :c40 THEN 1 END WHEN cntnr_vol_ind = :c41 THEN 1 END) = 1)
+   AND (:c42 IS NULL OR (CASE WHEN INSTR(:c43, '%') + INSTR(:c44, '_') > 0 THEN CASE WHEN cask_ind LIKE :c45 THEN 1 END WHEN cask_ind = :c46 THEN 1 END) = 1)
+   AND (:c47 IS NULL OR (CASE WHEN INSTR(:c48, '%') + INSTR(:c49, '_') > 0 THEN CASE WHEN epa_regulated_waste_ind LIKE :c50 THEN 1 END WHEN epa_regulated_waste_ind = :c51 THEN 1 END) = 1)
+   AND (:c52 IS NULL OR (CASE WHEN INSTR(:c53, '%') + INSTR(:c54, '_') > 0 THEN CASE WHEN collector_ind LIKE :c55 THEN 1 END WHEN collector_ind = :c56 THEN 1 END) = 1)
+   AND (:c57 IS NULL OR (CASE WHEN INSTR(:c58, '%') + INSTR(:c59, '_') > 0 THEN CASE WHEN processor_ind LIKE :c60 THEN 1 END WHEN processor_ind = :c61 THEN 1 END) = 1)
+   AND (:c62 IS NULL OR (CASE WHEN INSTR(:c63, '%') + INSTR(:c64, '_') > 0 THEN CASE WHEN envirocare_cwf_ind LIKE :c65 THEN 1 END WHEN envirocare_cwf_ind = :c66 THEN 1 END) = 1)
+   AND (:c67 IS NULL OR (CASE WHEN INSTR(:c68, '%') + INSTR(:c69, '_') > 0 THEN CASE WHEN qoc_cat2_ind LIKE :c70 THEN 1 END WHEN qoc_cat2_ind = :c71 THEN 1 END) = 1)
+   AND (:c72 IS NULL OR (CASE WHEN INSTR(:c73, '%') + INSTR(:c74, '_') > 0 THEN CASE WHEN electronic_541_ind LIKE :c75 THEN 1 END WHEN electronic_541_ind = :c76 THEN 1 END) = 1)
+   AND (:c77 IS NULL OR (CASE WHEN INSTR(:c78, '%') + INSTR(:c79, '_') > 0 THEN CASE WHEN electronic_542_ind LIKE :c80 THEN 1 END WHEN electronic_542_ind = :c81 THEN 1 END) = 1)
+   AND (:c82 IS NULL OR (CASE WHEN INSTR(:c83, '%') + INSTR(:c84, '_') > 0 THEN CASE WHEN electronic_add_notes_ind LIKE :c85 THEN 1 END WHEN electronic_add_notes_ind = :c86 THEN 1 END) = 1)
+   AND (:c87 IS NULL OR (CASE WHEN INSTR(:c88, '%') + INSTR(:c89, '_') > 0 THEN CASE WHEN additional_notes LIKE :c90 THEN 1 END WHEN additional_notes = :c91 THEN 1 END) = 1)
+   AND (:c92 IS NULL OR (CASE WHEN INSTR(:c93, '%') + INSTR(:c94, '_') > 0 THEN CASE WHEN shipment_status LIKE :c95 THEN 1 END WHEN shipment_status = :c96 THEN 1 END) = 1)
+   AND (:c97 IS NULL OR (CASE WHEN INSTR(:c98, '%') + INSTR(:c99, '_') > 0 THEN CASE WHEN transport_permit_nbr LIKE :c100 THEN 1 END WHEN transport_permit_nbr = :c101 THEN 1 END) = 1)
+   AND (:c102 IS NULL OR (CASE WHEN INSTR(:c103, '%') + INSTR(:c104, '_') > 0 THEN CASE WHEN generator_cd LIKE :c105 THEN 1 END WHEN generator_cd = :c106 THEN 1 END) = 1)
+   AND (:c107 IS NULL OR (CASE WHEN INSTR(:c108, '%') + INSTR(:c109, '_') > 0 THEN CASE WHEN disp_purpose_cd LIKE :c110 THEN 1 END WHEN disp_purpose_cd = :c111 THEN 1 END) = 1)
+   AND (:c112 IS NULL OR disp_site_seq_id = :c113)
+   AND (:c114 IS NULL OR (CASE WHEN INSTR(:c115, '%') + INSTR(:c116, '_') > 0 THEN CASE WHEN special_handling_instr LIKE :c117 THEN 1 END WHEN special_handling_instr = :c118 THEN 1 END) = 1)
+   AND (:c119 IS NULL OR shipper_seg_stf_seq_id = :c120)
+   AND (:c121 IS NULL OR man_addl_num_pgs = :c122)
+) WHERE ROWNUM <= 5000~'
+      USING p_outshipmt_seq_id, p_outshipmt_seq_id, p_cust_seq_id, p_cust_seq_id, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_railcar_nbr, p_railcar_nbr, p_railcar_nbr, p_railcar_nbr, p_railcar_nbr, p_epa_manifest_nbr, p_epa_manifest_nbr, p_epa_manifest_nbr, p_epa_manifest_nbr, p_epa_manifest_nbr, p_es_prof_seq_id, p_es_prof_seq_id, p_exclusive_use_ind, p_exclusive_use_ind, p_exclusive_use_ind, p_exclusive_use_ind, p_exclusive_use_ind, p_cntnr_vol_ind, p_cntnr_vol_ind, p_cntnr_vol_ind, p_cntnr_vol_ind, p_cntnr_vol_ind, p_cask_ind, p_cask_ind, p_cask_ind, p_cask_ind, p_cask_ind, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_collector_ind, p_collector_ind, p_collector_ind, p_collector_ind, p_collector_ind, p_processor_ind, p_processor_ind, p_processor_ind, p_processor_ind, p_processor_ind, p_envirocare_cwf_ind, p_envirocare_cwf_ind, p_envirocare_cwf_ind, p_envirocare_cwf_ind, p_envirocare_cwf_ind, p_qoc_cat2_ind, p_qoc_cat2_ind, p_qoc_cat2_ind, p_qoc_cat2_ind, p_qoc_cat2_ind, p_electronic_541_ind, p_electronic_541_ind, p_electronic_541_ind, p_electronic_541_ind, p_electronic_541_ind, p_electronic_542_ind, p_electronic_542_ind, p_electronic_542_ind, p_electronic_542_ind, p_electronic_542_ind, p_electronic_add_notes_ind, p_electronic_add_notes_ind, p_electronic_add_notes_ind, p_electronic_add_notes_ind, p_electronic_add_notes_ind, p_additional_notes, p_additional_notes, p_additional_notes, p_additional_notes, p_additional_notes, p_shipment_status, p_shipment_status, p_shipment_status, p_shipment_status, p_shipment_status, p_transport_permit_nbr, p_transport_permit_nbr, p_transport_permit_nbr, p_transport_permit_nbr, p_transport_permit_nbr, p_generator_cd, p_generator_cd, p_generator_cd, p_generator_cd, p_generator_cd, p_disp_purpose_cd, p_disp_purpose_cd, p_disp_purpose_cd, p_disp_purpose_cd, p_disp_purpose_cd, p_disp_site_seq_id, p_disp_site_seq_id, p_special_handling_instr, p_special_handling_instr, p_special_handling_instr, p_special_handling_instr, p_special_handling_instr, p_shipper_seg_stf_seq_id, p_shipper_seg_stf_seq_id, p_man_addl_num_pgs, p_man_addl_num_pgs;
+  END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT5510 DISP_SITES_LOV: the record group's own query
   PROCEDURE at5510_lov_disp_sites_lov(p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -481,45 +533,5 @@ ORDER BY e.waste_profile_number
 ) WHERE ROWNUM <= 5000~'
       USING p1, p1;
   END;
-
-  -- AT5510 AT_OUTBOUND_SHIPMENTS: AT_OUTBOUND_SHIPMENTS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
-  PROCEDURE at5510_w_at_outbound_shipments(p_outshipmt_seq_id IN NUMBER, p_cust_seq_id IN NUMBER, p_shipment_nbr IN VARCHAR2, p_manifest_nbr IN VARCHAR2, p_shipment_id_nbr IN VARCHAR2, p_railcar_nbr IN VARCHAR2, p_epa_manifest_nbr IN VARCHAR2, p_es_prof_seq_id IN NUMBER, p_exclusive_use_ind IN VARCHAR2, p_cntnr_vol_ind IN VARCHAR2, p_cask_ind IN VARCHAR2, p_epa_regulated_waste_ind IN VARCHAR2, p_collector_ind IN VARCHAR2, p_processor_ind IN VARCHAR2, p_envirocare_cwf_ind IN VARCHAR2, p_qoc_cat2_ind IN VARCHAR2, p_electronic_541_ind IN VARCHAR2, p_electronic_542_ind IN VARCHAR2, p_electronic_add_notes_ind IN VARCHAR2, p_additional_notes IN VARCHAR2, p_shipment_status IN VARCHAR2, p_transport_permit_nbr IN VARCHAR2, p_generator_cd IN VARCHAR2, p_disp_purpose_cd IN VARCHAR2, p_disp_site_seq_id IN NUMBER, p_special_handling_instr IN VARCHAR2, p_shipper_seg_stf_seq_id IN NUMBER, p_man_addl_num_pgs IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM AT_OUTBOUND_SHIPMENTS
- WHERE (
-SHIPMENT_NBR IN (
-SELECT SHIPMENT_NBR FROM AT_SHIPMENTS
-WHERE SUBSTR(SHIPMENT_TYPE_CD,1,8) <> 'TRANSFER')
-)
-   AND (:c1 IS NULL OR outshipmt_seq_id = :c2)
-   AND (:c3 IS NULL OR cust_seq_id = :c4)
-   AND (:c5 IS NULL OR (CASE WHEN INSTR(:c6, '%') + INSTR(:c7, '_') > 0 THEN CASE WHEN shipment_nbr LIKE :c8 THEN 1 END WHEN shipment_nbr = :c9 THEN 1 END) = 1)
-   AND (:c10 IS NULL OR (CASE WHEN INSTR(:c11, '%') + INSTR(:c12, '_') > 0 THEN CASE WHEN manifest_nbr LIKE :c13 THEN 1 END WHEN manifest_nbr = :c14 THEN 1 END) = 1)
-   AND (:c15 IS NULL OR (CASE WHEN INSTR(:c16, '%') + INSTR(:c17, '_') > 0 THEN CASE WHEN shipment_id_nbr LIKE :c18 THEN 1 END WHEN shipment_id_nbr = :c19 THEN 1 END) = 1)
-   AND (:c20 IS NULL OR (CASE WHEN INSTR(:c21, '%') + INSTR(:c22, '_') > 0 THEN CASE WHEN railcar_nbr LIKE :c23 THEN 1 END WHEN railcar_nbr = :c24 THEN 1 END) = 1)
-   AND (:c25 IS NULL OR (CASE WHEN INSTR(:c26, '%') + INSTR(:c27, '_') > 0 THEN CASE WHEN epa_manifest_nbr LIKE :c28 THEN 1 END WHEN epa_manifest_nbr = :c29 THEN 1 END) = 1)
-   AND (:c30 IS NULL OR es_prof_seq_id = :c31)
-   AND (:c32 IS NULL OR (CASE WHEN INSTR(:c33, '%') + INSTR(:c34, '_') > 0 THEN CASE WHEN exclusive_use_ind LIKE :c35 THEN 1 END WHEN exclusive_use_ind = :c36 THEN 1 END) = 1)
-   AND (:c37 IS NULL OR (CASE WHEN INSTR(:c38, '%') + INSTR(:c39, '_') > 0 THEN CASE WHEN cntnr_vol_ind LIKE :c40 THEN 1 END WHEN cntnr_vol_ind = :c41 THEN 1 END) = 1)
-   AND (:c42 IS NULL OR (CASE WHEN INSTR(:c43, '%') + INSTR(:c44, '_') > 0 THEN CASE WHEN cask_ind LIKE :c45 THEN 1 END WHEN cask_ind = :c46 THEN 1 END) = 1)
-   AND (:c47 IS NULL OR (CASE WHEN INSTR(:c48, '%') + INSTR(:c49, '_') > 0 THEN CASE WHEN epa_regulated_waste_ind LIKE :c50 THEN 1 END WHEN epa_regulated_waste_ind = :c51 THEN 1 END) = 1)
-   AND (:c52 IS NULL OR (CASE WHEN INSTR(:c53, '%') + INSTR(:c54, '_') > 0 THEN CASE WHEN collector_ind LIKE :c55 THEN 1 END WHEN collector_ind = :c56 THEN 1 END) = 1)
-   AND (:c57 IS NULL OR (CASE WHEN INSTR(:c58, '%') + INSTR(:c59, '_') > 0 THEN CASE WHEN processor_ind LIKE :c60 THEN 1 END WHEN processor_ind = :c61 THEN 1 END) = 1)
-   AND (:c62 IS NULL OR (CASE WHEN INSTR(:c63, '%') + INSTR(:c64, '_') > 0 THEN CASE WHEN envirocare_cwf_ind LIKE :c65 THEN 1 END WHEN envirocare_cwf_ind = :c66 THEN 1 END) = 1)
-   AND (:c67 IS NULL OR (CASE WHEN INSTR(:c68, '%') + INSTR(:c69, '_') > 0 THEN CASE WHEN qoc_cat2_ind LIKE :c70 THEN 1 END WHEN qoc_cat2_ind = :c71 THEN 1 END) = 1)
-   AND (:c72 IS NULL OR (CASE WHEN INSTR(:c73, '%') + INSTR(:c74, '_') > 0 THEN CASE WHEN electronic_541_ind LIKE :c75 THEN 1 END WHEN electronic_541_ind = :c76 THEN 1 END) = 1)
-   AND (:c77 IS NULL OR (CASE WHEN INSTR(:c78, '%') + INSTR(:c79, '_') > 0 THEN CASE WHEN electronic_542_ind LIKE :c80 THEN 1 END WHEN electronic_542_ind = :c81 THEN 1 END) = 1)
-   AND (:c82 IS NULL OR (CASE WHEN INSTR(:c83, '%') + INSTR(:c84, '_') > 0 THEN CASE WHEN electronic_add_notes_ind LIKE :c85 THEN 1 END WHEN electronic_add_notes_ind = :c86 THEN 1 END) = 1)
-   AND (:c87 IS NULL OR (CASE WHEN INSTR(:c88, '%') + INSTR(:c89, '_') > 0 THEN CASE WHEN additional_notes LIKE :c90 THEN 1 END WHEN additional_notes = :c91 THEN 1 END) = 1)
-   AND (:c92 IS NULL OR (CASE WHEN INSTR(:c93, '%') + INSTR(:c94, '_') > 0 THEN CASE WHEN shipment_status LIKE :c95 THEN 1 END WHEN shipment_status = :c96 THEN 1 END) = 1)
-   AND (:c97 IS NULL OR (CASE WHEN INSTR(:c98, '%') + INSTR(:c99, '_') > 0 THEN CASE WHEN transport_permit_nbr LIKE :c100 THEN 1 END WHEN transport_permit_nbr = :c101 THEN 1 END) = 1)
-   AND (:c102 IS NULL OR (CASE WHEN INSTR(:c103, '%') + INSTR(:c104, '_') > 0 THEN CASE WHEN generator_cd LIKE :c105 THEN 1 END WHEN generator_cd = :c106 THEN 1 END) = 1)
-   AND (:c107 IS NULL OR (CASE WHEN INSTR(:c108, '%') + INSTR(:c109, '_') > 0 THEN CASE WHEN disp_purpose_cd LIKE :c110 THEN 1 END WHEN disp_purpose_cd = :c111 THEN 1 END) = 1)
-   AND (:c112 IS NULL OR disp_site_seq_id = :c113)
-   AND (:c114 IS NULL OR (CASE WHEN INSTR(:c115, '%') + INSTR(:c116, '_') > 0 THEN CASE WHEN special_handling_instr LIKE :c117 THEN 1 END WHEN special_handling_instr = :c118 THEN 1 END) = 1)
-   AND (:c119 IS NULL OR shipper_seg_stf_seq_id = :c120)
-   AND (:c121 IS NULL OR man_addl_num_pgs = :c122)
-) WHERE ROWNUM <= 5000~'
-      USING p_outshipmt_seq_id, p_outshipmt_seq_id, p_cust_seq_id, p_cust_seq_id, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_shipment_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_manifest_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_shipment_id_nbr, p_railcar_nbr, p_railcar_nbr, p_railcar_nbr, p_railcar_nbr, p_railcar_nbr, p_epa_manifest_nbr, p_epa_manifest_nbr, p_epa_manifest_nbr, p_epa_manifest_nbr, p_epa_manifest_nbr, p_es_prof_seq_id, p_es_prof_seq_id, p_exclusive_use_ind, p_exclusive_use_ind, p_exclusive_use_ind, p_exclusive_use_ind, p_exclusive_use_ind, p_cntnr_vol_ind, p_cntnr_vol_ind, p_cntnr_vol_ind, p_cntnr_vol_ind, p_cntnr_vol_ind, p_cask_ind, p_cask_ind, p_cask_ind, p_cask_ind, p_cask_ind, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_epa_regulated_waste_ind, p_collector_ind, p_collector_ind, p_collector_ind, p_collector_ind, p_collector_ind, p_processor_ind, p_processor_ind, p_processor_ind, p_processor_ind, p_processor_ind, p_envirocare_cwf_ind, p_envirocare_cwf_ind, p_envirocare_cwf_ind, p_envirocare_cwf_ind, p_envirocare_cwf_ind, p_qoc_cat2_ind, p_qoc_cat2_ind, p_qoc_cat2_ind, p_qoc_cat2_ind, p_qoc_cat2_ind, p_electronic_541_ind, p_electronic_541_ind, p_electronic_541_ind, p_electronic_541_ind, p_electronic_541_ind, p_electronic_542_ind, p_electronic_542_ind, p_electronic_542_ind, p_electronic_542_ind, p_electronic_542_ind, p_electronic_add_notes_ind, p_electronic_add_notes_ind, p_electronic_add_notes_ind, p_electronic_add_notes_ind, p_electronic_add_notes_ind, p_additional_notes, p_additional_notes, p_additional_notes, p_additional_notes, p_additional_notes, p_shipment_status, p_shipment_status, p_shipment_status, p_shipment_status, p_shipment_status, p_transport_permit_nbr, p_transport_permit_nbr, p_transport_permit_nbr, p_transport_permit_nbr, p_transport_permit_nbr, p_generator_cd, p_generator_cd, p_generator_cd, p_generator_cd, p_generator_cd, p_disp_purpose_cd, p_disp_purpose_cd, p_disp_purpose_cd, p_disp_purpose_cd, p_disp_purpose_cd, p_disp_site_seq_id, p_disp_site_seq_id, p_special_handling_instr, p_special_handling_instr, p_special_handling_instr, p_special_handling_instr, p_special_handling_instr, p_shipper_seg_stf_seq_id, p_shipper_seg_stf_seq_id, p_man_addl_num_pgs, p_man_addl_num_pgs;
-  END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

@@ -2,13 +2,16 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT5161 AT_SHIPMENTS: AT_SHIPMENTS with the block's own WHERE; one optional criterion per column
   PROCEDURE at5161_w_at_shipments(p_shipment_nbr IN VARCHAR2, p_shipment_type_cd IN VARCHAR2, p_shipment_id_nbr IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
 
   -- AT5161 CNTNR1: AT_CONTAINERS with the block's own WHERE; one optional criterion per column
   PROCEDURE at5161_w_cntnr1(b_at_shipments_shipment_nbr IN VARCHAR2, p_container_id IN VARCHAR2, p_notes IN VARCHAR2, p_cntnr_stat_cd_id IN VARCHAR2, p_cntnr_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 
 --#BODY
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT5161 AT_SHIPMENTS: AT_SHIPMENTS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE at5161_w_at_shipments(p_shipment_nbr IN VARCHAR2, p_shipment_type_cd IN VARCHAR2, p_shipment_id_nbr IN VARCHAR2, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -57,4 +60,5 @@ AND AT_CONTAINERS.CNTNR_SEQ_ID IN
 ) WHERE ROWNUM <= 5000~'
       USING b_at_shipments_shipment_nbr, p_container_id, p_container_id, p_container_id, p_container_id, p_container_id, p_notes, p_notes, p_notes, p_notes, p_notes, p_cntnr_stat_cd_id, p_cntnr_stat_cd_id, p_cntnr_stat_cd_id, p_cntnr_stat_cd_id, p_cntnr_stat_cd_id, p_cntnr_seq_id, p_cntnr_seq_id;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 

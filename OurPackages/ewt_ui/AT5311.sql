@@ -2,23 +2,23 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
-  -- AT5311 CONTAINERS (record group CONTAINERS); not OData: a join
-  PROCEDURE at5311_lov_containers(p_rows OUT SYS_REFCURSOR);
+
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT5311 LABANLSMPL5: AT_LAB_ANALYSIS_SAMPLES with the block's own WHERE; one optional criterion per column
   PROCEDURE at5311_w_labanlsmpl5(p_pass_fail_ind IN VARCHAR2, p_mnfststat_cd_id IN VARCHAR2, p_qc_seg_stf_seq_id IN NUMBER, p_labsample_seq_id IN NUMBER, p_labanlsmpl_seq_id IN NUMBER, p_labtyp_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
 
   -- AT5311 LABSAMPLE2: AT_LAB_SAMPLES with the block's own WHERE; one optional criterion per column
   PROCEDURE at5311_w_labsample2(p_sample_id IN VARCHAR2, p_labsample_seq_id IN NUMBER, p_cntnr_seq_id IN NUMBER, p_req_by_seg_stf_seq_id IN NUMBER, p_seg_stf_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
+  -- AT5311 CONTAINERS (record group CONTAINERS); not OData: a join
+  PROCEDURE at5311_lov_containers(p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 
 --#BODY
-  -- AT5311 CONTAINERS: the record group's own query
-  PROCEDURE at5311_lov_containers(p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (
-select c.cntnr_seq_id, c.container_id from at_containers c,at_container_processes cp where cp.byprodhdrs_seq_id is not null and c.cntnr_seq_id = cp.cntnr_seq_id order by container_id
-) WHERE ROWNUM <= 5000~';
-  END;
 
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT5311 LABANLSMPL5: AT_LAB_ANALYSIS_SAMPLES with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE at5311_w_labanlsmpl5(p_pass_fail_ind IN VARCHAR2, p_mnfststat_cd_id IN VARCHAR2, p_qc_seg_stf_seq_id IN NUMBER, p_labsample_seq_id IN NUMBER, p_labanlsmpl_seq_id IN NUMBER, p_labtyp_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -54,4 +54,15 @@ labsample_seq_id in (select distinct smpls.labsample_seq_id from at_lab_samples 
 ) WHERE ROWNUM <= 5000~'
       USING p_sample_id, p_sample_id, p_sample_id, p_sample_id, p_sample_id, p_labsample_seq_id, p_labsample_seq_id, p_cntnr_seq_id, p_cntnr_seq_id, p_req_by_seg_stf_seq_id, p_req_by_seg_stf_seq_id, p_seg_stf_seq_id, p_seg_stf_seq_id;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
+  -- AT5311 CONTAINERS: the record group's own query
+  PROCEDURE at5311_lov_containers(p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (
+select c.cntnr_seq_id, c.container_id from at_containers c,at_container_processes cp where cp.byprodhdrs_seq_id is not null and c.cntnr_seq_id = cp.cntnr_seq_id order by container_id
+) WHERE ROWNUM <= 5000~';
+  END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

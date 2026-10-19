@@ -2,6 +2,16 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+  -- WB1000 SEGORDLITM: AT_SEG_ORDER_LINE_ITEMS with the block's own WHERE; one optional criterion per column
+  PROCEDURE wb1000_w_segordlitm(b_mnfst_advnotif_seq_id IN NUMBER, p_advnotif_seq_id IN NUMBER, p_line_item_nbr IN NUMBER, p_status_cd IN VARCHAR2, p_segordlitm_seq_id IN NUMBER, p_cnprodserv_seq_id IN NUMBER, p_grp_cnprodserv_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+
+  -- WB1000 WB_CONT_NUC_VIEW: WB_CONT_NUC_VIEW with the block's own WHERE; one optional criterion per column
+  PROCEDURE wb1000_w_wb_cont_nuc_view(p_trkditm_cd IN VARCHAR2, p_trkditm_seq_id IN NUMBER, p_inc_man_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- WB1000 CGFK$CUSTTRCK_DSP_CODE (record group CGFK$CUSTTRCK_DSP_CODE); not OData: could not read the query (unexpected "not" in WHERE)
   PROCEDURE wb1000_lov_cgfk_custtrck_dsp_c(p1 IN NUMBER, p2 IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
   -- WB1000 CGFK$MATLMATL_DSP_MATERIAL_TYP (record group CGFK$MATLMATL_DSP_MATERIAL_TYP); not OData: NOT / a subquery in WHERE
@@ -16,13 +26,50 @@
   PROCEDURE wb1000_lov_order_disp_sites(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR);
   -- WB1000 PSC_LV (record group PSC_RG); not OData: a join
   PROCEDURE wb1000_lov_psc_lv(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR);
-  -- WB1000 SEGORDLITM: AT_SEG_ORDER_LINE_ITEMS with the block's own WHERE; one optional criterion per column
-  PROCEDURE wb1000_w_segordlitm(b_mnfst_advnotif_seq_id IN NUMBER, p_advnotif_seq_id IN NUMBER, p_line_item_nbr IN NUMBER, p_status_cd IN VARCHAR2, p_segordlitm_seq_id IN NUMBER, p_cnprodserv_seq_id IN NUMBER, p_grp_cnprodserv_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
-
-  -- WB1000 WB_CONT_NUC_VIEW: WB_CONT_NUC_VIEW with the block's own WHERE; one optional criterion per column
-  PROCEDURE wb1000_w_wb_cont_nuc_view(p_trkditm_cd IN VARCHAR2, p_trkditm_seq_id IN NUMBER, p_inc_man_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 
 --#BODY
+
+
+
+
+
+
+
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+  -- WB1000 SEGORDLITM: AT_SEG_ORDER_LINE_ITEMS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
+  PROCEDURE wb1000_w_segordlitm(b_mnfst_advnotif_seq_id IN NUMBER, p_advnotif_seq_id IN NUMBER, p_line_item_nbr IN NUMBER, p_status_cd IN VARCHAR2, p_segordlitm_seq_id IN NUMBER, p_cnprodserv_seq_id IN NUMBER, p_grp_cnprodserv_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM AT_SEG_ORDER_LINE_ITEMS
+ WHERE (
+ADVNOTIF_SEQ_ID = :w1
+)
+   AND (:c1 IS NULL OR advnotif_seq_id = :c2)
+   AND (:c3 IS NULL OR line_item_nbr = :c4)
+   AND (:c5 IS NULL OR (CASE WHEN INSTR(:c6, '%') + INSTR(:c7, '_') > 0 THEN CASE WHEN status_cd LIKE :c8 THEN 1 END WHEN status_cd = :c9 THEN 1 END) = 1)
+   AND (:c10 IS NULL OR segordlitm_seq_id = :c11)
+   AND (:c12 IS NULL OR cnprodserv_seq_id = :c13)
+   AND (:c14 IS NULL OR grp_cnprodserv_seq_id = :c15)
+) WHERE ROWNUM <= 5000~'
+      USING b_mnfst_advnotif_seq_id, p_advnotif_seq_id, p_advnotif_seq_id, p_line_item_nbr, p_line_item_nbr, p_status_cd, p_status_cd, p_status_cd, p_status_cd, p_status_cd, p_segordlitm_seq_id, p_segordlitm_seq_id, p_cnprodserv_seq_id, p_cnprodserv_seq_id, p_grp_cnprodserv_seq_id, p_grp_cnprodserv_seq_id;
+  END;
+
+  -- WB1000 WB_CONT_NUC_VIEW: WB_CONT_NUC_VIEW with the block's own WHERE (JDAPI); binds and criteria bound; reads only
+  PROCEDURE wb1000_w_wb_cont_nuc_view(p_trkditm_cd IN VARCHAR2, p_trkditm_seq_id IN NUMBER, p_inc_man_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM WB_CONT_NUC_VIEW
+ WHERE (
+trkditm_cd not in (select code from at_tracked_items)
+)
+   AND (:c1 IS NULL OR (CASE WHEN INSTR(:c2, '%') + INSTR(:c3, '_') > 0 THEN CASE WHEN trkditm_cd LIKE :c4 THEN 1 END WHEN trkditm_cd = :c5 THEN 1 END) = 1)
+   AND (:c6 IS NULL OR trkditm_seq_id = :c7)
+   AND (:c8 IS NULL OR inc_man_seq_id = :c9)
+) WHERE ROWNUM <= 5000~'
+      USING p_trkditm_cd, p_trkditm_cd, p_trkditm_cd, p_trkditm_cd, p_trkditm_cd, p_trkditm_seq_id, p_trkditm_seq_id, p_inc_man_seq_id, p_inc_man_seq_id;
+  END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- WB1000 CGFK$CUSTTRCK_DSP_CODE: the record group's own query; P1 = :MATL.MATL_SEQ_ID, P2 = :MATL.HLD_NUCLIDE_CODE
   PROCEDURE wb1000_lov_cgfk_custtrck_dsp_c(p1 IN NUMBER, p2 IN VARCHAR2, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -152,35 +199,5 @@ order by 2
 ) WHERE ROWNUM <= 5000~'
       USING p1;
   END;
-
-  -- WB1000 SEGORDLITM: AT_SEG_ORDER_LINE_ITEMS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
-  PROCEDURE wb1000_w_segordlitm(b_mnfst_advnotif_seq_id IN NUMBER, p_advnotif_seq_id IN NUMBER, p_line_item_nbr IN NUMBER, p_status_cd IN VARCHAR2, p_segordlitm_seq_id IN NUMBER, p_cnprodserv_seq_id IN NUMBER, p_grp_cnprodserv_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM AT_SEG_ORDER_LINE_ITEMS
- WHERE (
-ADVNOTIF_SEQ_ID = :w1
-)
-   AND (:c1 IS NULL OR advnotif_seq_id = :c2)
-   AND (:c3 IS NULL OR line_item_nbr = :c4)
-   AND (:c5 IS NULL OR (CASE WHEN INSTR(:c6, '%') + INSTR(:c7, '_') > 0 THEN CASE WHEN status_cd LIKE :c8 THEN 1 END WHEN status_cd = :c9 THEN 1 END) = 1)
-   AND (:c10 IS NULL OR segordlitm_seq_id = :c11)
-   AND (:c12 IS NULL OR cnprodserv_seq_id = :c13)
-   AND (:c14 IS NULL OR grp_cnprodserv_seq_id = :c15)
-) WHERE ROWNUM <= 5000~'
-      USING b_mnfst_advnotif_seq_id, p_advnotif_seq_id, p_advnotif_seq_id, p_line_item_nbr, p_line_item_nbr, p_status_cd, p_status_cd, p_status_cd, p_status_cd, p_status_cd, p_segordlitm_seq_id, p_segordlitm_seq_id, p_cnprodserv_seq_id, p_cnprodserv_seq_id, p_grp_cnprodserv_seq_id, p_grp_cnprodserv_seq_id;
-  END;
-
-  -- WB1000 WB_CONT_NUC_VIEW: WB_CONT_NUC_VIEW with the block's own WHERE (JDAPI); binds and criteria bound; reads only
-  PROCEDURE wb1000_w_wb_cont_nuc_view(p_trkditm_cd IN VARCHAR2, p_trkditm_seq_id IN NUMBER, p_inc_man_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (SELECT * FROM WB_CONT_NUC_VIEW
- WHERE (
-trkditm_cd not in (select code from at_tracked_items)
-)
-   AND (:c1 IS NULL OR (CASE WHEN INSTR(:c2, '%') + INSTR(:c3, '_') > 0 THEN CASE WHEN trkditm_cd LIKE :c4 THEN 1 END WHEN trkditm_cd = :c5 THEN 1 END) = 1)
-   AND (:c6 IS NULL OR trkditm_seq_id = :c7)
-   AND (:c8 IS NULL OR inc_man_seq_id = :c9)
-) WHERE ROWNUM <= 5000~'
-      USING p_trkditm_cd, p_trkditm_cd, p_trkditm_cd, p_trkditm_cd, p_trkditm_cd, p_trkditm_seq_id, p_trkditm_seq_id, p_inc_man_seq_id, p_inc_man_seq_id;
-  END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

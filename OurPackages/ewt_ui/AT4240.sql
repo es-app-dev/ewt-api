@@ -2,11 +2,15 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT4240 GIC_CONTAINERS (record group GIC_CONTAINERS); not OData: a join
   PROCEDURE at4240_lov_gic_containers(p1 IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
   -- AT4240 LOV_COST (record group RG_COST); not OData: a join
   PROCEDURE at4240_lov_lov_cost(p1 IN NUMBER, p2 IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
+
 --#BODY
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT4240 GIC_CONTAINERS: the record group's own query; P1 = :AT$CTRL.NPC
   PROCEDURE at4240_lov_gic_containers(p1 IN VARCHAR2, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -48,4 +52,5 @@ SELECT CPS.COST PRICE
 ) WHERE ROWNUM <= 5000~'
       USING p1, p2;
   END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

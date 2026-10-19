@@ -2,11 +2,13 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- WB4100 WB_QTB_CONTAINERS_DAU: WB_QTB_CONTAINERS with the block's own WHERE; one optional criterion per column
   PROCEDURE wb4100_w_wb_qtb_containers_dau(p_qtb_seq_id IN NUMBER, p_parent_container_id IN VARCHAR2, p_qtb_barcode IN VARCHAR2, p_pseudo_parent_container_id IN VARCHAR2, p_full_wgt IN NUMBER, p_empty_wgt IN NUMBER, p_cntnr_typ_seq_id IN NUMBER, p_container_type IN VARCHAR2, p_incinerator_box_nbr IN VARCHAR2, p_next_process_cd IN VARCHAR2, p_psc IN VARCHAR2, p_exterior_dose_rate_amt IN NUMBER, p_dose_rate_30cm IN NUMBER, p_rows OUT SYS_REFCURSOR);
-  -- <<< end of generated query blocks
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 
 --#BODY
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- WB4100 WB_QTB_CONTAINERS_DAU: WB_QTB_CONTAINERS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE wb4100_w_wb_qtb_containers_dau(p_qtb_seq_id IN NUMBER, p_parent_container_id IN VARCHAR2, p_qtb_barcode IN VARCHAR2, p_pseudo_parent_container_id IN VARCHAR2, p_full_wgt IN NUMBER, p_empty_wgt IN NUMBER, p_cntnr_typ_seq_id IN NUMBER, p_container_type IN VARCHAR2, p_incinerator_box_nbr IN VARCHAR2, p_next_process_cd IN VARCHAR2, p_psc IN VARCHAR2, p_exterior_dose_rate_amt IN NUMBER, p_dose_rate_30cm IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -31,5 +33,5 @@ NVL(full_wgt, 0) > 0
 ) WHERE ROWNUM <= 5000~'
       USING p_qtb_seq_id, p_qtb_seq_id, p_parent_container_id, p_parent_container_id, p_parent_container_id, p_parent_container_id, p_parent_container_id, p_qtb_barcode, p_qtb_barcode, p_qtb_barcode, p_qtb_barcode, p_qtb_barcode, p_pseudo_parent_container_id, p_pseudo_parent_container_id, p_pseudo_parent_container_id, p_pseudo_parent_container_id, p_pseudo_parent_container_id, p_full_wgt, p_full_wgt, p_empty_wgt, p_empty_wgt, p_cntnr_typ_seq_id, p_cntnr_typ_seq_id, p_container_type, p_container_type, p_container_type, p_container_type, p_container_type, p_incinerator_box_nbr, p_incinerator_box_nbr, p_incinerator_box_nbr, p_incinerator_box_nbr, p_incinerator_box_nbr, p_next_process_cd, p_next_process_cd, p_next_process_cd, p_next_process_cd, p_next_process_cd, p_psc, p_psc, p_psc, p_psc, p_psc, p_exterior_dose_rate_amt, p_exterior_dose_rate_amt, p_dose_rate_30cm, p_dose_rate_30cm;
   END;
-  -- <<< end of generated query blocks
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 

@@ -2,6 +2,7 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT5210 LV_MANIFESTS (record group RG_MANIFESTS); not OData: a join
   PROCEDURE at5210_lov_lv_manifests(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR);
   -- AT5210 PARTITION_LOV (record group PARTITION_RG); not OData: UNION
@@ -10,7 +11,10 @@
   PROCEDURE at5210_lov_processes(p_rows OUT SYS_REFCURSOR);
   -- AT5210 PROJECT (record group PROJECT); not OData: a join
   PROCEDURE at5210_lov_project(p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
+
 --#BODY
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT5210 LV_MANIFESTS: the record group's own query; P1 = :BYPRODHDRS.CUST_SEQ_ID
   PROCEDURE at5210_lov_lv_manifests(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -48,4 +52,5 @@ select prctrantyp_seq_id, prctrantyp_cd_id, description from at_process_trans_ty
 select bp. proj_name, bp.description, bp.byprodproj_seq_id, im.cust_seq_id from at_byproduct_projects bp, at_incoming_manifests im where im. advnotif_seq_id(+) = bp.advnotif_seq_id
 ) WHERE ROWNUM <= 5000~';
   END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

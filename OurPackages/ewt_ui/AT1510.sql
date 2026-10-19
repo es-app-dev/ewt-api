@@ -2,10 +2,8 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
-  -- AT1510 DISP_SITE_LV (record group DISP_SITE_RG); not OData: a subquery in WHERE
-  PROCEDURE at1510_lov_disp_site_lv(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR);
-  -- AT1510 PROFILE_LV (record group PROFILE_RG); not OData: could not read the query (expected ) at "+ 1 ) <")
-  PROCEDURE at1510_lov_profile_lv(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR);
+
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT1510 AT_CPS_VIEW: AT_CNPRODSERV_VIEW3@ATCORP.ENERGYSOLUTIONS.COM with the block's own WHERE; one optional criterion per column
   PROCEDURE at1510_w_at_cps_view(b_mnfst_cust_seq_id IN NUMBER, b_mnfst_advnotif_expected_e379 IN DATE, b_mnfst_es_prof_seq_id IN NUMBER, b_mnfst_disp_site_seq_id IN NUMBER, p_cntrct_contract_nbr IN VARCHAR2, p_cntrct_mod_cntrct_id IN NUMBER, p_cnprodserv_seq_id IN NUMBER, p_prodserv_cd IN VARCHAR2, p_prodserv_descr IN VARCHAR2, p_dispsite_alias IN VARCHAR2, p_cnprodserv_cost IN NUMBER, p_cnprodserv_unit_cd_id IN VARCHAR2, p_cnprodserv_descr IN VARCHAR2, p_cnprodserv_cust_seq_id IN NUMBER, p_prodserv_prodcat_seq_id IN NUMBER, p_prodserv_seq_id IN NUMBER, p_group_nbr IN VARCHAR2, p_subgroup_nbr IN VARCHAR2, p_disposal_revenue_ind IN VARCHAR2, p_certification_prog_ind IN VARCHAR2, p_life_of_plant_ind IN VARCHAR2, p_cntrct_seq_id IN NUMBER, p_tax_included_ind IN VARCHAR2, p_dispsite_code IN VARCHAR2, p_min_charge IN NUMBER, p_seg_resp_dept_nm IN VARCHAR2, p_contract_line_nbr IN VARCHAR2, p_prodcat_descr IN VARCHAR2, p_classified_ind IN VARCHAR2, p_prof_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
 
@@ -14,33 +12,19 @@
 
   -- AT1510 RNCNTNRS: AT_RENTAL_CNTNR_SHIPMENTS_VIEW with the block's own WHERE; one optional criterion per column
   PROCEDURE at1510_w_rncntnrs(p_rental_container_id IN VARCHAR2, p_rncntnrstat_cd_id IN VARCHAR2, p_seg_owned_ind IN VARCHAR2, p_out_shipment_nbr IN VARCHAR2, p_shipment_type_cd IN VARCHAR2, p_consignee_cust_seq_id IN NUMBER, p_pick_up_cust_seq_id IN NUMBER, p_rncntnr_seq_id IN NUMBER, p_segordlitm_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
+  -- AT1510 DISP_SITE_LV (record group DISP_SITE_RG); not OData: a subquery in WHERE
+  PROCEDURE at1510_lov_disp_site_lv(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- AT1510 PROFILE_LV (record group PROFILE_RG); not OData: could not read the query (expected ) at "+ 1 ) <")
+  PROCEDURE at1510_lov_profile_lv(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 
 --#BODY
-  -- AT1510 DISP_SITE_LV: the record group's own query; P1 = :MNFST.CUST_SEQ_ID
-  PROCEDURE at1510_lov_disp_site_lv(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (
-select ds.disp_site_seq_id,ds.code,ds.description
-from at_disp_sites ds where ds.disp_site_seq_id in (select cds.disp_site_seq_id from at_customer_disp_sites cds where cds.cust_seq_id = :b1 and NVL(cds.allowed_ind,'N') = 'Y')
-) WHERE ROWNUM <= 5000~'
-      USING p1;
-  END;
 
-  -- AT1510 PROFILE_LV: the record group's own query; P1 = :MNFST.CUST_SEQ_ID
-  PROCEDURE at1510_lov_profile_lv(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
-  BEGIN
-    OPEN p_rows FOR q'~SELECT * FROM (
-select es_prof_seq_id,waste_profile_number
-from at_esprofiles
-where gen_cust_seq_id = :b1
-and NVL(waste_rev_dt,sysdate + 1) < sysdate
-and waste_profile_status = 'QC RELEASED' 
-and site_cd in (select site_name from at_corp_cust_sites@atcorp
-where upper(instance_name) in (select upper(parameter_value) from at_parameters where parameter_name = 'DATABASE_PREFIX'))
-) WHERE ROWNUM <= 5000~'
-      USING p1;
-  END;
 
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT1510 AT_CPS_VIEW: AT_CNPRODSERV_VIEW3@ATCORP.ENERGYSOLUTIONS.COM with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE at1510_w_at_cps_view(b_mnfst_cust_seq_id IN NUMBER, b_mnfst_advnotif_expected_e379 IN DATE, b_mnfst_es_prof_seq_id IN NUMBER, b_mnfst_disp_site_seq_id IN NUMBER, p_cntrct_contract_nbr IN VARCHAR2, p_cntrct_mod_cntrct_id IN NUMBER, p_cnprodserv_seq_id IN NUMBER, p_prodserv_cd IN VARCHAR2, p_prodserv_descr IN VARCHAR2, p_dispsite_alias IN VARCHAR2, p_cnprodserv_cost IN NUMBER, p_cnprodserv_unit_cd_id IN VARCHAR2, p_cnprodserv_descr IN VARCHAR2, p_cnprodserv_cust_seq_id IN NUMBER, p_prodserv_prodcat_seq_id IN NUMBER, p_prodserv_seq_id IN NUMBER, p_group_nbr IN VARCHAR2, p_subgroup_nbr IN VARCHAR2, p_disposal_revenue_ind IN VARCHAR2, p_certification_prog_ind IN VARCHAR2, p_life_of_plant_ind IN VARCHAR2, p_cntrct_seq_id IN NUMBER, p_tax_included_ind IN VARCHAR2, p_dispsite_code IN VARCHAR2, p_min_charge IN NUMBER, p_seg_resp_dept_nm IN VARCHAR2, p_contract_line_nbr IN VARCHAR2, p_prodcat_descr IN VARCHAR2, p_classified_ind IN VARCHAR2, p_prof_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -145,4 +129,32 @@ and advnotif_seq_id <> 1086
 ) WHERE ROWNUM <= 5000~'
       USING p_rental_container_id, p_rental_container_id, p_rental_container_id, p_rental_container_id, p_rental_container_id, p_rncntnrstat_cd_id, p_rncntnrstat_cd_id, p_rncntnrstat_cd_id, p_rncntnrstat_cd_id, p_rncntnrstat_cd_id, p_seg_owned_ind, p_seg_owned_ind, p_seg_owned_ind, p_seg_owned_ind, p_seg_owned_ind, p_out_shipment_nbr, p_out_shipment_nbr, p_out_shipment_nbr, p_out_shipment_nbr, p_out_shipment_nbr, p_shipment_type_cd, p_shipment_type_cd, p_shipment_type_cd, p_shipment_type_cd, p_shipment_type_cd, p_consignee_cust_seq_id, p_consignee_cust_seq_id, p_pick_up_cust_seq_id, p_pick_up_cust_seq_id, p_rncntnr_seq_id, p_rncntnr_seq_id, p_segordlitm_seq_id, p_segordlitm_seq_id;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
+
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
+  -- AT1510 DISP_SITE_LV: the record group's own query; P1 = :MNFST.CUST_SEQ_ID
+  PROCEDURE at1510_lov_disp_site_lv(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (
+select ds.disp_site_seq_id,ds.code,ds.description
+from at_disp_sites ds where ds.disp_site_seq_id in (select cds.disp_site_seq_id from at_customer_disp_sites cds where cds.cust_seq_id = :b1 and NVL(cds.allowed_ind,'N') = 'Y')
+) WHERE ROWNUM <= 5000~'
+      USING p1;
+  END;
+
+  -- AT1510 PROFILE_LV: the record group's own query; P1 = :MNFST.CUST_SEQ_ID
+  PROCEDURE at1510_lov_profile_lv(p1 IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
+  BEGIN
+    OPEN p_rows FOR q'~SELECT * FROM (
+select es_prof_seq_id,waste_profile_number
+from at_esprofiles
+where gen_cust_seq_id = :b1
+and NVL(waste_rev_dt,sysdate + 1) < sysdate
+and waste_profile_status = 'QC RELEASED' 
+and site_cd in (select site_name from at_corp_cust_sites@atcorp
+where upper(instance_name) in (select upper(parameter_value) from at_parameters where parameter_name = 'DATABASE_PREFIX'))
+) WHERE ROWNUM <= 5000~'
+      USING p1;
+  END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

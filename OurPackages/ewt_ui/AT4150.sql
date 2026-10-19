@@ -2,6 +2,7 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT4150 BATCH_PARENTS (record group BATCH_PARENTS); not OData: could not read the query (expected FROM at "")
   PROCEDURE at4150_lov_batch_parents(p_rows OUT SYS_REFCURSOR);
   -- AT4150 LOV_COST (record group RG_COST); not OData: a join
@@ -12,7 +13,10 @@
   PROCEDURE at4150_lov_material_types(p_rows OUT SYS_REFCURSOR);
   -- AT4150 PARENT_CONTENTS (record group MATERIAL_TYPES); not OData: function TO_CHAR
   PROCEDURE at4150_lov_parent_contents(p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
+
 --#BODY
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT4150 BATCH_PARENTS: the record group's own query
   PROCEDURE at4150_lov_batch_parents(p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -124,4 +128,5 @@ select material_type_cd, to_char(matl_typ_seq_id) matl_typ_seq_id, description, 
 select material_type_cd, to_char(matl_typ_seq_id) matl_typ_seq_id, description, high_price_ind from at_material_types where NVL(SHOW_IN_LOV,'N') = 'Y' order by material_type_cd
 ) WHERE ROWNUM <= 5000~';
   END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

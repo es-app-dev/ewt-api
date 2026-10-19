@@ -2,10 +2,13 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT5160 CNTNR1: AT_CONTAINERS with the block's own WHERE; one optional criterion per column
   PROCEDURE at5160_w_cntnr1(p_container_id IN VARCHAR2, p_cntnr_stat_cd_id IN VARCHAR2, p_cntnr_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 
 --#BODY
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT5160 CNTNR1: AT_CONTAINERS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE at5160_w_cntnr1(p_container_id IN VARCHAR2, p_cntnr_stat_cd_id IN VARCHAR2, p_cntnr_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -27,4 +30,5 @@ WHERE AT_CONTAINERS.CNTNR_SEQ_ID=CNTNR_SEQ_ID)
 ) WHERE ROWNUM <= 5000~'
       USING p_container_id, p_container_id, p_container_id, p_container_id, p_container_id, p_cntnr_stat_cd_id, p_cntnr_stat_cd_id, p_cntnr_stat_cd_id, p_cntnr_stat_cd_id, p_cntnr_stat_cd_id, p_cntnr_seq_id, p_cntnr_seq_id;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 

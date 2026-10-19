@@ -2,10 +2,13 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT4215 COMPACTION_MASTER: AT_COMPACTION_MASTERS with the block's own WHERE; one optional criterion per column
   PROCEDURE at4215_w_compaction_master(p_cmpctn_seq_id IN NUMBER, p_cntnr_seq_id IN NUMBER, p_pre_compaction_wgt IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 
 --#BODY
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT4215 COMPACTION_MASTER: AT_COMPACTION_MASTERS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE at4215_w_compaction_master(p_cmpctn_seq_id IN NUMBER, p_cntnr_seq_id IN NUMBER, p_pre_compaction_wgt IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -20,4 +23,5 @@ where PRCTRANTYP_CD_ID like '2%')
 ) WHERE ROWNUM <= 5000~'
       USING p_cmpctn_seq_id, p_cmpctn_seq_id, p_cntnr_seq_id, p_cntnr_seq_id, p_pre_compaction_wgt, p_pre_compaction_wgt;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 

@@ -22,12 +22,19 @@ import re
 import sys
 
 OUTDIR = os.path.join("OurPackages", "ewt_ui")
+KNOWN_SECTIONS = {
+    "SPEC", "BODY",
+    "PREAMBLE", "SPEC-OPEN", "SPEC-HEAD", "SPEC-TAIL",
+    "BODY-OPEN", "BODY-HEAD", "BODY-TAIL",
+}
+
 SECTION = re.compile(r"(?m)^--#([A-Z-]+)\n")
 
 
 def sections(text):
     out = {}
-    marks = list(SECTION.finditer(text))
+    marks = [m for m in SECTION.finditer(text)
+             if m.group(1) in KNOWN_SECTIONS]
     for i, m in enumerate(marks):
         end = marks[i + 1].start() if i + 1 < len(marks) else len(text)
         out[m.group(1)] = text[m.end():end]

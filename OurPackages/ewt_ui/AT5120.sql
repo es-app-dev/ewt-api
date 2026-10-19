@@ -2,9 +2,13 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT5120 CGFK$CNTNR_DSP_CONTAINER_ID (record group CGFK$CNTNR_CONTAINER_ID); not OData: a join
   PROCEDURE at5120_lov_cgfk_cntnr_dsp_cont(p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
+
 --#BODY
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT5120 CGFK$CNTNR_DSP_CONTAINER_ID: the record group's own query
   PROCEDURE at5120_lov_cgfk_cntnr_dsp_cont(p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -31,4 +35,5 @@ WHERE        cntnr_typ1.cntnr_typ_seq_id = cntnr1.cntnr_typ_seq_id
 ORDER BY cntnr1.container_id
 ) WHERE ROWNUM <= 5000~';
   END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

@@ -2,10 +2,13 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- WB3100 LOAD_IBOX: WB_IBOX_CONTAINERS with the block's own WHERE; one optional criterion per column
   PROCEDURE wb3100_w_load_ibox(b_at$ctrl_incinerator_id IN VARCHAR2, p_ibox_nbr IN VARCHAR2, p_ibox_seq_id IN NUMBER, p_cust_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_sequence IN NUMBER, p_ibox_barcode IN VARCHAR2, p_online_status IN VARCHAR2, p_incinerator_id IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 
 --#BODY
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- WB3100 LOAD_IBOX: WB_IBOX_CONTAINERS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE wb3100_w_load_ibox(b_at$ctrl_incinerator_id IN VARCHAR2, p_ibox_nbr IN VARCHAR2, p_ibox_seq_id IN NUMBER, p_cust_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_sequence IN NUMBER, p_ibox_barcode IN VARCHAR2, p_online_status IN VARCHAR2, p_incinerator_id IN VARCHAR2, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -25,4 +28,5 @@ INCINERATION_STATUS='ON-LINE' AND SORT_STATUS='ON-LINE' AND INCINERATOR_ID = :w1
 ) WHERE ROWNUM <= 5000~'
       USING b_at$ctrl_incinerator_id, p_ibox_nbr, p_ibox_nbr, p_ibox_nbr, p_ibox_nbr, p_ibox_nbr, p_ibox_seq_id, p_ibox_seq_id, p_cust_seq_id, p_cust_seq_id, p_disp_site_seq_id, p_disp_site_seq_id, p_sequence, p_sequence, p_ibox_barcode, p_ibox_barcode, p_ibox_barcode, p_ibox_barcode, p_ibox_barcode, p_online_status, p_online_status, p_online_status, p_online_status, p_online_status, p_incinerator_id, p_incinerator_id, p_incinerator_id, p_incinerator_id, p_incinerator_id;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 

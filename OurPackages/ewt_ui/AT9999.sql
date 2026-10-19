@@ -2,6 +2,7 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT9999 AT_CUST_DOC_TRACKED_ITEMS: AT_CUST_DOC_TRACKED_ITEMS with the block's own WHERE; one optional criterion per column
   PROCEDURE at9999_w_at_cust_doc_trac_c339(b_at$ctrl_cntnr_seq IN NUMBER, p_custtrck_seq_id IN NUMBER, p_trkditm_seq_id IN NUMBER, p_cust_provided_ind IN VARCHAR2, p_activity_amt IN NUMBER, p_total_activity_pct IN NUMBER, p_inc_activity_amt IN NUMBER, p_snm_amt IN NUMBER, p_inc_snm_amt IN NUMBER, p_inc_source_material_amt IN NUMBER, p_source_material_amt IN NUMBER, p_accum_ind IN VARCHAR2, p_cust_seq_id IN NUMBER, p_matl_seq_id IN NUMBER, p_byprodhdrs_seq_id IN NUMBER, p_snm_741_ind IN VARCHAR2, p_cntnr_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
 
@@ -10,8 +11,10 @@
 
   -- AT9999 DAUGHTERS: AT_CONTAINER_PROCESSES with the block's own WHERE; one optional criterion per column
   PROCEDURE at9999_w_daughters(b_at_anchor_retro_cntnr_seq_id IN NUMBER, p_cntnr_seq_id IN NUMBER, p_anchor_wgt IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 
 --#BODY
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- AT9999 AT_CUST_DOC_TRACKED_ITEMS: AT_CUST_DOC_TRACKED_ITEMS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE at9999_w_at_cust_doc_trac_c339(b_at$ctrl_cntnr_seq IN NUMBER, p_custtrck_seq_id IN NUMBER, p_trkditm_seq_id IN NUMBER, p_cust_provided_ind IN VARCHAR2, p_activity_amt IN NUMBER, p_total_activity_pct IN NUMBER, p_inc_activity_amt IN NUMBER, p_snm_amt IN NUMBER, p_inc_snm_amt IN NUMBER, p_inc_source_material_amt IN NUMBER, p_source_material_amt IN NUMBER, p_accum_ind IN VARCHAR2, p_cust_seq_id IN NUMBER, p_matl_seq_id IN NUMBER, p_byprodhdrs_seq_id IN NUMBER, p_snm_741_ind IN VARCHAR2, p_cntnr_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -85,4 +88,5 @@ PARENT_CNTNR_SEQ_ID =:w1
 ) WHERE ROWNUM <= 5000~'
       USING b_at_anchor_retro_cntnr_seq_id, p_cntnr_seq_id, p_cntnr_seq_id, p_anchor_wgt, p_anchor_wgt;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 

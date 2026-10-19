@@ -2,9 +2,13 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT4280 TANKS (record group TANKS); not OData: function EXISTS
   PROCEDURE at4280_lov_tanks(p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
+
 --#BODY
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT4280 TANKS: the record group's own query
   PROCEDURE at4280_lov_tanks(p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -18,4 +22,5 @@ and nvl(b.terminal_process_ind,'N') = 'Y'
 and b.container_id like '%' || a.container_id || '%')
 ) WHERE ROWNUM <= 5000~';
   END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 

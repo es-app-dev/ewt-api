@@ -2,6 +2,7 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- WB3200 ACTIVITY_BURNED: WB_IBOX_CONTAINERS with the block's own WHERE; one optional criterion per column
   PROCEDURE wb3200_w_activity_burned(b_burn_incinerator_incin IN VARCHAR2, p_empty_wgt IN NUMBER, p_full_wgt IN NUMBER, p_ibox_seq_id IN NUMBER, p_sequence IN NUMBER, p_ibox_barcode IN VARCHAR2, p_ibox_nbr IN VARCHAR2, p_total_activity IN NUMBER, p_proj_ash_wgt IN NUMBER, p_proj_ash_uncomp_volume IN NUMBER, p_proj_waste_class IN VARCHAR2, p_incineration_status IN VARCHAR2, p_sort_status IN VARCHAR2, p_void_indicator IN VARCHAR2, p_online_status IN VARCHAR2, p_cust_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_advnotif_seq_id IN NUMBER, p_burn_reason IN VARCHAR2, p_rows OUT SYS_REFCURSOR);
 
@@ -25,8 +26,10 @@
 
   -- WB3200 WB_ASHDRUM2: WB_ASHDRUM with the block's own WHERE; one optional criterion per column
   PROCEDURE wb3200_w_wb_ashdrum2(b_at$ctrl_incinerator_id IN VARCHAR2, p_incinerator_id IN VARCHAR2, p_ashdrum_seq_id IN NUMBER, p_ashdrum_barcode IN VARCHAR2, p_empty_wt IN NUMBER, p_full_wt IN NUMBER, p_waste_wt IN NUMBER, p_final_void IN NUMBER, p_dose_rate IN NUMBER, p_dose_rate_30cm IN NUMBER, p_dose_unit IN VARCHAR2, p_sample_amt IN NUMBER, p_sample_unit IN VARCHAR2, p_sample_reason IN VARCHAR2, p_comments IN VARCHAR2, p_cntnr_typ_seq_id IN NUMBER, p_prctrantyp_seq_id IN NUMBER, p_prodserv_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 
 --#BODY
+  -- >>> generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
   -- WB3200 ACTIVITY_BURNED: WB_IBOX_CONTAINERS with the block's own WHERE (JDAPI); binds and criteria bound; reads only
   PROCEDURE wb3200_w_activity_burned(b_burn_incinerator_incin IN VARCHAR2, p_empty_wgt IN NUMBER, p_full_wgt IN NUMBER, p_ibox_seq_id IN NUMBER, p_sequence IN NUMBER, p_ibox_barcode IN VARCHAR2, p_ibox_nbr IN VARCHAR2, p_total_activity IN NUMBER, p_proj_ash_wgt IN NUMBER, p_proj_ash_uncomp_volume IN NUMBER, p_proj_waste_class IN VARCHAR2, p_incineration_status IN VARCHAR2, p_sort_status IN VARCHAR2, p_void_indicator IN VARCHAR2, p_online_status IN VARCHAR2, p_cust_seq_id IN NUMBER, p_disp_site_seq_id IN NUMBER, p_advnotif_seq_id IN NUMBER, p_burn_reason IN VARCHAR2, p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -264,4 +267,5 @@ ASHDRUM_SEQ_ID = (SELECT MAX(ASHDRUM_SEQ_ID) FROM WB_ASHDRUM WHERE ACTIVE_INDICA
 ) WHERE ROWNUM <= 5000~'
       USING b_at$ctrl_incinerator_id, p_incinerator_id, p_incinerator_id, p_incinerator_id, p_incinerator_id, p_incinerator_id, p_ashdrum_seq_id, p_ashdrum_seq_id, p_ashdrum_barcode, p_ashdrum_barcode, p_ashdrum_barcode, p_ashdrum_barcode, p_ashdrum_barcode, p_empty_wt, p_empty_wt, p_full_wt, p_full_wt, p_waste_wt, p_waste_wt, p_final_void, p_final_void, p_dose_rate, p_dose_rate, p_dose_rate_30cm, p_dose_rate_30cm, p_dose_unit, p_dose_unit, p_dose_unit, p_dose_unit, p_dose_unit, p_sample_amt, p_sample_amt, p_sample_unit, p_sample_unit, p_sample_unit, p_sample_unit, p_sample_unit, p_sample_reason, p_sample_reason, p_sample_reason, p_sample_reason, p_sample_reason, p_comments, p_comments, p_comments, p_comments, p_comments, p_cntnr_typ_seq_id, p_cntnr_typ_seq_id, p_prctrantyp_seq_id, p_prctrantyp_seq_id, p_prodserv_seq_id, p_prodserv_seq_id, p_disp_site_seq_id, p_disp_site_seq_id;
   END;
+  -- <<< generated: query blocks run as the form wrote them (scripts/jdapi/block-package.cjs)
 

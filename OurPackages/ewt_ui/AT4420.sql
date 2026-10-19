@@ -2,9 +2,13 @@
 -- Assembled into the EWT_UI package by the API. No CREATE OR REPLACE here,
 -- and no slash lines: the frame supplies those.
 --#SPEC
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT4420 SURVEYS (record group SURVEYS); not OData: a join
   PROCEDURE at4420_lov_surveys(p_rows OUT SYS_REFCURSOR);
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
+
 --#BODY
+  -- >>> generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
   -- AT4420 SURVEYS: the record group's own query
   PROCEDURE at4420_lov_surveys(p_rows OUT SYS_REFCURSOR) IS
   BEGIN
@@ -24,4 +28,5 @@ and not exists
 order by ac.survey_nbr
 ) WHERE ROWNUM <= 5000~';
   END;
+  -- <<< generated: lists of values run as the form wrote them (scripts/jdapi/contract.cjs --lov-sql)
 
