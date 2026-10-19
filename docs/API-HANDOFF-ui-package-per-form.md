@@ -59,9 +59,7 @@ and off everywhere else**.
 | `GetUiPackageForm` | `GET /admin/ui-package/forms/{FORM}` | that form's file, as plain text |
 | `PutUiPackageForm` | `PUT /admin/ui-package/forms/{FORM}` | replaces it; creates it if new |
 | `DeleteUiPackageForm` | `DELETE /admin/ui-package/forms/{FORM}` | removes it from the next assembly |
-| `GetUiPackageAssembled` | `GET /admin/ui-package/assembled` | all 60 concatenated: exactly what a deploy compiles |
 | `DeployUiPackage` | `POST /admin/ui-package/deploy` | reassembles and compiles on all seven |
-| `GetUiPackage` | `GET /admin/ui-package` | where the package stands on all seven instances |
 
 ### The loop
 

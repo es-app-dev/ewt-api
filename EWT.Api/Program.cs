@@ -445,99 +445,6 @@ namespace EWT.Api
                 }, statusCode: 403);
             }
 
-            app.MapGet("/admin/ui-package", async (PackageService packages, OracleConnectionService connections,
-                                                   string? db, bool? runnable) =>
-            {
-                // No database named: report where the package stands on every instance.
-                if (string.IsNullOrWhiteSpace(db))
-                {
-                    var status = await packages.DescribeLiveAsync(UiPackage, connections.InstanceNames);
-                    return Results.Ok(new
-                    {
-                        package = UiPackage,
-                        runtimeDeploy = packages.AllowRuntimeDeploy,
-                        instances = status.Count,
-                        valid = status.Count(s => !s.Missing && !s.Invalid && s.Unreachable is null),
-                        matchingFile = status.Count(s => s.MatchesFile),
-                        status
-                    });
-                }
-
-                if (!TryResolveDb(connections, db, out var instance, out var dbError)) return dbError!;
-
-                var deployed = await packages.GetDeployedAsync(instance, UiPackage);
-                if (deployed is null)
-                {
-                    return Results.NotFound(new
-                    {
-                        error = new { code = "PackageNotDeployed",
-                                      message = $"{UiPackage} is not on {instance}." }
-                    });
-                }
-
-                // runnable=true gives plain text you can edit and send straight back.
-                if (runnable == true)
-                {
-                    return Results.Text(deployed.Runnable, "text/plain");
-                }
-
-                return Results.Ok(new
-                {
-                    package = deployed.Package,
-                    instance = deployed.Instance,
-                    invalid = deployed.Invalid,
-                    matchesFile = deployed.MatchesFile,
-                    databaseFingerprint = deployed.DatabaseFingerprint,
-                    fileFingerprint = deployed.FileFingerprint,
-                    units = deployed.Units.Select(u => new { type = u.Type, lines = u.Text.Split('\n').Length, text = u.Text }),
-                    runnable = deployed.Runnable
-                });
-            })
-            .WithName("GetUiPackage")
-            .WithSummary("Get the EWT_UI package.")
-            .WithDescription("With no ?db=, reports where EWT_UI stands on all seven instances: present, valid, how many procedures, and whether it matches the .sql file this server ships.\n\nWith ?db=BCTN, returns the package as that instance holds it, read from USER_SOURCE, which is the deployed text rather than the file. Add &runnable=true for plain text with CREATE OR REPLACE and the slash lines put back, ready to edit and send to DeployUiPackage.");
-
-            app.MapPut("/admin/ui-package", async (PackageService packages, HttpRequest request) =>
-            {
-                if (RuntimeDeployGate(packages) is { } off) return off;
-
-                using var reader = new StreamReader(request.Body);
-                var sql = await reader.ReadToEndAsync();
-                if (string.IsNullOrWhiteSpace(sql))
-                {
-                    return Results.BadRequest(new
-                    {
-                        error = new { code = "EmptyBody",
-                                      message = "Send the package source as the request body, content-type text/plain." }
-                    });
-                }
-
-                var update = await packages.WriteSourceFileAsync(UiPackage, sql);
-                if (!update.Ok)
-                {
-                    return Results.BadRequest(new
-                    {
-                        error = new { code = "SourceRejected", message = update.Refusal }
-                    });
-                }
-
-                return Results.Ok(new
-                {
-                    package = UiPackage,
-                    file = update.FileName,
-                    previousBytes = update.PreviousBytes,
-                    newBytes = update.NewBytes,
-                    statements = update.Statements,
-                    fingerprint = update.Fingerprint,
-                    previousKeptAs = update.BackupFileName,
-                    note = "The file this server ships is updated. Nothing is on a database yet: "
-                           + "call DeployUiPackage to compile it."
-                });
-            })
-            .WithName("UpdateUiPackage")
-            .WithSummary("Update the EWT_UI source this server ships.")
-            .WithDescription("Replaces the single .sql file a package is built from, with the request body, content-type text/plain.\n\nThis is refused for EWT_UI, because EWT_UI is assembled from one file per form in OurPackages/ewt_ui: there is no single file to replace, and overwriting the whole package in one call would make one person's edit silently discard everyone else's. Use PutUiPackageForm for the form you changed.\n\nFor any other package:\n\nThis changes what the server believes the package should be: it is what matchesFile is measured against, what AutoDeploy restores at startup, and it survives a restart. It does not touch any database on its own. The previous file is kept beside it with a timestamp, because it is checked in, so copy the new version back into the repo once you are happy with it.");
-
             app.MapPost("/admin/ui-package/deploy", async (PackageService packages, OracleConnectionService connections,
                                                            HttpRequest request) =>
             {
@@ -616,7 +523,7 @@ namespace EWT.Api
             })
             .WithName("DeployUiPackage")
             .WithSummary("Deploy the EWT_UI package to every database.")
-            .WithDescription("Compiles EWT_UI on all seven instances and reports what Oracle made of each. There is no ?db=: the package goes everywhere or nowhere.\n\nThat is deliberate. A screen calls EWT_UI.&lt;proc&gt; against whichever database it is pointed at, so a procedure present on one instance and missing or different on another is a screen that works at one site and fails at the next. Deploying to a single instance made that drift easy to create and easy to forget. Expect roughly a minute for the seven.\n\nSend the source as the request body, content-type text/plain, to deploy that text. Send no body to deploy what the server holds, which for EWT_UI means the fragments in OurPackages/ewt_ui assembled in manifest order. That is how you put the shipped version back after trying something.\n\nWhen it does not compile the reply carries USER_ERRORS per instance, with type, line and position, so the reason does not have to be chased through the server log. A deploy from a body does not change the file: restart, or deploy with no body, and the shipped version returns. Use UpdateUiPackage to make a change stick.");
+            .WithDescription("Compiles EWT_UI on all seven instances and reports what Oracle made of each. There is no ?db=: the package goes everywhere or nowhere.\n\nThat is deliberate. A screen calls EWT_UI.&lt;proc&gt; against whichever database it is pointed at, so a procedure present on one instance and missing or different on another is a screen that works at one site and fails at the next. Deploying to a single instance made that drift easy to create and easy to forget. Expect roughly a minute for the seven.\n\nSend the source as the request body, content-type text/plain, to deploy that text. Send no body to deploy what the server holds, which for EWT_UI means the fragments in OurPackages/ewt_ui assembled in manifest order. That is how you put the shipped version back after trying something.\n\nWhen it does not compile the reply carries USER_ERRORS per instance, with type, line and position, so the reason does not have to be chased through the server log. A deploy from a body does not change any file: deploy again with no body and the fragments on the server are compiled instead. Use PutUiPackageForm to make a change stick.");
 
             // ---- One form at a time -------------------------------------------------------
             // EWT_UI is assembled from OurPackages/ewt_ui/<FORM>.sql. These let the UI side
@@ -754,15 +661,6 @@ namespace EWT.Api
             .WithName("DeleteUiPackageForm")
             .WithSummary("Remove one form from the package.")
             .WithDescription("Deletes OurPackages/ewt_ui/{FORM}.sql, keeping a timestamped copy beside it. The next deploy assembles without it, which is what actually removes its procedures from the databases. _COMMON cannot be removed: other fragments call into it.");
-
-            app.MapGet("/admin/ui-package/assembled", (PackageService packages) =>
-            {
-                if (FragmentsGate(packages) is { } no) return no;
-                return Results.Text(packages.AssembleFromFragments(), "text/plain");
-            })
-            .WithName("GetUiPackageAssembled")
-            .WithSummary("The whole package as the fragments currently assemble it.")
-            .WithDescription("The exact text a deploy would compile: the frame plus every form in assembly order. Useful for reading a diff before deploying, and for checking what a fragment change did to the whole.");
 
             // The named block WHERE clauses. Read-only: the registry is reviewed and placed on
             // the server like relationships.json, never written through the API.

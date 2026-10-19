@@ -79,8 +79,6 @@ against a running server:
 
 | Operation | Route | What it does |
 |---|---|---|
-| `GetUiPackage` | `GET /admin/ui-package` | with no `?db=`, where EWT_UI stands on all seven; with `?db=BCTN`, the package as that instance holds it |
-| `UpdateUiPackage` | `PUT /admin/ui-package` | replaces `OurPackages/EWT_UI.sql` on the server |
 | `DeployUiPackage` | `POST /admin/ui-package/deploy` | reassembles and compiles on all seven |
 
 They need:
@@ -92,17 +90,14 @@ They need:
 `AllowRuntimeDeploy` is **Dev only and false unless set**. It compiles PL/SQL into the
 database, so treat it as what it is.
 
-### Update and deploy are deliberately different
+### Put and deploy are deliberately different
 
-- **Deploy** puts PL/SQL on a database. It is undone by the next restart, because AutoDeploy
-  puts the shipped file back.
-- **Update** changes what this server believes the package should be: the thing `matchesFile`
-  is measured against, and the thing a restart restores.
+- **Put** writes one form's file and validates it. No database is touched.
+- **Deploy** reassembles all 60 forms and compiles them on every instance.
 
-So you can try something on one instance without claiming it is the truth, and claim it
-separately once it works. `UpdateUiPackage` keeps the previous file beside it with a
-timestamp, because that file is checked in: copy the new version into the repo when you are
-happy with it.
+So you can stage several forms and deploy once. `PutUiPackageForm` keeps the previous file
+beside it with a timestamp, because those files are checked in: commit the new version when
+you are happy with it.
 
 ### The loop
 
@@ -141,5 +136,6 @@ position, so the reason is not chased through the server log:
 - **A deploy always goes to all seven.** There is no `?db=`. A procedure present on one
   instance and missing or different on another is a screen that works at one site and
   fails at the next, so the package goes everywhere or nowhere. Allow about a minute.
-- **A deploy does not change the file.** Only `UpdateUiPackage` does. `matchesFile` in
-  `GetUiPackage` is how you see you have drifted.
+- **A deploy does not change a file.** Only `PutUiPackageForm` does. A deploy's reply reports
+  `matchesFile` per instance, which is how you see whether a database holds what this
+  directory says it should.
