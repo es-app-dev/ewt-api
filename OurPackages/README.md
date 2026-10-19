@@ -81,7 +81,7 @@ against a running server:
 |---|---|---|
 | `GetUiPackage` | `GET /admin/ui-package` | with no `?db=`, where EWT_UI stands on all seven; with `?db=BCTN`, the package as that instance holds it |
 | `UpdateUiPackage` | `PUT /admin/ui-package` | replaces `OurPackages/EWT_UI.sql` on the server |
-| `DeployUiPackage` | `POST /admin/ui-package/deploy?db=` | compiles it onto one instance or all seven |
+| `DeployUiPackage` | `POST /admin/ui-package/deploy` | reassembles and compiles on all seven |
 
 They need:
 
@@ -107,26 +107,22 @@ happy with it.
 ### The loop
 
 ```bash
-# what is on BCTN right now
-curl "http://localhost:5282/admin/ui-package?db=BCTN&runnable=true" > work.sql
+# take the form you are working on
+curl "http://localhost:5282/admin/ui-package/forms/AT5510" > AT5510.sql
 
-# edit work.sql, then compile it on BCTN only
-curl -X POST "http://localhost:5282/admin/ui-package/deploy?db=BCTN" \
-     -H "Content-Type: text/plain" --data-binary @work.sql
+# edit it, then put it back. This validates and saves; it touches no database.
+curl -X PUT "http://localhost:5282/admin/ui-package/forms/AT5510" \
+     -H "Content-Type: text/plain" --data-binary @AT5510.sql
 
-# run what you just changed
-curl -X POST "http://localhost:5282/odata/proc/EWT_UI.MY_PROC?db=BCTN" \
-     -H "Content-Type: application/json" -d '{"P_ID": 4211}'
+# reassemble all 60 and compile, on every instance. There is no ?db=.
+curl -X POST "http://localhost:5282/admin/ui-package/deploy"
 
-# happy with it: make it the version this server ships
-curl -X PUT "http://localhost:5282/admin/ui-package" \
-     -H "Content-Type: text/plain" --data-binary @work.sql
+# call what you changed, on whichever database you want to see it against
+curl -X POST "http://localhost:5282/odata/proc/EWT_UI.AT5510_SET_LOCATION?db=BCTN" \
+     -H "Content-Type: application/json" -d '{"P_OUTSHIPMT_SEQ_ID": 4211}'
 
-# and put it on the rest
-curl -X POST "http://localhost:5282/admin/ui-package/deploy?db=all"
-
-# or abandon it: redeploy the shipped file, no body
-curl -X POST "http://localhost:5282/admin/ui-package/deploy?db=BCTN"
+# abandon an edit: put the form back as it was, then deploy again
+curl -X POST "http://localhost:5282/admin/ui-package/deploy"
 ```
 
 A deploy that does not compile returns **USER_ERRORS in the response**, with type, line and
@@ -142,7 +138,8 @@ position, so the reason is not chased through the server log:
 ### What it will not do
 
 - **EWT_UI only.** These routes name it; nothing here reaches a legacy `ACCUTRACK` package.
-- **The instance is always named** on a deploy. No default, and `?db=all` must be spelled out.
-  On this estate a request that guessed its database has already gone wrong once.
+- **A deploy always goes to all seven.** There is no `?db=`. A procedure present on one
+  instance and missing or different on another is a screen that works at one site and
+  fails at the next, so the package goes everywhere or nowhere. Allow about a minute.
 - **A deploy does not change the file.** Only `UpdateUiPackage` does. `matchesFile` in
   `GetUiPackage` is how you see you have drifted.

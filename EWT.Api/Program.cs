@@ -539,27 +539,39 @@ namespace EWT.Api
             .WithDescription("Replaces the single .sql file a package is built from, with the request body, content-type text/plain.\n\nThis is refused for EWT_UI, because EWT_UI is assembled from one file per form in OurPackages/ewt_ui: there is no single file to replace, and overwriting the whole package in one call would make one person's edit silently discard everyone else's. Use PutUiPackageForm for the form you changed.\n\nFor any other package:\n\nThis changes what the server believes the package should be: it is what matchesFile is measured against, what AutoDeploy restores at startup, and it survives a restart. It does not touch any database on its own. The previous file is kept beside it with a timestamp, because it is checked in, so copy the new version back into the repo once you are happy with it.");
 
             app.MapPost("/admin/ui-package/deploy", async (PackageService packages, OracleConnectionService connections,
-                                                           HttpRequest request, string? db) =>
+                                                           HttpRequest request) =>
             {
                 if (RuntimeDeployGate(packages) is { } off) return off;
 
-                if (string.IsNullOrWhiteSpace(db))
+                // Refuse a leftover ?db= rather than ignoring it. Silently deploying to seven
+                // instances for a caller whose URL says one is worse than making them read a
+                // sentence: the old command still in someone's shell history would otherwise
+                // do something broader than it says.
+                if (request.Query.ContainsKey("db"))
                 {
                     return Results.BadRequest(new
                     {
                         error = new
                         {
-                            code = "InstanceRequired",
-                            message = "Name the database outright: ?db=BCTN, or ?db=all for every instance.",
-                            hint = "There is no default here on purpose.",
+                            code = "DbNotAccepted",
+                            message = "This deploy no longer takes ?db=. EWT_UI is compiled on "
+                                      + "every instance, every time.",
+                            hint = "Drop the parameter. A procedure present on one database and "
+                                   + "missing or different on another is a screen that works at "
+                                   + "one site and fails at the next, so the package goes "
+                                   + "everywhere or nowhere.",
                             instances = connections.InstanceNames
                         }
                     });
                 }
 
-                var targets = db.Equals("all", StringComparison.OrdinalIgnoreCase)
-                    ? connections.InstanceNames.ToList()
-                    : new List<string> { connections.ResolveInstanceName(db) };
+                // Every instance, always. There is no ?db= here any more, by decision on
+                // 2026-10-19: the UI calls EWT_UI.<proc> on whichever database the screen is
+                // pointed at, so a procedure that exists on one instance and not another, or
+                // differs between them, is a screen that works for one site and not the next.
+                // Allowing a single-instance deploy made that drift easy to create and easy
+                // to forget, which is the whole reason matchesFile had to exist.
+                var targets = connections.InstanceNames.ToList();
 
                 // A body deploys that text; no body deploys the file this server ships.
                 using var reader = new StreamReader(request.Body);
@@ -603,8 +615,8 @@ namespace EWT.Api
                 }, statusCode: allOk ? 200 : 400);
             })
             .WithName("DeployUiPackage")
-            .WithSummary("Deploy the EWT_UI package to one database or to all seven.")
-            .WithDescription("Compiles EWT_UI and reports what Oracle made of it. ?db= is required and may be an instance name or 'all'.\n\nSend the source as the request body, content-type text/plain, to deploy that text. Send no body to deploy what the server holds, which for EWT_UI means the fragments in OurPackages/ewt_ui assembled in manifest order. That is how you put the shipped version back after trying something.\n\nWhen it does not compile the reply carries USER_ERRORS per instance, with type, line and position, so the reason does not have to be chased through the server log. A deploy from a body does not change the file: restart, or deploy with no body, and the shipped version returns. Use UpdateUiPackage to make a change stick.");
+            .WithSummary("Deploy the EWT_UI package to every database.")
+            .WithDescription("Compiles EWT_UI on all seven instances and reports what Oracle made of each. There is no ?db=: the package goes everywhere or nowhere.\n\nThat is deliberate. A screen calls EWT_UI.&lt;proc&gt; against whichever database it is pointed at, so a procedure present on one instance and missing or different on another is a screen that works at one site and fails at the next. Deploying to a single instance made that drift easy to create and easy to forget. Expect roughly a minute for the seven.\n\nSend the source as the request body, content-type text/plain, to deploy that text. Send no body to deploy what the server holds, which for EWT_UI means the fragments in OurPackages/ewt_ui assembled in manifest order. That is how you put the shipped version back after trying something.\n\nWhen it does not compile the reply carries USER_ERRORS per instance, with type, line and position, so the reason does not have to be chased through the server log. A deploy from a body does not change the file: restart, or deploy with no body, and the shipped version returns. Use UpdateUiPackage to make a change stick.");
 
             // ---- One form at a time -------------------------------------------------------
             // EWT_UI is assembled from OurPackages/ewt_ui/<FORM>.sql. These let the UI side

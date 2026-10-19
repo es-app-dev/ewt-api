@@ -60,7 +60,7 @@ and off everywhere else**.
 | `PutUiPackageForm` | `PUT /admin/ui-package/forms/{FORM}` | replaces it; creates it if new |
 | `DeleteUiPackageForm` | `DELETE /admin/ui-package/forms/{FORM}` | removes it from the next assembly |
 | `GetUiPackageAssembled` | `GET /admin/ui-package/assembled` | all 60 concatenated: exactly what a deploy compiles |
-| `DeployUiPackage` | `POST /admin/ui-package/deploy?db=` | reassembles and compiles. `?db=` is required |
+| `DeployUiPackage` | `POST /admin/ui-package/deploy` | reassembles and compiles on all seven |
 | `GetUiPackage` | `GET /admin/ui-package` | where the package stands on all seven instances |
 
 ### The loop
@@ -73,15 +73,13 @@ curl "http://localhost:5282/admin/ui-package/forms/AT5510" > AT5510.sql
 curl -X PUT "http://localhost:5282/admin/ui-package/forms/AT5510" \
      -H "Content-Type: text/plain" --data-binary @AT5510.sql
 
-# compile all 60 onto one instance
-curl -X POST "http://localhost:5282/admin/ui-package/deploy?db=BCTN"
+# compile all 60 onto every instance
+curl -X POST "http://localhost:5282/admin/ui-package/deploy"
 
 # call what you changed
 curl -X POST "http://localhost:5282/odata/proc/EWT_UI.AT5510_SET_LOCATION?db=BCTN" \
      -H "Content-Type: application/json" -d '{"P_OUTSHIPMT_SEQ_ID": 4211}'
 
-# happy: put it on the rest
-curl -X POST "http://localhost:5282/admin/ui-package/deploy?db=all"
 ```
 
 `PUT` and `DEPLOY` are separate on purpose. A put saves the file; a deploy compiles every
